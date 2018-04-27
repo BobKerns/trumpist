@@ -9,6 +9,15 @@ To build a .brz archive, we need to change the BrainId, to avoid potential confl
 
 The 'jq' JSON query command is required. It is widely used and readibly available in repositories; I used the one in macports.
 
+## 2018-04-27
+
+* Adds more Prevezon filings and related modelling re disqualification
+* DOJ IG report on McCabe
+* Manafort filings on supervision
+* Improvements to Russian model, including Alma-Ata protocol and other USSR dissolution
+* Patriot Legal Expense Fund Trust (fund for legal expenses for Trumpists caught up in Mueller investigation)
+* Complaints against Trump campaign (FEC, Lieu-Rice letter)
+
 ## 2018-04-07
 
-Initial export
+Initial export 

@@ -35,13 +35,18 @@ else
     echo "$GUID" >"$GUIDFILE"
 fi
 
-BZP="$BUILDDIR/trumpist-$GUID-$GITTIME-$GITREF.bzp"
+K_NAME="7501869f-6fc5-5c4b-b838-f3f7287c138c"
+BRAIN_NAME="$(jq 'select(.Id=="'$K_NAME'") .Value' <brain/settings.json)"
+BRAIN_NAME="${BRAIN_NAME}-$(echo "$GUID" | git hash-object --stdin | cut -c 1-8)"
 
-echo "Brain: $BRAINDIR"
+
+BRZ="$BUILDDIR/${BRAIN_NAME}-$GUID-$GITTIME-$GITREF.brz"
+
+echo "Source: $BRAINDIR"
 echo "Brain ID: $GUID"
 echo "Commit Time: $GITTIME (UTC)"
 echo "Tree Id: $GITREF"
-echo "Building: $BZP"
+echo "Building: $BRZ"
 #echo "Root: $ROOTDIR"
 #echo "Temp: $TMPDIR"
 
@@ -56,7 +61,10 @@ for f in "$BRAINDIR"/*.json; do
     mv "$f".tmp "$f"
 done
 
-mkdir -p "$BUILDDIR"
-rm -f "$BZP"
+jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" >"$TMPDIR/settings.json.tmp"
+mv "$TMPDIR/settings.json.tmp" "$TTMPDIR/settings.json"
 
-(cd $TMPDIR; zip --recurse-paths -q "$BZP" .)
+mkdir -p "$BUILDDIR"
+rm -f "$BRZ"
+
+(cd $TMPDIR; zip --recurse-paths -q "$BRZ" .)
