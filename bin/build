@@ -1,0 +1,62 @@
+#!/bin/sh
+
+
+# Abbreviated tree ID for this brain
+GITREF="$(git ls-tree -d --abbrev=8 HEAD brain | cut -f 1 | cut -f 3 -d' ')"
+# Depth of git history, for better sorting
+#GITDEPTH="$(git rev-list HEAD | wc -l)"
+#But let's use the time of the commit. Let's get it in unix format and format it ourselves, in UTC
+GITTIME="$(git show --format="%at" -s HEAD)"
+
+GITTIME="$(TZ=UTC date -r $GITTIME "+%Y-%m-%d-%H%M")"
+
+
+# Get the GUID to use. We accept one on the command line, but will generate or reuse one below.
+GUID="$1"
+
+truname() {
+         (cd "$1"; echo "$PWD")
+}
+
+BINDIR=$(dirname "$0")
+
+
+ROOTDIR=$(truname $(dirname "$BINDIR"))
+BRAINDIR="$ROOTDIR/brain"
+TMPDIR="$ROOTDIR/tmp"
+BUILDDIR="$ROOTDIR/build"
+GUIDFILE="$ROOTDIR/.git/info/brain-guid"
+
+# Reuse prio GUID, or generate (if needed) and save.
+if [ -e "$GUIDFILE" ]; then
+    GUID="${GUID:-$(cat "$GUIDFILE")}"
+else
+    GUID="${GUID:-$(uuidgen | tr A-Z a-z)}"
+    echo "$GUID" >"$GUIDFILE"
+fi
+
+BZP="$BUILDDIR/trumpist-$GUID-$GITTIME-$GITREF.bzp"
+
+echo "Brain: $BRAINDIR"
+echo "Brain ID: $GUID"
+echo "Commit Time: $GITTIME (UTC)"
+echo "Tree Id: $GITREF"
+echo "Building: $BZP"
+#echo "Root: $ROOTDIR"
+#echo "Temp: $TMPDIR"
+
+
+
+mkdir -p "$TMPDIR"
+rm -rf "$TMPDIR"/*
+cp -rp "$BRAINDIR"/ "$TMPDIR"/
+
+for f in "$BRAINDIR"/*.json; do
+    jq --compact-output '.BrainId = "'"$GUID"'"' <"$f" >"$f".tmp
+    mv "$f".tmp "$f"
+done
+
+mkdir -p "$BUILDDIR"
+rm -f "$BZP"
+
+(cd $TMPDIR; zip --recurse-paths -q "$BZP" .)

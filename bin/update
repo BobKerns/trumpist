@@ -12,7 +12,7 @@ BZPNAME=$(basename "$BZP")
 
 
 BZP2="$BZPDIR/$BZPNAME"
-echo "Installing: $BZPDIR / $BZPNAME $BZP2"
+echo "Installing: $BZP2"
 
 BINDIR=$(dirname "$0")
 

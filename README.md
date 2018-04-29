@@ -5,13 +5,9 @@ Welcome to Trumpist Brain
 
 This git project contain versions of the Trumpist Brain, in the form of expanded .brz archives. This form allows unchanged portions to be shared, and changes to be tracked in git (in addition to the history that TheBrain itself keeps).
 
-You should be able to reconstitute any specific version by zipping up the brain/ subdirectory and changing the extension to .brz.
+To build a .brz archive, we need to change the BrainId, to avoid potential conflicts. The bin/build command will assign a BrainID specific to your repo (stored in .git/info/brain-guid), and generate a .brz file, storing it in the build/ subdirectory.
 
-Then open TheBrain (version 9 required) and import.
-
-Be sure to NOT include the brain/ directory paths stored in the zip file; that's sure to prevent import!
-
-Good luck!
+The 'jq' JSON query command is required. It is widely used and readibly available in repositories; I used the one in macports.
 
 ## 2018-04-07
 
