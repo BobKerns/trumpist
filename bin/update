@@ -1,0 +1,27 @@
+#!/bin/sh
+
+BZP="$1"
+
+truname() {
+         (cd "$1"; echo "$PWD")
+}
+
+
+BZPDIR=$(truname $(dirname "$BZP"))
+BZPNAME=$(basename "$BZP")
+
+
+BZP2="$BZPDIR/$BZPNAME"
+echo "Installing: $BZPDIR / $BZPNAME $BZP2"
+
+BINDIR=$(dirname "$0")
+
+
+ROOTDIR=$(dirname "$BINDIR")
+BRAINDIR=$(truname "$ROOTDIR/brain")
+
+echo "Brain: $(truname "$BRAINDIR")"
+
+rm -rf "$BRAINDIR"/*
+
+(cd $BRAINDIR; unzip "$BZP2")
