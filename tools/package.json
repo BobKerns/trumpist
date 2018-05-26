@@ -1,0 +1,48 @@
+{
+  "bundleDependencies": [],
+  "dependencies": {
+    "jsdom": "^11.0.0",
+    "jsonlines": "^0.1.1",
+    "neo4j-driver": "^1.6.1",
+    "through2-filter": "^2.0.0",
+    "through2-spy": "^2.0.0"
+  },
+  "deprecated": false,
+  "description": "Tools for Trumpist Brain",
+  "devDependencies": {
+    "ajv": "^6.5.0",
+    "eslint": "^5.0.0-alpha.3"
+  },
+  "homepage": "https://github.com/bobkerns/tumpist#readme",
+  "keywords": [
+    "server",
+    "politics",
+    "history",
+    "trump"
+  ],
+  "license": "MIT",
+  "main": "./trumpist.js",
+  "maintainers": [
+    {
+      "name": "Bob Kerns",
+      "email": "bobkerns@protonmail.com",
+      "url": "http://bobkerns.typepad.com"
+    }
+  ],
+  "name": "trumpist",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobkens/tumpist.git"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2018
+    }
+  },
+  "scripts": {},
+  "version": "1.0.0"
+}
