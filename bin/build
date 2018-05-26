@@ -36,12 +36,13 @@ else
 fi
 
 K_NAME="7501869f-6fc5-5c4b-b838-f3f7287c138c"
-BRAIN_NAME="$(jq 'select(.Id=="'$K_NAME'") .Value' <brain/settings.json)"
+BRAIN_NAME="$(jq -r 'select(.Id=="'$K_NAME'") .Value' <brain/settings.json)"
 BRAIN_NAME="${BRAIN_NAME}-$(echo "$GUID" | git hash-object --stdin | cut -c 1-8)"
 
 
-BRZ="$BUILDDIR/${BRAIN_NAME}-$GUID-$GITTIME-$GITREF.brz"
+BRZ="$BUILDDIR/${BRAIN_NAME}-$GITTIME-$GITREF.brz"
 
+echo "Name: ${BRAIN_NAME}"
 echo "Source: $BRAINDIR"
 echo "Brain ID: $GUID"
 echo "Commit Time: $GITTIME (UTC)"
@@ -62,7 +63,7 @@ for f in "$BRAINDIR"/*.json; do
 done
 
 jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" >"$TMPDIR/settings.json.tmp"
-mv "$TMPDIR/settings.json.tmp" "$TTMPDIR/settings.json"
+mv "$TMPDIR/settings.json.tmp" "$TMPDIR/settings.json"
 
 mkdir -p "$BUILDDIR"
 rm -f "$BRZ"
