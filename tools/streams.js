@@ -10,7 +10,7 @@ const finished = util.promisify(s_finished);
 
 function done(stream) {
     return new Promise((resolve, reject) => {
-        stream.on('close', () => resolve(stream));
+        //stream.on('close', () => resolve(stream));
         stream.on('finish', () => resolve(stream));
         stream.on('error', (e) => reject(e));
     });
@@ -20,8 +20,10 @@ function done(stream) {
 function log(key, template) {
     return function (data) {
         try {
+            // eslint-disable-next-line no-console
             console.log(`${key}: ${template(data)}`);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(`${key}: ${e.message || e}`);
         }
     };
@@ -38,7 +40,6 @@ function filter(f, pass_through = false) {
             }
             cb();
         } catch (e) {
-            console.error(`Error in filter: ${util.inspect(e)}`)
             cb(null, e);
         }
     }
@@ -57,7 +58,7 @@ function thru(f) {
 }
 
 function split(input, ...outputs) {
-    return Promise.all(outputs.map(o => pipeline(input, o).then(s => {console.log('SPLIT'); return s;})));
+    return Promise.all(outputs.map(o => pipeline(input, o)));
 }
 
 module.exports = {
