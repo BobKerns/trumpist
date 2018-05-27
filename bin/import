@@ -1,0 +1,50 @@
+#!/bin/sh
+
+
+BRZFILE="$1"
+if [ ! -r "$BRZFILE" ]; then
+    echo "File $BRZFILE not found."
+    exit 2
+fi
+
+if ! git diff-index --quiet --cached HEAD --; then
+    echo "You have staged changes in your GIT tree. Either commit or reset."
+    exit -1;
+fi
+
+BRZNAME="$(basename "${BRZFILE}" .brz)"
+
+BRZUTIME=$(stat -f "%c" "${BRZFILE}")
+ls -l "${BRZFILE}"
+BRZDATE="$(TZ=UTC date -r "${BRZUTIME}" "+%Y-%m-%dT%H:%M:%S")"
+echo "TIME: ${BRZDATE}"
+
+truname() {
+         (cd "$1"; echo "$PWD")
+}
+
+
+BRZDIR=$(truname $(dirname "$BRZFILE"))
+BRZNAME=$(basename "$BRZFILE")
+
+
+BRZ2="$BRZDIR/$BRZNAME"
+echo "Installing: $BRZ2"
+
+BINDIR=$(dirname "$0")
+
+
+ROOTDIR=$(dirname "$BINDIR")
+BRAINDIR=$(truname "$ROOTDIR/brain")
+
+echo "Brain: $(truname "$BRAINDIR")"
+
+rm -rf "$BRAINDIR"/*
+
+(cd $BRAINDIR; unzip "$BRZ2")
+
+git add "$BRAINDIR"
+git commit --date="${BRZDATE} +0000" -m "Brain Update $BRZDATE UTC" || exit 0
+
+
+git log HEAD^..HEAD
