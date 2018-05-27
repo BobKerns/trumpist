@@ -62,12 +62,12 @@ function split(input, ...outputs) {
 }
 
 module.exports = {
-    pipeline: pipeline,
-    log: log,
-    sink: sink,
-    filter: filter,
-    thru: thru,
-    split: split,
-    finished: finished,
-    done: done
+    pipeline,
+    log,
+    sink,
+    filter,
+    thru,
+    split,
+    finished,
+    done
 };
