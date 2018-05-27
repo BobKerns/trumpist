@@ -1,6 +1,7 @@
 {
   "bundleDependencies": [],
   "dependencies": {
+    "bomstrip": "^0.1.4",
     "jsdom": "^11.0.0",
     "jsonlines": "^0.1.1",
     "neo4j-driver": "^1.6.1",

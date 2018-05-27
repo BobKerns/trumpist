@@ -7,11 +7,17 @@
 const jsonlines = require('jsonlines');
 //var fsp = require('fs/promises');
 const fs = require('fs');
-
-const {filter, sink, log, thru, done} = require('./streams');
 const util = require('util');
 
+const {filter, sink, log, thru, done} = require('./streams');
+const {join, dirname, resolve} = require('path');
+
+const basedir = dirname(dirname(module.filename));
+const braindir = join(basedir, 'brain');
+
 const {resultStream} = require('./result-stream');
+
+const bomstrip = require('bomstrip');
 
 const neo4j = require('neo4j-driver').v1;
 
@@ -20,22 +26,23 @@ const password = 'admin';
 const uri = 'bolt://localhost:7687';
 
 const driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
-const session = driver.session(neo4j.WRITE);
 
 const ID_ROOT_TYPE='ROOT-TYPE';
 const ID_ROOT_TAG='ROOT-TAG';
 const ID_ROOT_SPECIAL='ROOT-SPECIAL';
+const ID_ROOT_LINK='ROOT-LINK';
 
 // The Neo4J labels we apply to each of our meta types.
 const L_TYPE = "Type:_Meta:Node";
 const L_TAG = "Tag:_Meta:Node";
 const L_SPECIAL = "Special:_Meta:Node";
+const L_LINK = "Link:_Meta";
 
 // Statement to link supertypes.
 const C_LINK_TYPES = `
-MATCH (n:Node)
+MATCH (n:_Meta)
 WHERE n.super IS NOT NULL
-MATCH (s:Node {id: n.super})
+MATCH (s:_Meta {id: n.super})
 MERGE (n)-[:SUPER]->(s)
 REMOVE n.super;`;
 
@@ -43,23 +50,28 @@ REMOVE n.super;`;
 const C_ROOTS = `
 MERGE(n:${L_TYPE} {name: "Node", label: "Node", id: "${ID_ROOT_TYPE}"})
 MERGE(t:${L_TAG} {name: "Tag", label: "Tag", id: "${ID_ROOT_TAG}"})
-MERGE(s:${L_SPECIAL} {name: "Special", label: "Special", id: "${ID_ROOT_SPECIAL}"});`;
+MERGE(s:${L_SPECIAL} {name: "Special", label: "Special", id: "${ID_ROOT_SPECIAL}"})
+MERGE(l:${L_LINK} {name: "Link", label: "Link", id: "${ID_ROOT_LINK}"});`;
 
 // Statement to add a type. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_TYPE = `
-MERGE(n:${L_TYPE} {name: $name, label: $label,  id: $id})
-SET n.super = $super;`;
-
+MERGE(n:${L_TYPE} {id: $id})
+SET n.super = $super, n.name = $name, n.label = $label;`;
 
 // Statement to add a tag. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_TAG = `
-MERGE(n:${L_TAG} {name: $name, label: $label, id: $id})
-SET n.super = $super;`;
+MERGE(n:${L_TAG} {id: $id})
+SET n.super = $super, n.name = $name, n.label = $label;`;
 
 // Statement to add a special. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_SPECIAL = `
-MERGE(n:${L_SPECIAL} {name: $name, label: $label, id: $id})
-SET n.super = $super;`;
+MERGE(n:${L_SPECIAL} {id: $id})
+SET n.super = $super, n.name = $name, n.label = $label;`;
+
+// Statement to add a Link type. n.super will be used to link in C_LINK_TYPES, then removed.
+const C_ADD_LINK = `
+MERGE(n:${L_LINK} {id: $id})
+SET n.super = $super, n.name = $name, n.label = $label;`;
 
 // Define our id: uniqueness constraint
 const C_ID_CONSTRAINT = "CREATE CONSTRAINT ON (n:Node) assert n.id IS UNIQUE;";
@@ -69,10 +81,13 @@ const C_LOAD_TYPE_LABELS = `
 MATCH path=(p)-[*]->(s {id: "ROOT-TYPE"})
 RETURN p.id AS id, REDUCE(s=p.name, x IN TAIL(NODES(path)) | s + ':' + x.name) AS labels;`;
 
+//Get a data logging function
 function logger(tname, tag) {
     return logger2(tname, tag, data => `${data.Kind} ${data.Name} / ${data.Label || data.Name}`);
 }
 
+// Get a generic logging & counting stream
+// f(data) -> message
 function logger2(tname, tag, f) {
     let counter = 0;
     function count(s) {
@@ -80,7 +95,7 @@ function logger2(tname, tag, f) {
         return s;
     }
     let s = sink(log(tag, data => count(f(data))));
-    s.on('finish', () => console.log(`${tag} Loaded ${counter} ${tname} items`));
+    s.on('finish', () => console.log(`${tag}: ===> Loaded ${counter} ${tname} types`));
     return s;
 }
 
@@ -92,10 +107,19 @@ function kind(k) {
     return filter(t => t.Kind === k);
 }
 
-async function loadNodeMetadata() {
-    let nodes = fs.createReadStream(('../brain/thoughts.json'));
+function openJSON(file) {
+    let path = resolve(braindir, file);
+    let input = fs.createReadStream(path, 'utf8');
     let parser = jsonlines.parse();
-    nodes.pipe(parser);
+    input
+        .pipe(new bomstrip())
+        .pipe(parser);
+    return {input, parser, path};
+}
+
+async function loadNodeMetadata(session) {
+    let {input, parser, path} = openJSON('thoughts.json');
+    console.log(`Scanning ${path} for metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT));
     await session.writeTransaction(tx => tx.run(C_ROOTS));
     await session.writeTransaction(async tx => {
@@ -112,7 +136,7 @@ async function loadNodeMetadata() {
                 .pipe(thru(t => tx.run(stmt, nodeOpts(t))
                     .catch(e => tail.emit('error', e))))
                 .pipe(logstr);
-            tail.on('error', () => nodes.close());
+            tail.on('error', () => input.close());
             return done(tail);
         }
 
@@ -135,12 +159,39 @@ async function loadTypeLabels(session) {
     return done(tail);
 }
 
-loadNodeMetadata()
-    .catch(e => console.error(`Error: ${e.message} ${util.inspect(e)} ${e.stack}`
-    ))
-    .then(() => session.close())
+async function loadLinkMetadata(session) {
+    await session.writeTransaction(async tx => {
+        function linkopts(t) {
+            return {
+                super: t.TypeId || ID_ROOT_LINK,
+                id: t.Id,
+                name: t.Name,
+                label: t.Name
+            };
+        }
+        let logstr = logger('Link', 'L', data =>  `${data.Name}`);
+        let {input, parser} = openJSON(('links.json'));
+        let tail = parser
+            .pipe(kind(2))
+            .pipe(thru(t => tx.run(C_ADD_LINK, linkopts(t))))
+            .pipe(logstr);
+        tail.on('error', () => input.close());
+        await done(tail);
+        return tx.run(C_LINK_TYPES, {})
+    });
+    return session;
+}
+
+async function loadMetadata(session) {
+    await loadNodeMetadata(session);
+    await loadLinkMetadata(session);
+    return session;
+}
+
+loadMetadata(driver.session(neo4j.WRITE))
+    .then(session => session.close())
     .then(() => console.log('CLOSED'))
     .then(() => driver.close())
     .then(() => console.log('DRIVER CLOSED'))
-    .catch(e => console.error(`Error: ${e.message}`));
+    .catch(e => console.error(`Error: ${e.code || 'MISC'} ${e.message} ${e.stack}`));
 
