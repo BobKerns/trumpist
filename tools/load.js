@@ -125,7 +125,8 @@ const OMIT_PROPS = ['Name', 'Label', 'TypeId', 'CreationDateTime', 'Modification
 function nodeOpts(t, parent) {
     let brainKeys = R.difference(R.keys(t), OMIT_PROPS);
     let brainProps = {};
-    brainKeys.forEach(k => brainProps['brain_' + k] =t[k]);
+    let fix = v => (typeof v === 'number' ? neo4j.int(v) : v);
+    brainKeys.forEach(k => brainProps['brain_' + k] = fix(t[k]));
     let result = {
         id: t.Id,
         props: {
