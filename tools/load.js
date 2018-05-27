@@ -8,6 +8,8 @@ const jsonlines = require('jsonlines');
 //var fsp = require('fs/promises');
 const fs = require('fs');
 
+const R = require('ramda');
+
 const {filter, sink, log, thru, done} = require('./streams');
 const {join, dirname, resolve} = require('path');
 
@@ -17,6 +19,8 @@ const braindir = join(basedir, 'brain');
 const {resultStream} = require('./result-stream');
 
 const bomstrip = require('bomstrip');
+
+const {convertDateTime} = require('./neo4j-date');
 
 const neo4j = require('neo4j-driver').v1;
 
@@ -116,6 +120,28 @@ function openJSON(file) {
     return {input, parser, path};
 }
 
+const OMIT_PROPS = ['Name', 'Label', 'TypeId', 'CreationDateTime', 'ModificationDateTime', 'BrainId', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
+
+function nodeOpts(t, parent) {
+    let brainKeys = R.difference(R.keys(t), OMIT_PROPS);
+    let brainProps = {};
+    brainKeys.forEach(k => brainProps['brain_' + k] =t[k]);
+    let result = {
+        id: t.Id,
+        props: {
+            name: t.Name,
+            label: t.Label || t.Name,
+            creationTime: convertDateTime(t.CreationDateTime),
+            modifiedTime: convertDateTime(t.ModificationDateTime),
+            ...brainProps
+        }
+    };
+    if (parent) {
+        result.props.super = parent;
+    }
+    return result;
+}
+
 async function loadNodeMetadata(session) {
     let {input, parser, path} = openJSON('thoughts.json');
     console.log(`Scanning ${path} for metadata.`);
@@ -124,17 +150,10 @@ async function loadNodeMetadata(session) {
     await session.writeTransaction(async tx => {
         async function doKind(tname, tag, k, root, stmt, obj) {
             let logstr = logger(tname, tag);
-            let nodeOpts = t => ({
-                id: t.Id,
-                props: {
-                    name: t.Name,
-                    label: t.Label || t.Name,
-                    super: t.TypeId || root,
-                }});
             let tail = parser
                 .pipe(kind(k))
                 .pipe(thru(t => obj[t.Id] = t))
-                .pipe(thru(t => tx.run(stmt, nodeOpts(t))
+                .pipe(thru(t => tx.run(stmt, nodeOpts(t, t.TypeId || root))
                     .catch(e => tail.emit('error', e))))
                 .pipe(logstr);
             tail.on('error', () => input.close());
@@ -162,21 +181,11 @@ async function loadTypeLabels(session) {
 
 async function loadLinkMetadata(session) {
     await session.writeTransaction(async tx => {
-        function linkopts(t) {
-            return {
-                super: t.TypeId || ID_ROOT_LINK,
-                id: t.Id,
-                props: {
-                    name: t.Name,
-                    label: t.Name
-                }
-            };
-        }
         let logstr = logger('Link', 'L', data =>  `${data.Name}`);
         let {input, parser} = openJSON(('links.json'));
         let tail = parser
             .pipe(kind(2))
-            .pipe(thru(t => tx.run(C_ADD_LINK, linkopts(t))))
+            .pipe(thru(t => tx.run(C_ADD_LINK, nodeOpts(t, t.TypeId || ID_ROOT_LINK))))
             .pipe(logstr);
         tail.on('error', () => input.close());
         await done(tail);

@@ -5,6 +5,7 @@
     "jsdom": "^11.0.0",
     "jsonlines": "^0.1.1",
     "neo4j-driver": "^1.6.1",
+    "ramda": "^0.25.0",
     "through2-filter": "^2.0.0",
     "through2-spy": "^2.0.0"
   },
