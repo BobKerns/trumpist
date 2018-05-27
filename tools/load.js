@@ -7,7 +7,6 @@
 const jsonlines = require('jsonlines');
 //var fsp = require('fs/promises');
 const fs = require('fs');
-const util = require('util');
 
 const {filter, sink, log, thru, done} = require('./streams');
 const {join, dirname, resolve} = require('path');
@@ -56,22 +55,22 @@ MERGE(l:${L_LINK} {name: "Link", label: "Link", id: "${ID_ROOT_LINK}"});`;
 // Statement to add a type. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_TYPE = `
 MERGE(n:${L_TYPE} {id: $id})
-SET n.super = $super, n.name = $name, n.label = $label;`;
+SET n += $props;`;
 
 // Statement to add a tag. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_TAG = `
 MERGE(n:${L_TAG} {id: $id})
-SET n.super = $super, n.name = $name, n.label = $label;`;
+SET n += $props;`;
 
 // Statement to add a special. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_SPECIAL = `
 MERGE(n:${L_SPECIAL} {id: $id})
-SET n.super = $super, n.name = $name, n.label = $label;`;
+SET n += $props;`;
 
 // Statement to add a Link type. n.super will be used to link in C_LINK_TYPES, then removed.
 const C_ADD_LINK = `
 MERGE(n:${L_LINK} {id: $id})
-SET n.super = $super, n.name = $name, n.label = $label;`;
+SET n += $props;`;
 
 // Define our id: uniqueness constraint
 const C_ID_CONSTRAINT = "CREATE CONSTRAINT ON (n:Node) assert n.id IS UNIQUE;";
@@ -126,10 +125,12 @@ async function loadNodeMetadata(session) {
         async function doKind(tname, tag, k, root, stmt, obj) {
             let logstr = logger(tname, tag);
             let nodeOpts = t => ({
-                name: t.Name,
-                label: t.Label || t.Name,
-                super: t.TypeId || root,
-                id: t.Id});
+                id: t.Id,
+                props: {
+                    name: t.Name,
+                    label: t.Label || t.Name,
+                    super: t.TypeId || root,
+                }});
             let tail = parser
                 .pipe(kind(k))
                 .pipe(thru(t => obj[t.Id] = t))
@@ -165,8 +166,10 @@ async function loadLinkMetadata(session) {
             return {
                 super: t.TypeId || ID_ROOT_LINK,
                 id: t.Id,
-                name: t.Name,
-                label: t.Name
+                props: {
+                    name: t.Name,
+                    label: t.Name
+                }
             };
         }
         let logstr = logger('Link', 'L', data =>  `${data.Name}`);
