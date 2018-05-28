@@ -29,13 +29,13 @@ function log(key, template) {
     };
 }
 
-function filter(f, pass_through = false) {
+function filter(f) {
     let stream;
     async function transform(obj, encoding, cb) {
         try {
             let p = f && f(obj);
             p = await p;
-            if (p || pass_through) {
+            if (p) {
                 stream.push(obj);
             }
             cb();
