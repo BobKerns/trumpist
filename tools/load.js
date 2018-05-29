@@ -47,9 +47,11 @@ MATCH (s:_Meta {id: n.super})
 MERGE (n)-[:SUPER]->(s)
 REMOVE n.super;`;
 
+const ID_NULL_NODE = '00000000-0000-0000-0000-000000000000';
+
 // Statement to create the roots of our metatype hierarchies.
 const C_ROOTS = `
-MERGE(x:_Meta {name: "--NULL--", label: '--NULL--', id: '00000000-0000-0000-0000-000000000000'})
+MERGE(x:_Meta:Node {name: "--NULL--", label: '--NULL--', id: "${ID_NULL_NODE}"})
 MERGE(n:${L_TYPE} {name: "Node", label: "Node", id: "${ID_ROOT_TYPE}"})
 MERGE(t:${L_TAG} {name: "Tag", label: "Tag", id: "${ID_ROOT_TAG}"})
 MERGE(s:${L_SPECIAL} {name: "Special", label: "Special", id: "${ID_ROOT_SPECIAL}"})
@@ -93,7 +95,7 @@ function nodeLogger(tname, tag) {
 
 //Get a data logging function
 function linkLogger(tname, tag) {
-    return logger2(tname, tag, data => `${data.Kind} ${data.link_label || '?'} ${data.Name || data.Label || '--'}`);
+    return logger2(tname, tag, data => `${data.Kind}/${data.Meaning} [:${data.link_label || '?'} {Name: "${data.Name || '--'}", Label: "${data.Label || '--'}"}]`);
 }
 
 // Get a generic logging & counting stream
@@ -114,8 +116,10 @@ const TAGS = {};
 const SPECIALS = {};
 const LINKS = {};
 
-function kind(k) {
-    return filter(t => t.Kind === k);
+LINKS[ID_NULL_NODE] = {};
+
+function kind(...k) {
+    return filter(t => R.contains(t.Kind, k));
 }
 
 function openJSON(file) {
@@ -202,7 +206,7 @@ function linkOpts(t, parent) {
     let result = nodeOpts(t, parent);
     let flags = t.Direction < 0 ? 0 : t.Direction;
     let hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === 1));
-    let reversed = result.props.dir_reversed = (flags & FLAG_REVERSED) > 0;
+    let reversed = result.props.dir_reversed = (flags & FLAG_REVERSED) > 0 || t.Meaning in [2, 5];
     result.props.dir_shown = (flags & FLAG_DIRECTONAL) > 0;
     result.props.dir_one_way = (flags & FLAG_ONE_WAY) > 0;
     result.props.dir_specified = (flags & FLAG_SPECIFIED) > 0;
@@ -224,7 +228,7 @@ function linkProtoLabel(t) {
     let tid = t.TypeId;
     let proto = tid && LINKS[tid];
     if (proto) {
-        return `\`${proto.Name}\`:Link`;
+        return proto.Name;
     }
     return 'Link';
 }
@@ -237,6 +241,9 @@ function linkMeaningLabel(t) {
             return null;
         case 2:
             return 'TYPE_';
+        case 3:
+            //return 'XXX_';
+            return null;
         case 5:
             return 'TAG_';
         case 6:
@@ -268,7 +275,7 @@ async function loadLinkMetadata(session) {
             };
         }
         tail = parser
-            .pipe(kind(2))
+            .pipe(kind(2, 3))
             .pipe(thru(check(t => t.link_label = linkLabel(t))))
             .pipe(thru(t => LINKS[t.Id] = t))
             .pipe(thru(t => tx.run(C_ADD_LINK, linkOpts(t, t.TypeId || ID_ROOT_LINK))))
@@ -317,26 +324,33 @@ async function loadNodes(session) {
 
 function getLinkStmt(t) {
     let id = t.TypeId;
+    if (id && !LINKS[id]) {
+        throw new Error(`Missing type definition: ${id}`);
+    }
     let existing = id &&  LINKS[id].statement;
     if (existing) {
         return existing;
     }
-    let labels = (id && LINKS[id].link_label) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label;
-    if (!labels) {
+    let parent = (id && (LINKS[id].Name || LINKS[id].Label));
+    let label =  parent || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label;
+    if (!label) {
         throw new Error('unknown link label');
     }
     let stmt = `
 MATCH (f:Node {id: $from_id})
 MATCH (t:Node {id: $to_id})
-WHERE NOT (f)-[:SUPER]-(t)
-MERGE (f)-[l:${labels} {id: $id}]->(t)
+//WHERE NOT (f)-[:SUPER]-(t)
+MERGE (f)-[l:\`${label}\` {id: $id}]->(t)
 SET l += $props;`;
     if (id) {
         LINKS[id].statement = stmt;
+        t.statement = stmt;
+        t.link_label = label;
     }
     return stmt;
 }
 
+// Load the actual link data.
 async function loadLinks(session) {
     let {input, parser, path} = openJSON('links.json');
     console.log(`Loading links from ${path}.`);
@@ -344,7 +358,7 @@ async function loadLinks(session) {
         let logstr = linkLogger('Links', '-');
         let typeidLabel = t => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].link_label);
         let tail = parser
-            .pipe(kind(1))
+            //.pipe(kind(1))
             .pipe(thru(t => t.link_options = linkOpts(t)))
             .pipe(thru(t => t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)))
             .pipe(thru(t => tx.run(getLinkStmt(t), t.link_options)
@@ -375,4 +389,3 @@ async function load() {
 }
 
 load();
-
