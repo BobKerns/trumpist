@@ -17,14 +17,12 @@ function done(stream) {
 }
 
 
-function log(key, template) {
+function logstream(log, key, template) {
     return function (data) {
         try {
-            // eslint-disable-next-line no-console
-            console.log(`${key}: ${template(data)}`);
+            log.info(`${key}: ${template(data)}`);
         } catch (e) {
-            // eslint-disable-next-line no-console
-            console.error(`${key}: ${e.message || e}`);
+            log.error(`${key}: ${e.message || e}`);
         }
     };
 }
@@ -63,7 +61,7 @@ function split(input, ...outputs) {
 
 module.exports = {
     pipeline,
-    log,
+    logstream: logstream,
     sink,
     filter,
     thru,

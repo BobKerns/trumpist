@@ -4,10 +4,12 @@
     "bomstrip": "^0.1.4",
     "jsdom": "^11.0.0",
     "jsonlines": "^0.1.1",
+    "logform": "^1.7.0",
     "neo4j-driver": "^1.6.1",
     "ramda": "^0.25.0",
     "through2-filter": "^2.0.0",
-    "through2-spy": "^2.0.0"
+    "through2-spy": "^2.0.0",
+    "winston": "^3.0.0-rc6"
   },
   "deprecated": false,
   "description": "Tools for Trumpist Brain",

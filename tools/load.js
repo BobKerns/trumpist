@@ -1,8 +1,9 @@
-/* eslint-disable no-console */
 /*
  * Copyright (c) 2018 Bob Kerns.
  */
 "use strict";
+
+const log = require('./logging')('load');
 
 const jsonlines = require('jsonlines');
 //var fsp = require('fs/promises');
@@ -10,7 +11,7 @@ const fs = require('fs');
 
 const R = require('ramda');
 
-const {filter, sink, log, thru, done} = require('./streams');
+const {filter, sink, logstream, thru, done} = require('./streams');
 const {join, dirname, resolve} = require('path');
 
 const basedir = dirname(dirname(module.filename));
@@ -159,8 +160,8 @@ function logger2(tname, tag, f) {
         counter++;
         return s;
     }
-    let s = sink(log(tag, data => count(f(data))));
-    s.on('finish', () => console.log(`${tag}: ===> Loaded ${counter} ${tname} types`));
+    let s = sink(logstream(log, tag, data => count(f(data))));
+    s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tname} types`));
     return s;
 }
 
@@ -226,7 +227,7 @@ function nodeOpts(t) {
 
 async function loadNodeMetadata(session) {
     let {input, parser, path} = openJSON('thoughts.json');
-    console.log(`Scanning ${path} for node metadata.`);
+    log.info(`Scanning ${path} for node metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_NODE));
     await session.writeTransaction(tx => tx.run(C_INDEX_NODE_NAME));
     await session.writeTransaction(tx => tx.run(C_INDEX_NODE_LABEL));
@@ -260,7 +261,7 @@ async function loadNodeMetadata(session) {
             doKind('Special', 'S', 5, C_ADD_SPECIAL, SPECIALS)
         ]);
         if (!tx.isOpen()) {
-            console.error('Transaction is closed.');
+            log.error('Transaction is closed.');
         }
     });
 }
@@ -268,14 +269,16 @@ async function loadNodeMetadata(session) {
 const RE_LABEL = /[^a-zA-Z0-9:]/g;
 
 async function loadTypeLabels(session) {
-    console.log('Loading composite node type labels from database');
+    log.info('Loading composite node type labels from database');
+    let failure = null;
     let processData = data => {
         try {
             let labels = data.get('labels').split(':').map(v => v.replace(RE_LABEL, '_')).join(':');
             TYPES[data.get('id')].labels = labels;
             return data;
         } catch (e) {
-            console.error("FAIL: ${e.message}");
+            log.error("FAIL: ${e.message}");
+            throw e;
         }
     };
     let tail;
@@ -283,7 +286,13 @@ async function loadTypeLabels(session) {
     tail = resultStream(session.run(C_LOAD_TYPE_LABELS))
         .pipe(thru2(processData))
         .pipe(logger2('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`));
-    return done(tail);
+    return done(tail)
+        .then(v => {
+            if (failure) {
+                throw failure;
+            }
+            return v;
+        })
 }
 
 function linkOpts(t) {
@@ -339,7 +348,7 @@ async function loadLinkTypes(session) {
     };
     let logstr = linkLogger('Link', 'L');
     let {input, parser, path} = openJSON(('links.json'));
-    console.log(`Scanning ${path} for link metadata.`);
+    log.info(`Scanning ${path} for link metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
         let tail;
@@ -363,7 +372,7 @@ async function loadLinkTypes(session) {
 async function loadSupertypeRelations(session) {
     let logstr = linkLogger('Link', 'L');
     let {input, parser, path} = openJSON(('links.json'));
-    console.log(`Scanning ${path} for supertype metadata.`);
+    log.info(`Scanning ${path} for supertype metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
         let tail;
@@ -394,12 +403,12 @@ const util = require('util');
 async function loadMetadata(session) {
     await loadNodeMetadata(session);
     await loadLinkMetadata(session);
-    console.log('Linking to root types');
+    log.info('Linking to root types');
     await session.writeTransaction(tx => tx.run(C_LINK_ROOTS, {})
         .then(v => {
-            console.log("LINKED: " + util.inspect(v));
+            log.info("LINKED: " + util.inspect(v));
         }).catch(e => {
-            console.error(`Failed to link roots: ${e.message}`);
+            log.error(`Failed to link roots: ${e.message}`);
             throw e;
         }));
     await loadTypeLabels(session);
@@ -422,7 +431,7 @@ SET n += $props;`;
 
 async function loadNodes(session) {
     let {input, parser, path} = openJSON('thoughts.json');
-    console.log(`Loading nodes from ${path}.`);
+    log.info(`Loading nodes from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = nodeLogger('Nodes', 'N');
         let tail = parser
@@ -471,7 +480,7 @@ RETURN l;`;
 // Load the actual link data.
 async function loadLinks(session) {
     let {input, parser, path} = openJSON('links.json');
-    console.log(`Loading links from ${path}.`);
+    log.info(`Loading links from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = linkLogger('Links', '-');
         let typeidLabel = t => {
@@ -504,7 +513,7 @@ async function load() {
         await loadNodes(session);
         await loadLinks(session);
     } catch (e) {
-        console.error(`Error: ${e.code || 'MISC'} ${e.message} ${e.stack}`);
+        log.error(`Error: ${e.code || 'MISC'} ${e.message} ${e.stack}`);
     } finally {
         session.close();
         driver.close();
