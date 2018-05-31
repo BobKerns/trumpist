@@ -27,7 +27,8 @@ const braindir = join(basedir, 'brain');
 
 const {MEANING, MEANING_IDS,
     ID_NULL_NODE,
-    FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED
+    FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED,
+    KIND
 } = require('./brain');
 
 const {resultStream} = require('./result-stream');
@@ -261,29 +262,50 @@ async function loadNodeMetadata(session) {
     await session.writeTransaction(tx => tx.run(C_INDEX_SPECIAL_LABEL));
     await session.writeTransaction(tx => tx.run(C_ROOTS));
     await session.writeTransaction(async tx => {
-        async function doKind(tName, tag, k, stmt, obj) {
-            let logstr = nodeLogger(tName, tag);
-            let tail;
-            let thru2 = checkStep(() => tail, thru);
-            // noinspection JSUnresolvedFunction
-            tail = parser
-                .pipe(kind(k))
-                .pipe(thru2(t => obj[t.Id] = t))
-                .pipe(thru2(t => tx.run(stmt, nodeOpts(t))
-                    .catch(e => tail.emit('error', e))))
-                .pipe(logstr)
-                .on('error', () => input.close());
-            return await done(tail);
+        let logstr = nodeLogger('Metadata', 'M');
+        let tail, dead;
+        let fail = e => {
+            dead = true;
+            input.destroy(e);
+            tail.destroy(e);
+        };
+        async function doMetadata(data) {
+            if (dead) {
+                log.info(`Skipping ${data.Id} due to prior error`);
+                return false;
+            }
+            try {
+                switch (data.Kind) {
+                    case KIND.TYPE:
+                        TYPES[data.Id] = data;
+                        await tx.run(C_ADD_TYPE, nodeOpts(data));
+                        return true;
+                    case KIND.TAG:
+                        TAGS[data.Id] = data;
+                        await tx.run(C_ADD_TAG, nodeOpts(data));
+                        return true;
+                    case KIND.SPECIAL:
+                        SPECIALS[data.Id] = data;
+                        await tx.run(C_ADD_SPECIAL, nodeOpts(data));
+                        return true;
+                    case KIND.NODE:
+                        return false;
+                    default:
+                        // noinspection ExceptionCaughtLocallyJS
+                        throw new Error(`Unknown Kind: ${data.Kind}`);
+                }
+            } catch (e) {
+                fail(e);
+                throw e;
+            }
         }
-
-        await Promise.all([
-            doKind('Node Type', 'N', 2, C_ADD_TYPE, TYPES),
-            doKind('Tag', 'T', 4, C_ADD_TAG, TAGS),
-            doKind('Special', 'S', 5, C_ADD_SPECIAL, SPECIALS)
-        ]);
-        if (!tx.isOpen()) {
-            log.error('Transaction is closed.');
-        }
+        let filter2 = checkStep(() => tail, filter);
+        // noinspection JSUnresolvedFunction
+        tail = parser
+            .pipe(filter2(doMetadata))
+            .pipe(logstr)
+            .on('error', (e) => fail(e));
+        return await done(tail);
     });
 }
 
