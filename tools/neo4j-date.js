@@ -7,7 +7,7 @@ const {types: {DateTime}} = require('neo4j-driver').v1;
 function convertDateTime(date) {
     if (date instanceof Date) {
         // All set
-    } else if ((typeof date === 'string') || (typeof date == 'number')) {
+    } else if ((typeof date === 'string') || (typeof date === 'number')) {
         date = new Date(date);
     } else {
         throw new TypeError(`Incorrect type in convertDateTime(${date})`);
