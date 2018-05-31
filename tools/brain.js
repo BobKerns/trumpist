@@ -22,7 +22,7 @@ R.forEachObjIndexed((val, key) => {
 
 const ID_NULL_NODE = '00000000-0000-0000-0000-000000000000';
 
-const FLAG_DIRECTONAL = 1;
+const FLAG_DIRECTIONAL = 1;
 const FLAG_REVERSED = 2;
 const FLAG_ONE_WAY = 4;
 const FLAG_SPECIFIED = 8;
@@ -32,8 +32,79 @@ module.exports = {
     MEANING,
     MEANING_IDS,
     ID_NULL_NODE,
-    FLAG_DIRECTONAL,
+    FLAG_DIRECTIONAL: FLAG_DIRECTIONAL,
     FLAG_REVERSED,
     FLAG_ONE_WAY,
     FLAG_SPECIFIED
 };
+
+/**
+ * @name Link
+ * @interface
+ */
+
+/**
+ * @memberOf Link
+ * @name Kind
+ * @type number
+ */
+
+/**
+ * @memberOf Link
+ * @name Label
+ * @type string
+ */
+
+/**
+ * @memberOf Link
+ * @name Meaning
+ * @type number
+ */
+
+/**
+ * @memberOf Link
+ * @name Direction
+ * @type number
+ */
+
+/**
+* @memberOf Link
+* @name Relation
+* @type number
+*/
+
+/**
+ * @memberOf Link
+ * @name TypeId
+ * @type String
+ */
+
+/**
+ * @memberOf Link
+ * @name Id
+ * @type String
+ */
+
+/**
+ * @memberOf Link
+ * @name CreationDateTime
+ * @type String
+ */
+
+/**
+ * @memberOf Link
+ * @name ModificationDateTime
+ * @type String
+ */
+
+/**
+ * @memberOf Link
+ * @name ThoughtIdA
+ * @type String
+ */
+
+/**
+ * @memberOf Link
+ * @name ThoughtIdB
+ * @type String
+ */

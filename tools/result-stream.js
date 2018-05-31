@@ -48,11 +48,13 @@ class ResultStream extends Readable {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     _read() {
         this._continue();
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 module.exports = {
     ResultStream: ResultStream,
     resultStream(result) {
