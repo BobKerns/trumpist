@@ -10,4 +10,3 @@ build/
 *.save
 **/node_modules/**
 **/out/**
-.idea/vagrant.xml
