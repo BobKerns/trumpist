@@ -3,9 +3,17 @@
  */
 "use strict";
 
+// noinspection SpellCheckingInspection
+
 const log = require('./logging')('load');
 
-const jsonlines = require('jsonlines');
+/** @namespace */
+const jsonLines = require('jsonlines');
+/**
+ * @returns Duplex
+ */
+const makeJSONParser = jsonLines.parse;
+
 //var fsp = require('fs/promises');
 const fs = require('fs');
 
@@ -19,11 +27,13 @@ const braindir = join(basedir, 'brain');
 
 const {MEANING, MEANING_IDS,
     ID_NULL_NODE,
-    FLAG_DIRECTONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED
+    FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED,
+    KIND
 } = require('./brain');
 
 const {resultStream} = require('./result-stream');
 
+/** @type Duplex */
 const Bomstrip = require('bomstrip');
 
 const {convertDateTime} = require('./neo4j-date');
@@ -65,26 +75,26 @@ RETURN *;`;
 
 // Statement to link the top nodes to the roots of the metadata hierarchies.
 const C_LINK_ROOTS = `
-MATCH (nroot:${L_TYPE} {id: "${ID_ROOT_TYPE}"})
-MATCH (troot:${L_TAG} {id: "${ID_ROOT_TAG}"})
-MATCH (sroot:${L_SPECIAL} {id: "${ID_ROOT_SPECIAL}"})
-MATCH (lroot:${L_LINK} {id: "${ID_ROOT_LINK}"})
-WITH nroot, troot, sroot, lroot
+MATCH (nRoot:${L_TYPE} {id: "${ID_ROOT_TYPE}"})
+MATCH (tRoot:${L_TAG} {id: "${ID_ROOT_TAG}"})
+MATCH (sRoot:${L_SPECIAL} {id: "${ID_ROOT_SPECIAL}"})
+MATCH (lRoot:${L_LINK} {id: "${ID_ROOT_LINK}"})
+WITH nRoot, tRoot, sRoot, lRoot
 MATCH (n:${L_TYPE})
 WHERE n.brain_TypeId IS NULL AND n.id <> "${ID_ROOT_TYPE}"
-MERGE (n)-[nl:_SUPER]->(nroot)
-WITH count(nl) AS types, troot, sroot, lroot
+MERGE (n)-[nl:_SUPER]->(nRoot)
+WITH count(nl) AS types, tRoot, sRoot, lRoot
 MATCH (t:${L_TAG})
 WHERE t.brain_TypeId IS NULL AND t.id <> "${ID_ROOT_TAG}"
-MERGE (t)-[nt:_SUPER]->(troot)
-WITH types, count(nt) AS tags, sroot, lroot
+MERGE (t)-[nt:_SUPER]->(tRoot)
+WITH types, count(nt) AS tags, sRoot, lRoot
 MATCH (s:${L_SPECIAL})
 WHERE s.brain_TypeId IS NULL AND s.id <> "${ID_ROOT_SPECIAL}"
-MERGE (s)-[ns:_SUPER]->(sroot)
-with types, tags, count(ns) AS supers, lroot
+MERGE (s)-[ns:_SUPER]->(sRoot)
+WITH types, tags, count(ns) AS supers, lRoot
 MATCH (l:${L_LINK})
 WHERE l.brain_TypeId IS NULL AND l.id <> "${ID_ROOT_LINK}"
-MERGE (l)-[nl:_SUPER]->(lroot)
+MERGE (l)-[nl:_SUPER]->(lRoot)
 RETURN types, tags, supers, count(nl) AS links;`;
 
 
@@ -131,37 +141,42 @@ WITH DISTINCT path, p, s
 RETURN p.id AS id, REDUCE(s=p.name, x IN TAIL(NODES(path)) | s + ':' + x.name) AS labels;`;
 
 //Get a data logging function
-function nodeLogger(tname, tag) {
+function nodeLogger(tName, tag) {
     let f = data => {
+        /**
+         * @name data
+         * @type Link
+         */
         if (!data.Id) {
             throw data;
         }
         return `${data.Id} ${data.Kind} ${data.Name || 'Unnamed'} / ${data.Label || data.Name || 'Unnamed'}`;
     };
-    return logger2(tname, tag, f);
+    return logger2(tName, tag, f);
 }
 
 //Get a data logging function
-function linkLogger(tname, tag) {
+function linkLogger(tName, tag) {
     let f = data => {
         let opts = !data.Name
             ? ''
             : ` {Name: "${data.Name || '--'}"}`;
         return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts}}]->(${data.ThoughtIdB})`;
     };
-    return logger2(tname, tag, f);
+    return logger2(tName, tag, f);
 }
 
 // Get a generic logging & counting stream
 // f(data) -> message
-function logger2(tname, tag, f) {
+function logger2(tName, tag, f) {
     let counter = 0;
     function count(s) {
         counter++;
         return s;
     }
+    /** @type Writable */
     let s = sink(logstream(log, tag, data => count(f(data))));
-    s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tname} types`));
+    s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
     return s;
 }
 
@@ -191,14 +206,21 @@ const LINKS = {};
 
 LINKS[ID_NULL_NODE] = {};
 
+/**
+ * Filter on Kind field
+ * @param {number} k
+ * @returns {Stream}
+ */
 function kind(...k) {
     return filter(t => R.contains(t.Kind, k));
 }
 
 function openJSON(file) {
     let path = resolve(braindir, file);
+    /** @type Readable */
     let input = fs.createReadStream(path, 'utf8');
-    let parser = jsonlines.parse();
+    /** Duplex */
+    let parser = makeJSONParser();
     input
         .pipe(new Bomstrip())
         .pipe(parser);
@@ -212,7 +234,7 @@ function nodeOpts(t) {
     let brainProps = {};
     let fix = v => (typeof v === 'number' ? neo4j.int(v) : v);
     brainKeys.forEach(k => brainProps['brain_' + k] = fix(t[k]));
-    return result = {
+    return {
         id: t.Id,
         props: {
             name: t.Name,
@@ -240,28 +262,50 @@ async function loadNodeMetadata(session) {
     await session.writeTransaction(tx => tx.run(C_INDEX_SPECIAL_LABEL));
     await session.writeTransaction(tx => tx.run(C_ROOTS));
     await session.writeTransaction(async tx => {
-        async function doKind(tname, tag, k, stmt, obj) {
-            let logstr = nodeLogger(tname, tag);
-            let tail;
-            let thru2 = checkStep(() => tail, thru);
-            tail = parser
-                .pipe(kind(k))
-                .pipe(thru2(t => obj[t.Id] = t))
-                .pipe(thru2(t => tx.run(stmt, nodeOpts(t))
-                    .catch(e => tail.emit('error', e))))
-                .pipe(logstr)
-                .on('error', () => input.close());
-            return done(tail);
+        let logstr = nodeLogger('Metadata', 'M');
+        let tail, dead;
+        let fail = e => {
+            dead = true;
+            input.destroy(e);
+            tail.destroy(e);
+        };
+        async function doMetadata(data) {
+            if (dead) {
+                log.info(`Skipping ${data.Id} due to prior error`);
+                return false;
+            }
+            try {
+                switch (data.Kind) {
+                    case KIND.TYPE:
+                        TYPES[data.Id] = data;
+                        await tx.run(C_ADD_TYPE, nodeOpts(data));
+                        return true;
+                    case KIND.TAG:
+                        TAGS[data.Id] = data;
+                        await tx.run(C_ADD_TAG, nodeOpts(data));
+                        return true;
+                    case KIND.SPECIAL:
+                        SPECIALS[data.Id] = data;
+                        await tx.run(C_ADD_SPECIAL, nodeOpts(data));
+                        return true;
+                    case KIND.NODE:
+                        return false;
+                    default:
+                        // noinspection ExceptionCaughtLocallyJS
+                        throw new Error(`Unknown Kind: ${data.Kind}`);
+                }
+            } catch (e) {
+                fail(e);
+                throw e;
+            }
         }
-
-        await Promise.all([
-            doKind('Node Type', 'N', 2, C_ADD_TYPE, TYPES),
-            doKind('Tag Type', 'T', 4, C_ADD_TAG, TAGS),
-            doKind('Special', 'S', 5, C_ADD_SPECIAL, SPECIALS)
-        ]);
-        if (!tx.isOpen()) {
-            log.error('Transaction is closed.');
-        }
+        let filter2 = checkStep(() => tail, filter);
+        // noinspection JSUnresolvedFunction
+        tail = parser
+            .pipe(filter2(doMetadata))
+            .pipe(logstr)
+            .on('error', (e) => fail(e));
+        return await done(tail);
     });
 }
 
@@ -286,7 +330,7 @@ async function loadTypeLabels(session) {
     tail = resultStream(session.run(C_LOAD_TYPE_LABELS))
         .pipe(thru2(processData))
         .pipe(logger2('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`));
-    return done(tail)
+    return await done(tail)
         .then(v => {
             if (failure) {
                 throw failure;
@@ -300,7 +344,7 @@ function linkOpts(t) {
     let flags = t.Direction < 0 ? 0 : t.Direction;
     let hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL.code));
     let reversed = result.props.dir_reversed = (flags & FLAG_REVERSED) > 0 || MEANING_IDS[t.Meaning].reverse;
-    result.props.dir_shown = (flags & FLAG_DIRECTONAL) > 0;
+    result.props.dir_shown = (flags & FLAG_DIRECTIONAL) > 0;
     result.props.dir_one_way = (flags & FLAG_ONE_WAY) > 0;
     result.props.dir_specified = (flags & FLAG_SPECIFIED) > 0;
     if (reversed && ((t.Meaning !== 1) || !hierarchy)) {
@@ -357,6 +401,7 @@ async function loadLinkTypes(session) {
         let proc = t => {
             return tx.run(C_ADD_LINK, linkOpts(t));
         };
+        // noinspection JSUnresolvedFunction
         tail = parser
             .pipe(filter2(t => t.Meaning === MEANING.PROTO.code))
             .pipe(thru2(t => t.link_label = linkLabel(t)))
@@ -387,6 +432,7 @@ async function loadSupertypeRelations(session) {
                     throw e;
                 });
         };
+        // noinspection JSUnresolvedFunction
         tail = parser
             .pipe(filter2(t => t.Meaning === MEANING.SUBTYPE.code))
             .pipe(thru2(t => LINKS[t.Id] = t))
@@ -434,13 +480,14 @@ async function loadNodes(session) {
     log.info(`Loading nodes from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = nodeLogger('Nodes', 'N');
+        // noinspection JSUnresolvedFunction
         let tail = parser
             .pipe(kind(1))
             .pipe(thru(t => tx.run(getNodeStmt(t), nodeOpts(t))
                 .catch(e => tail.emit('error', e))))
             .pipe(logstr);
         tail.on('error', () => input.close());
-        return done(tail);
+        return await done(tail);
     });
 }
 
@@ -483,12 +530,11 @@ async function loadLinks(session) {
     log.info(`Loading links from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = linkLogger('Links', '-');
-        let typeidLabel = t => {
-            return (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
-        };
+        let typeidLabel = t => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
         let tail;
         let filter2 = checkStep(() => tail, filter);
         let thru2 = checkStep(() => tail, thru);
+        // noinspection JSUnresolvedFunction
         tail = parser
             .pipe(filter2(t => t.Meaning !== MEANING.PROTO.code && t.Meaning !== MEANING.SUBTYPE.code))
             .pipe(thru2(t => t.link_options = linkOpts(t)))
@@ -500,7 +546,7 @@ async function loadLinks(session) {
                 })))
             .pipe(logstr)
             .on('error', () => input.close());
-        return done(tail);
+        return await done(tail);
     });
 }
 
@@ -514,10 +560,11 @@ async function load() {
     } catch (e) {
         log.error(`Error: ${e.code || 'MISC'} ${e.message} ${e.stack}`);
     } finally {
-        session.close();
-        driver.close();
+        await session.close();
+        await driver.close();
     }
 
 }
 
-load();
+load()
+    .catch(() => process.exit(-1));
