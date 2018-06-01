@@ -63,7 +63,7 @@ MERGE (s:${L_SPECIAL} {name: "Special", label: "Special", id: "${ID_ROOT_SPECIAL
 MERGE (l:${L_LINK} {name: "Link", label: "Link", id: "${ID_ROOT_LINK}"})
 RETURN *;`;
 
-// Statement to link the top nodes to the roots of the metadata hiearchies.
+// Statement to link the top nodes to the roots of the metadata hierarchies.
 const C_LINK_ROOTS = `
 MATCH (nroot:${L_TYPE} {id: "${ID_ROOT_TYPE}"})
 MATCH (troot:${L_TAG} {id: "${ID_ROOT_TAG}"})
@@ -137,7 +137,7 @@ function nodeLogger(tname, tag) {
             throw data;
         }
         return `${data.Id} ${data.Kind} ${data.Name || 'Unnamed'} / ${data.Label || data.Name || 'Unnamed'}`;
-    }
+    };
     return logger2(tname, tag, f);
 }
 
@@ -148,7 +148,7 @@ function linkLogger(tname, tag) {
             ? ''
             : ` {Name: "${data.Name || '--'}"}`;
         return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts}}]->(${data.ThoughtIdB})`;
-    }
+    };
     return logger2(tname, tag, f);
 }
 
@@ -212,7 +212,7 @@ function nodeOpts(t) {
     let brainProps = {};
     let fix = v => (typeof v === 'number' ? neo4j.int(v) : v);
     brainKeys.forEach(k => brainProps['brain_' + k] = fix(t[k]));
-    let result = {
+    return result = {
         id: t.Id,
         props: {
             name: t.Name,
@@ -222,7 +222,6 @@ function nodeOpts(t) {
             ...brainProps
         }
     };
-    return result;
 }
 
 async function loadNodeMetadata(session) {
@@ -273,6 +272,7 @@ async function loadTypeLabels(session) {
     let failure = null;
     let processData = data => {
         try {
+            // noinspection UnnecessaryLocalVariableJS
             let labels = data.get('labels').split(':').map(v => v.replace(RE_LABEL, '_')).join(':');
             TYPES[data.get('id')].labels = labels;
             return data;
@@ -484,8 +484,7 @@ async function loadLinks(session) {
     await session.writeTransaction(async tx => {
         let logstr = linkLogger('Links', '-');
         let typeidLabel = t => {
-            let label = (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
-            return label;
+            return (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
         };
         let tail;
         let filter2 = checkStep(() => tail, filter);
