@@ -2,11 +2,21 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * @module streams
+ */
+
 "use strict";
 const util = require('util');
-const { Transform, pipeline: s_pipeline, finished: s_finished } = require('stream');
+const { Transform,
+    /** @interface */
+    Readable,
+    Duplex, Writable, pipeline: s_pipeline, finished: s_finished } = require('stream');
 const pipeline = util.promisify(s_pipeline);
 const finished = util.promisify(s_finished);
+
+/** @type external:Duplex */
+const Bomstrip = require('bomstrip');
 
 function done(stream) {
     return new Promise((resolve, reject) => {
@@ -30,7 +40,7 @@ function logstream(log, key, template) {
 /**
  * Produce a filter stream
  * @param {filterCallback} f
- * @returns {Duplex}
+ * @returns {external:Duplex}
  */
 function filter(f) {
     let stream;
@@ -60,7 +70,7 @@ function filter(f) {
 /**
  * Produce an output stream to serve as destination.
  * @param {sinkCallback} f
- * @returns {Writable}
+ * @returns {external:Writable}
  */
 function sink(f) {
     let s = filter(v => ++s.count && f && f(v) && false);
@@ -82,7 +92,7 @@ function sink(f) {
 /**
  * Produce a stream that processes output
  * @param {thruCallback} f
- * @returns {Duplex}
+ * @returns {external:Duplex}
  */
 function thru(f) {
     return filter(v => (f && f(v)) || true);
@@ -93,6 +103,10 @@ function split(input, ...outputs) {
 }
 
 module.exports = {
+    Readable,
+    Writable,
+    Duplex,
+    Transform,
     pipeline,
     logstream: logstream,
     sink,
@@ -100,71 +114,54 @@ module.exports = {
     thru,
     split,
     finished,
-    done
+    done,
+    Bomstrip
 };
 
 /**
- * @name EventEmitter
- * @interface
+ * JSDOoc declarations to inform the type inferencing so we don't get spurious warnings.
  */
 
 /**
- * @name on
- * @param {string} event
- * @param {function} handler
+ * @interface external:Stream
  */
 
 /**
- * @name Writable
- * @interface
- * @implements EventEmitter
+ * @interface external:Parser
+ * @implements external:Stream
  */
 
 /**
- * @name Readable
- * @interface
- * @implements EventEmitter
+ * @interface external:Writable
+ * @implements external:Stream
  */
 
+
 /**
- * @name Duplex
- * @interface
+ * @interface external:Duplex
  * @implements Readable
- * @implements Writable
- * @implements EventEmitter
+ * @implements external:Writable
+ * @implements external:Stream
  */
 
 /**
  * @method
- * @name Readable#on
- * @alias Writable#on
+ * @name external:Writable~on
  * @param {string} event
- * @param (function} handler
- * @returns {Readable}
- */
-
-/**
- * @typedef {(Readable|Writable|Duplex|Parser)} Stream
+ * @param {function():*} handler
+ * @returns {external:Stream}
  */
 
 /**
  * @method
- * @name Readable#pipe
- * @param {Stream} out
- * @returns {Stream}
+ * @name Readable~pipe
+ * @param {external:Writable} out
+ * @returns {external:Writable}
  */
 
 /**
-* @method
-* @name Stream#pipe
-* @param {Stream} out
-* @returns {Stream}
-*/
-
-
-/*
-* @method
-* @name Parser#pipe
-* @param {Stream} out
-* @returns {Stream}
-*/
+ * @method
+ * @name external:Duplex~pipe
+ * @param {external:Writable} out
+ * @returns {external:Writable}
+ */

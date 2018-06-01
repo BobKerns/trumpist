@@ -2,13 +2,17 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * @module dbaccess
+ */
+
 const neo4j = require('neo4j-driver').v1;
-const DatabaseAccess = require('./database');
+const DatabaseAccess = require('./database/access');
 const {Driver, Session, Transaction, Query} = DatabaseAccess.impl;
 
 /**
- * Connector for Neo4J 3.4 database.
- * @implements Connector
+ * Provider for Neo4J 3.4 database.
+ * @implements Provider
  */
 class Neo4JConnector_3_4 {
     /**
@@ -30,8 +34,8 @@ class Neo4JConnector_3_4 {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * See @{link Connector#withDatabase}
-     * @param {Connector~driverCallback} fn
+     * See @{link Provider#withDatabase}
+     * @param {Provider~driverCallback} fn
      * @returns {Promise<*>}
      */
     async withDatabase(fn) {

@@ -2,6 +2,10 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * @module dbaccess
+ */
+
 let COUNTER = 0;
 /**
  * Abstract query (standin)

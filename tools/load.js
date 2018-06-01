@@ -7,10 +7,10 @@
 
 const log = require('./logging')('load');
 
-/** @namespace */
+/** @external jsonLines */
 const jsonLines = require('jsonlines');
 /**
- * @returns Duplex
+ * @returns external:Duplex
  */
 const makeJSONParser = jsonLines.parse;
 
@@ -19,7 +19,7 @@ const fs = require('fs');
 
 const R = require('ramda');
 
-const {filter, sink, logstream, thru, done} = require('./streams');
+const {filter, sink, logstream, thru, done, Bomstrip} = require('./streams');
 const {join, dirname, resolve} = require('path');
 
 const basedir = dirname(dirname(module.filename));
@@ -29,14 +29,12 @@ const {MEANING, MEANING_IDS,
     ID_NULL_NODE,
     FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED,
     KIND
-} = require('./brain');
+} = require('./brain/brain');
 
-const {resultStream} = require('./result-stream');
 
-/** @type Duplex */
-const Bomstrip = require('bomstrip');
+const {resultStream} = require('./database/result-stream');
 
-const {convertDateTime} = require('./neo4j-date');
+const {convertDateTime} = require('./database/neo4j-date');
 
 const neo4j = require('neo4j-driver').v1;
 
@@ -168,13 +166,19 @@ function linkLogger(tName, tag) {
 
 // Get a generic logging & counting stream
 // f(data) -> message
+/**
+ * @param tName
+ * @param tag
+ * @param f
+ * @returns {external:Writable}
+ */
 function logger2(tName, tag, f) {
     let counter = 0;
     function count(s) {
         counter++;
         return s;
     }
-    /** @type Writable */
+    /** @type external:Writable */
     let s = sink(logstream(log, tag, data => count(f(data))));
     s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
     return s;
@@ -219,7 +223,7 @@ function openJSON(file) {
     let path = resolve(braindir, file);
     /** @type Readable */
     let input = fs.createReadStream(path, 'utf8');
-    /** Duplex */
+    /** external:Duplex */
     let parser = makeJSONParser();
     input
         .pipe(new Bomstrip())
@@ -327,9 +331,15 @@ async function loadTypeLabels(session) {
     };
     let tail;
     let thru2 = checkStep(() => tail, thru);
-    tail = resultStream(session.run(C_LOAD_TYPE_LABELS))
-        .pipe(thru2(processData))
-        .pipe(logger2('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`));
+    /**
+     *
+     * @type {external:Writable}
+     */
+    let log2 = logger2('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`);
+    /** @type {Readable} */
+    let rs = resultStream(session.run(C_LOAD_TYPE_LABELS));
+    tail = rs.pipe(thru2(processData))
+        .pipe(log2);
     return await done(tail)
         .then(v => {
             if (failure) {

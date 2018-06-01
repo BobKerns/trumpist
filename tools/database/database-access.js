@@ -3,12 +3,12 @@
  */
 
 /**
- * @module DatabaseAccess
+ * @module dbaccess
  */
 
 'use strict';
 
-const defaultLog = require('./logging')('database');
+const defaultLog = require('../logging')('database');
 const Query = require('./query');
 const Neo4JConnector_3_4 = require('./neo4j-connector');
 
@@ -18,7 +18,7 @@ const Neo4JConnector_3_4 = require('./neo4j-connector');
  *
  * Instantiating this is for configuration only. No external work is done until {@link DatabaseAccess#withDatabase} is
  * called (at the earliest).
- * @implements Connector
+ * @implements Provider
  */
 class DatabaseAccess {
     /**
@@ -37,7 +37,7 @@ class DatabaseAccess {
         switch (database) {
             case "neo4j":
             case "neo4j@3.4":
-                /** @type Connector */
+                /** @type Provider */
                 this.connector = new Neo4JConnector_3_4(this, options);
                 break;
             default:
@@ -47,7 +47,7 @@ class DatabaseAccess {
 
     /**
      * Access the database, ensuring cleanup.
-     * @param {Connector~driverCallback} fn Callback that performs work with access to this database.
+     * @param {Provider~driverCallback} fn Callback that performs work with access to this database.
      * @returns {Promise<*>} Returns a Promise with the value of _fn_, or reflecting any error thrown.
      */
     async withDatabase(fn) {
@@ -70,23 +70,50 @@ class DatabaseAccess {
 }
 
 /**
- * @interface Connector
+ * This is what to implement to provide a different database connection
+ * The implementation of {@link Provider} needs wrappers for the following:
+ * * {@link Driver}
+ * * {@link Session}
+ * * {@link Transaction}
+ * * (@link Query)
+ * * {@link Result}
+ * * {@link ResultSummary}
+ * * {@link ResultStream}
+ *
+ * @interface Provider
+ */
+
+/**
+ * This is what to implement to provide access to a result of running a {@link Query}. It provides access to one "row"
+ * or unit of possibly-repeated information.
+ * @interface Result
+ */
+
+/**
+ * Get a named value from the result.
+ * @memberOf Result
+ * @method get
+ */
+
+/**
+ * @interface ResultStream
+ * @implements external:Readable
  */
 
 /**
  * Callback to do work with one database.
  *
  * @async
- * @callback Connector~driverCallback
- * @param {Driver} driver A factory for sessions (aka connections).
+ * @callback Provider~driverCallback
+ * @param {module:dbaccess~Driver} driver A factory for sessions (aka connections).
  * @returns Promise
  */
 
 /**
  * @method
  * @async
- * @name Connector#withDatabase
- * @param {Connector~driverCallback} fn
+ * @name Provider#withDatabase
+ * @param {Provider~driverCallback} fn
  * @returns Promise
  */
 
@@ -102,6 +129,7 @@ let COUNT = 0;
 /**
  * A Driver wrapper for the underlying driver implementation that serves as a factory for connections.
  * @public
+ * @memberOf module:dbaccess
  */
 class Driver {
     // Internal

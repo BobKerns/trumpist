@@ -2,6 +2,10 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * @module dbaccess
+ */
+
 const {types: {DateTime}} = require('neo4j-driver').v1;
 
 function convertDateTime(date) {

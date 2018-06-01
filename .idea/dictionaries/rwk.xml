@@ -5,8 +5,10 @@
       <w>bomstrip</w>
       <w>braindir</w>
       <w>cabe</w>
+      <w>dbaccess</w>
       <w>dirname</w>
       <w>eslint</w>
+      <w>inferencing</w>
       <w>kerns</w>
       <w>logstr</w>
       <w>logstream</w>
@@ -15,6 +17,7 @@
       <w>metatype</w>
       <w>prevezon</w>
       <w>proc</w>
+      <w>ramda</w>
       <w>standin</w>
       <w>subtags</w>
       <w>thru</w>

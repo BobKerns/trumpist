@@ -3,8 +3,18 @@
  */
 "use Strict";
 
-const {Readable} = require('stream');
+/**
+ * @module dbaccess
+ */
 
+const {
+    /** @external Readable */
+    Readable
+} = require('stream');
+
+/**
+ * @implements external:Readable
+ */
 class ResultStream extends Readable {
     constructor(options) {
         super({...options, objectMode: true});
@@ -56,7 +66,13 @@ class ResultStream extends Readable {
 
 // noinspection JSUnusedGlobalSymbols
 module.exports = {
+    /** @type external:Readable */
     ResultStream: ResultStream,
+    /**
+     * Construct a result stream
+     * @param result
+     * @returns {external:Readable}
+     */
     resultStream(result) {
         return new ResultStream({result});
     }

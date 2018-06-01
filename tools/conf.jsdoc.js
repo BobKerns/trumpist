@@ -4,22 +4,21 @@
 
 module.exports = {
     "plugins": [
-        "plugins/markdown",
-        "plugins/summarize"
+        "plugins/markdown"
     ],
     "recurseDepth": 1,
     "source": {
-        "include": ["package.json", "../README.md"],
+        "include": ["package.json", "../README.md", "brain/", "database/"],
         "includePattern": ".+\\.js$",
         "excludePattern": "(^|\\/|\\\\)(_|#|\\.)"
     },
     "sourceType": "module",
     "tags": {
-    "allowUnknownTags": true,
+        "allowUnknownTags": true,
         "dictionaries": ["jsdoc","closure"]
-},
+    },
     "templates": {
-    "cleverLinks": false,
+        "cleverLinks": true,
         "monospaceLinks": false
     }
 };

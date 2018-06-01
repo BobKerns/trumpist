@@ -52,7 +52,8 @@
   },
   "scripts": {
     "test": "jest",
-    "jsdoc": "./node_modules/jsdoc/jsdoc.js --debug -c conf.jsdoc.js --package package.json --readme ../README.md ."
+    "jsdoc": "./node_modules/jsdoc/jsdoc.js --verbose --private -c conf.jsdoc.js .",
+    "doc": "npm run jsdoc && open out/${npm_package_name}/${npm_package_version}/index.html"
   },
   "version": "1.0.0"
 }
