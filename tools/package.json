@@ -15,9 +15,11 @@
   "description": "Tools for Trumpist Brain",
   "devDependencies": {
     "ajv": "^6.5.0",
-    "eslint": "^5.0.0-alpha.3"
+    "eslint": "^5.0.0-alpha.3",
+    "jest": "^23.1.0",
+    "jsdoc": "^3.5.5"
   },
-  "homepage": "https://github.com/bobkerns/tumpist#readme",
+  "homepage": "https://github.com/bobkerns/trumpist#readme",
   "keywords": [
     "server",
     "politics",
@@ -36,7 +38,7 @@
   "name": "trumpist",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bobkens/tumpist.git"
+    "url": "git+https://github.com/bobkens/trumpist.git"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -48,6 +50,9 @@
       "ecmaVersion": 2018
     }
   },
-  "scripts": {},
+  "scripts": {
+    "test": "jest",
+    "jsdoc": "./node_modules/jsdoc/jsdoc.js --debug -c conf.jsdoc.js --package package.json --readme ../README.md ."
+  },
   "version": "1.0.0"
 }
