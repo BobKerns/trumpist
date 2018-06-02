@@ -19,6 +19,9 @@
     "jest": "^23.1.0",
     "jsdoc": "^3.5.5"
   },
+  "directories": {
+    "doc": "doc"
+  },
   "homepage": "https://github.com/bobkerns/trumpist#readme",
   "keywords": [
     "server",
@@ -52,7 +55,7 @@
   },
   "scripts": {
     "test": "jest",
-    "jsdoc": "./node_modules/jsdoc/jsdoc.js --verbose --private -c conf.jsdoc.js .",
+    "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
     "doc": "npm run jsdoc && open out/${npm_package_name}/${npm_package_version}/index.html"
   },
   "version": "1.0.0"

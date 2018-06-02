@@ -3,18 +3,31 @@
  */
 "use strict";
 
+/**
+ * Module that loads data from a data source (exported JSON files) into the database.
+ * @module load
+ */
+
 // noinspection SpellCheckingInspection
 
 const log = require('./logging')('load');
 
-/** @external jsonLines */
-const jsonLines = require('jsonlines');
 /**
- * @returns external:Duplex
+ * @class JSONLines
+ * @protected
  */
-const makeJSONParser = jsonLines.parse;
+const JSONLines = require('jsonlines');
 
-//var fsp = require('fs/promises');
+/**
+ * @function parseJSON
+ * @memberOf JSONLines
+ * @protected
+ */
+const parseJSON = (options) => JSONLines.parse(options);
+
+/*
+ *
+ */
 const fs = require('fs');
 
 const R = require('ramda');
@@ -150,7 +163,7 @@ function nodeLogger(tName, tag) {
         }
         return `${data.Id} ${data.Kind} ${data.Name || 'Unnamed'} / ${data.Label || data.Name || 'Unnamed'}`;
     };
-    return logger2(tName, tag, f);
+    return countingLogger(tName, tag, f);
 }
 
 //Get a data logging function
@@ -161,7 +174,7 @@ function linkLogger(tName, tag) {
             : ` {Name: "${data.Name || '--'}"}`;
         return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts}}]->(${data.ThoughtIdB})`;
     };
-    return logger2(tName, tag, f);
+    return countingLogger(tName, tag, f);
 }
 
 // Get a generic logging & counting stream
@@ -170,66 +183,96 @@ function linkLogger(tName, tag) {
  * @param tName
  * @param tag
  * @param f
- * @returns {external:Writable}
+ * @returns {module:streams.Writable}
  */
-function logger2(tName, tag, f) {
+function countingLogger(tName, tag, f) {
     let counter = 0;
     function count(s) {
         counter++;
         return s;
     }
-    /** @type external:Writable */
+    /** @type module:streams.Writable */
     let s = sink(logstream(log, tag, data => count(f(data))));
     s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
     return s;
 }
 
-function checkStep(tail, s) {
+/**
+ *
+ * @param {function(): module:streams.Writable} tailFn -- a future value of tail, since we use this result in constructing it.
+ * @param {function(*): *} checkedFn
+ * @returns {function(*): *}
+ */
+function checkStep(tailFn, checkedFn) {
     function check(f) {
         return t => {
             try {
                 return f(t);
             } catch (e) {
-                tail().emit('error', e);
+                tailFn().destroy(e);
                 throw e;
             }
         };
     }
-    return f => s(check(f));
+    return f => checkedFn(check(f));
 }
 
+/**
+ * Table of node types.
+ * @type {{}}
+ */
 const TYPES = {
     [ID_NULL_NODE]: {
         Id: ID_NULL_NODE,
         link_label: 'Node:_Node'
     }
 };
+/**
+ * Table of tags
+ * @type {{}}
+ */
 const TAGS = {};
+/**
+ * Table of special nodes
+ * @type {{}}
+ */
 const SPECIALS = {};
+/**
+ * Table of link types
+ * @type {{}}
+ */
 const LINKS = {};
 
 LINKS[ID_NULL_NODE] = {};
 
 /**
- * Filter on Kind field
- * @param {number} k
- * @returns {Stream}
+ * Open a JSON-per-line file for reading.
+ * @param file
+ * @returns {{input: module:streams.Readable, parser: module:streams.Duplex, path: *}}
  */
-function kind(...k) {
-    return filter(t => R.contains(t.Kind, k));
-}
 
 function openJSON(file) {
     let path = resolve(braindir, file);
-    /** @type Readable */
-    let input = fs.createReadStream(path, 'utf8');
-    /** external:Duplex */
-    let parser = makeJSONParser();
+    /** @type {*} */
+    let f = fs.createReadStream(path, 'utf8');
+    ignore(f);
+    /** @type {module:streams.Readable} */
+    let input = f;
+    /** @type module:streams.Duplex */
+    let parser = parseJSON();
     input
         .pipe(new Bomstrip())
         .pipe(parser);
     return {input, parser, path};
 }
+
+function ignore() {
+
+}
+/**
+ *
+ * @type {string[]}
+ */
 
 const OMIT_PROPS = ['Name', 'Label', 'CreationDateTime', 'ModificationDateTime', 'BrainId', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
 
@@ -333,10 +376,10 @@ async function loadTypeLabels(session) {
     let thru2 = checkStep(() => tail, thru);
     /**
      *
-     * @type {external:Writable}
+     * @type {module:streams.Writable}
      */
-    let log2 = logger2('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`);
-    /** @type {Readable} */
+    let log2 = countingLogger('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`);
+    /** @type {module:streams.Readable} */
     let rs = resultStream(session.run(C_LOAD_TYPE_LABELS));
     tail = rs.pipe(thru2(processData))
         .pipe(log2);
@@ -492,7 +535,7 @@ async function loadNodes(session) {
         let logstr = nodeLogger('Nodes', 'N');
         // noinspection JSUnresolvedFunction
         let tail = parser
-            .pipe(kind(1))
+            .pipe(filter(t => t.Kind === KIND.NODE))
             .pipe(thru(t => tx.run(getNodeStmt(t), nodeOpts(t))
                 .catch(e => tail.emit('error', e))))
             .pipe(logstr);

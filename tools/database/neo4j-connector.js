@@ -7,17 +7,21 @@
  */
 
 const neo4j = require('neo4j-driver').v1;
-const DatabaseAccess = require('./database/access');
-const {Driver, Session, Transaction, Query} = DatabaseAccess.impl;
+/**
+ * @property {object} impl -- Implementation classes.
+ */
+const DbDatabaseAccess = require('./database-access');
+const {DaDriver, DaSession, DaTransaction, DaQuery} = DbDatabaseAccess.impl;
 
 /**
  * Provider for Neo4J 3.4 database.
- * @implements Provider
+ * @implements module:dbaccess.DaProvider
  */
 class Neo4JConnector_3_4 {
     /**
-     * See @{link DatabaseAccess#constructor}
-     * @param {DatabaseAccess} parent the @{link DatabaseAccess} object that instantiated this connector.
+     * See {@link module:dbaccess.DaDatabaseAccess}
+     * @param {module:dbaccess.DaDatabaseAccess} parent the [DaDatabaseAccess]{@link module:dbaccess.DaDatabaseAccess}
+     *                                                   instance that instantiated this connector.
      * @param {Object} options
      * @param options.uri
      * @param options.user
@@ -34,8 +38,8 @@ class Neo4JConnector_3_4 {
 
     // noinspection JSUnusedGlobalSymbols
     /**
-     * See @{link Provider#withDatabase}
-     * @param {Provider~driverCallback} fn
+     * @see module:dbaccess.DaProvider#withDatabase
+     * @param {module:dbaccess.DaProvider~driverCallback} fn
      * @returns {Promise<*>}
      */
     async withDatabase(fn) {
@@ -43,7 +47,10 @@ class Neo4JConnector_3_4 {
     }
 }
 
-class Neo4JDriver extends Driver {
+/**
+ * @extends module:dbaccess.DaDriver
+ */
+class Neo4JDriver extends DaDriver {
     constructor(driver, parent) {
         super();
         this.driver = driver;
@@ -66,7 +73,7 @@ class Neo4JDriver extends Driver {
 /**
  * A Neo4J-specific session wrapper that implements our interface (which is very close to the Neo4J interface).
  */
-class Neo4JSession extends Session {
+class Neo4JSession extends DaSession {
     constructor(session, parent) {
         super();
         this.session = session;
@@ -95,7 +102,7 @@ class Neo4JSession extends Session {
 /**
  * A Neo4J-specific transaction wrapper that implements our interface (which is very close to the Neo4J interface).
  */
-class Neo4JTransaction extends Transaction {
+class Neo4JTransaction extends DaTransaction {
     constructor(transaction, parent) {
         super();
         this.transaction = transaction;
@@ -116,7 +123,7 @@ class Neo4JTransaction extends Transaction {
  * Internal Neo4J-specific query that captures supplied parameters, and reifies the
  * abstract query.
  */
-class Neo4JQuery extends Query {
+class Neo4JQuery extends DaQuery {
     /**
      * Capture the supplied query and parameters, and reify the statement we will supply to the server.
      * @param query

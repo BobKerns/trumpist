@@ -16,11 +16,14 @@ const Neo4JConnector_3_4 = require('./neo4j-connector');
  * Abstracted factory access to the database, allowing substitution (e.g. mocking) and enforcing consistent
  * usage patterns (e.g. proper closing, error checking, etc.)
  *
- * Instantiating this is for configuration only. No external work is done until {@link DatabaseAccess#withDatabase} is
+ * Instantiating this is for configuration only. No external work is done until {@link DaDatabaseAccess#withDatabase} is
  * called (at the earliest).
- * @implements Provider
+ * @implements module:dbaccess.DaProvider
+ * @memberOf module:dbaccess
+ * @property  * @property {{{Driver: module:dbaccess.DaDriver, DaSession: module:dbaccess.DaSession, DaTransaction: module:dbaccess.DaTransaction, DaQuery: DaQuery}}} impl - Properties
+ impl - Properties
  */
-class DatabaseAccess {
+class DaDatabaseAccess {
     /**
      * Create a Database Access object
      * @param options options for the underlying database driver
@@ -37,7 +40,7 @@ class DatabaseAccess {
         switch (database) {
             case "neo4j":
             case "neo4j@3.4":
-                /** @type Provider */
+                /** @type module:dbaccess.DaProvider */
                 this.connector = new Neo4JConnector_3_4(this, options);
                 break;
             default:
@@ -47,7 +50,7 @@ class DatabaseAccess {
 
     /**
      * Access the database, ensuring cleanup.
-     * @param {Provider~driverCallback} fn Callback that performs work with access to this database.
+     * @param {module:dbaccess.DaProvider~driverCallback} fn Callback that performs work with access to this database.
      * @returns {Promise<*>} Returns a Promise with the value of _fn_, or reflecting any error thrown.
      */
     async withDatabase(fn) {
@@ -55,7 +58,7 @@ class DatabaseAccess {
         let log = this.log;
         try {
             log.debug(`Using database ${this.database}.`);
-            let val = await this.connector.withDatabase(driver => fn((inner = new Driver(driver, this))));
+            let val = await this.connector.withDatabase(driver => fn((inner = new DaDriver(driver, this))));
             log.debug(`Finished with database ${this.database}.`);
             return val;
         } catch (e) {
@@ -71,57 +74,76 @@ class DatabaseAccess {
 
 /**
  * This is what to implement to provide a different database connection
- * The implementation of {@link Provider} needs wrappers for the following:
- * * {@link Driver}
- * * {@link Session}
- * * {@link Transaction}
- * * (@link Query)
- * * {@link Result}
- * * {@link ResultSummary}
- * * {@link ResultStream}
+ * The implementation of {@link module:dbaccess.DaProvider} needs wrappers for the following:
+ * * {@link module:dbaccess.DaDriver}
+ * * {@link module:dbaccess.DaSession}
+ * * {@link module:dbaccess.DaTransaction}
+ * * {@link module:dbaccess.DaQuery}
+ * * {@link module:dbaccess.DaResult}
+ * * {@link module:dbaccess.DaResultSummary}
+ * * {@link module:dbaccess.DaResultStream}
  *
- * @interface Provider
+ * @interface DaProvider
+ * @memberOf module:dbaccess
+ */
+
+/**
+ * This is what to implement to provide access to the composite results of running a {@link Query}.
+ * It provides access to the rows
+ * or unit of possibly-repeated information.
+ * @interface DaResultSummary
+ * @memberOf module:dbaccess
+ */
+
+/**
+ * Get an array of results from the summary.
+ * @memberOf module:dbaccess.DaResultSummary
+ * @method getResults
+ * @returns Array.<module:dbaccess.DaResult>
  */
 
 /**
  * This is what to implement to provide access to a result of running a {@link Query}. It provides access to one "row"
  * or unit of possibly-repeated information.
- * @interface Result
+ * @interface DaResult
+ * @memberOf module:dbaccess
  */
 
 /**
  * Get a named value from the result.
- * @memberOf Result
+ * @memberOf module:dbaccess.DaResult
  * @method get
  */
 
 /**
- * @interface ResultStream
- * @implements external:Readable
+ * @interface DaResultStream
+ * @extends Readable
+ * @memberOf module:dbaccess
  */
 
 /**
  * Callback to do work with one database.
  *
  * @async
- * @callback Provider~driverCallback
- * @param {module:dbaccess~Driver} driver A factory for sessions (aka connections).
- * @returns Promise
+ * @callback module:dbaccess.DaProvider~driverCallback
+ * @param {module:dbaccess.DaDriver} driver A factory for sessions (aka connections).
+ * @returns {Promise<*>}
  */
 
 /**
  * @method
  * @async
- * @name Provider#withDatabase
- * @param {Provider~driverCallback} fn
- * @returns Promise
+ * @name withDatabase
+ * @param {module:dbaccess.DaProvider~driverCallback} fn
+ * @memberOf module:dbaccess.DaProvider
+ * @returns {Promise<*>}
  */
 
 /**
  * @async
- * @callback Driver~sessionCallback
- * @param {Session} session The session (aka) connection. Not thread/async safe.
- * @returns Promise
+ * @callback module:dbaccess.DaDriver~sessionCallback
+ * @param {module:dbaccess.DaSession} session The session (aka) connection. Not thread/async safe.
+ * @returns {Promise<*>}
  */
 
 let COUNT = 0;
@@ -131,7 +153,7 @@ let COUNT = 0;
  * @public
  * @memberOf module:dbaccess
  */
-class Driver {
+class DaDriver {
     // Internal
     constructor(driver, parent) {
         this.driver = driver;
@@ -143,7 +165,7 @@ class Driver {
     /**
      * Connect to the database and prepare to begin issuing transactions.
      *
-     * @param {Driver~sessionCallback} fn The function that executes with this session
+     * @param {module:dbaccess.DaDriver~sessionCallback} fn The function that executes with this session
      * @param {boolean} writeAccess true if write access is needed.
      * @returns {Promise<*>} the return value from the session
      * @public
@@ -153,7 +175,7 @@ class Driver {
         let dir = writeAccess ? 'WRITE' : 'READ';
         let wrapped = async session => {
             // noinspection SpellCheckingInspection
-            let nsession = new Session(session, this);
+            let nsession = new DaSession(session, this);
             try {
                 // noinspection SpellCheckingInspection
                 this.log.trace(`SESBEG: ${id} ${dir} Session begin`);
@@ -173,7 +195,7 @@ class Driver {
 
     /**
      * Close the database and any open connections.
-     * @returns {Promise<*>}
+     * @returns {Promise.<*>}
      */
     async close() {
         return this.driver.close();
@@ -181,15 +203,18 @@ class Driver {
 }
 
 /**
- * @callback Session~transactionCallback
- * @param {Transaction} transaction The transaction in which operations should be performed.
+ * @async
+ * @callback module:dbaccess.DaSession~transactionCallback
+ * @param {module:dbaccess.DaTransaction} transaction The transaction in which operations should be performed.
+ * @returns {Promise<*>}
  */
 
 /**
  * Session object exposed to the application code. Factory for transactions.
  * @public
+ * @memberOf module:dbaccess
  */
-class Session {
+class DaSession {
     constructor(session, parent) {
         this.session = session;
         this.log = parent.log;
@@ -199,7 +224,7 @@ class Session {
     /**
      * Execute a transaction. It will be committed on successful completion, or rolled back on error.
      *
-     * @param {Session~transactionCallback} fn
+     * @param {module:dbaccess.DaSession~transactionCallback} fn
      * @param {boolean} writeAccess
      * @returns {Promise<*>} The return value from the transaction.
      */
@@ -208,7 +233,7 @@ class Session {
         let log = this.log;
         let name = fn.name || 'anon';
         let inner = async tx => {
-            let transaction = new Transaction(tx, writeAccess);
+            let transaction = new DaTransaction(tx, writeAccess);
             let dir = writeAccess ? 'WRITE' : 'READ';
             try {
                 // noinspection SpellCheckingInspection
@@ -224,7 +249,7 @@ class Session {
                 // noinspection SpellCheckingInspection
                 log.error(`TXFEND: ${name} ${dir} transaction failed: ${e.message}\n${e.stack}`);
                 if (writeAccess) {
-                    await transaction.rollback();
+                    await transaction.rollback(e);
                 }
                 throw e;
             }
@@ -244,7 +269,7 @@ class Session {
     // noinspection JSUnusedGlobalSymbols
     /**
      * Execute a read-only transaction.
-     * @param {Session~transactionCallback} fn
+     * @param {module:dbaccess.DaSession~transactionCallback} fn
      * @returns {Promise<*>} The return value from the transaction.
      * @public
      */
@@ -256,7 +281,7 @@ class Session {
     /**
      * Execute a transaction that can modify data.
      *
-     * @param {Session~transactionCallback} fn
+     * @param {module:dbaccess.DaSession~transactionCallback} fn
      * @returns {Promise<*>} The return value from the transaction.
      * @public
      */
@@ -275,8 +300,9 @@ class Session {
 
 /**
  * The transaction object presented to application code
+ * @memberOf module:dbaccess
  */
-class Transaction {
+class DaTransaction {
     constructor(transaction, parent, writeAccess=false) {
         this.transaction = transaction;
         this.log = parent.log;
@@ -286,7 +312,7 @@ class Transaction {
 
     /**
      * Execute a query.
-     * @param {Query} query
+     * @param {module:dbaccess.DaQuery} query
      * @param {Object} params
      * @returns {Promise<*>}
      */
@@ -307,26 +333,33 @@ class Transaction {
         }
     }
 
-    // noinspection JSMethodCanBeStatic
     /**
-     * NOOP, since Neo4J integrates commit/rollback into withTransaction
-     * @see Transaction#rollback
+     * Give the implementation a chance to roll back if it doesn't do so organically on withTransaction.
+     * @param {Error} e The cause for rollback, probably ignored.
      * @returns {Promise<*>}
+     * @see module:dbaccess.DaTransaction#rollback
      */
-    async rollback() {
-        return null;
+    async rollback(e) {
+        return this.transaction.rollback(e);
     }
 
-    // noinspection JSMethodCanBeStatic
     /**
-     * NOOP, since Neo4J integrates commit/rollback into withTransaction
-     * @see Transaction#rollback
-     * @returns {Promise<null>}
+     * Give the implementation a chance to roll back if it doesn't do so organically on withTransaction.
+     * @see module:dbaccess.DaTransaction#rollback
+     * @returns {Promise<*>}
      */
     async commit() {
-        return null;
+        return this.transaction.commit();
+    }
+
+    async foo () {
+
     }
 }
 
-module.export = DatabaseAccess;
-DatabaseAccess.impl = {Driver, Session, Transaction, Query};
+module.export = DaDatabaseAccess;
+/**
+ * @namespace impl
+ * @type {{Driver: module:dbaccess.DaDriver, DaSession: module:dbaccess.DaSession, DaTransaction: module:dbaccess.DaTransaction, DaQuery: DaQuery}}
+ */
+DaDatabaseAccess.impl = {Driver: DaDriver, DaSession: DaSession, DaTransaction: DaTransaction, DaQuery: Query};

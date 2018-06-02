@@ -8,14 +8,43 @@
 
 "use strict";
 const util = require('util');
-const { Transform,
-    /** @interface */
+const {
+    /**
+     * @memberOf module:streams
+     * @external Transform
+     * @extends module:streams.Readable
+     * @extends module:streams.Writable
+     * @interface
+     * @private
+     * */
+    Transform,
+    /**
+     * @memberOf module:streams
+     * @external Readable
+     * @interface
+     * @private
+     * */
     Readable,
-    Duplex, Writable, pipeline: s_pipeline, finished: s_finished } = require('stream');
+    /**
+     * @memberOf module:streams
+     * @external Duplex
+     * @extends module:streams.Readable
+     * @extends module:streams.Writable
+     * @private
+     * @interface
+     * */
+    Duplex,
+    /**
+     * @memberOf module:streams
+     * @external Writable
+     * @private
+     * @interface
+     * */
+    Writable, pipeline: s_pipeline, finished: s_finished } = require('stream');
 const pipeline = util.promisify(s_pipeline);
 const finished = util.promisify(s_finished);
 
-/** @type external:Duplex */
+/** @type Duplex */
 const Bomstrip = require('bomstrip');
 
 function done(stream) {
@@ -39,8 +68,8 @@ function logstream(log, key, template) {
 
 /**
  * Produce a filter stream
- * @param {filterCallback} f
- * @returns {external:Duplex}
+ * @param {module:streams~filterCallback} f
+ * @returns {module:streams.Duplex}
  */
 function filter(f) {
     let stream;
@@ -62,37 +91,38 @@ function filter(f) {
 }
 
 /**
- * @callback filterCallback
+ * @callback module:streams~filterCallback
  * @param f
  * @returns {boolean}
  */
 
 /**
  * Produce an output stream to serve as destination.
- * @param {sinkCallback} f
- * @returns {external:Writable}
+ * @param {module:streams~sinkCallback} f
+ * @returns {module:streams.Writable}
  */
 function sink(f) {
+    /* @type {module:streams.Writable} */
     let s = filter(v => ++s.count && f && f(v) && false);
     s.count = 0;
     return s;
 }
 /**
- * @callback sinkCallback
+  * @callback module:streams~sinkCallback
  * @param data
  * @returns {void}
  */
 
 /**
- * @callback thruCallback
+ * @callback module:streams~thruCallback
  * @param data
  * @return {*}
  */
 
 /**
  * Produce a stream that processes output
- * @param {thruCallback} f
- * @returns {external:Duplex}
+ * @param {module:streams~thruCallback} f
+ * @returns {module:streams.Duplex}
  */
 function thru(f) {
     return filter(v => (f && f(v)) || true);
@@ -118,50 +148,17 @@ module.exports = {
     Bomstrip
 };
 
+
 /**
- * JSDOoc declarations to inform the type inferencing so we don't get spurious warnings.
+ @method
+ @name module:streams.Writable~on
+ @param {string} key
+ @param handler
  */
 
 /**
- * @interface external:Stream
- */
-
-/**
- * @interface external:Parser
- * @implements external:Stream
- */
-
-/**
- * @interface external:Writable
- * @implements external:Stream
- */
-
-
-/**
- * @interface external:Duplex
- * @implements Readable
- * @implements external:Writable
- * @implements external:Stream
- */
-
-/**
- * @method
- * @name external:Writable~on
- * @param {string} event
- * @param {function():*} handler
- * @returns {external:Stream}
- */
-
-/**
- * @method
- * @name Readable~pipe
- * @param {external:Writable} out
- * @returns {external:Writable}
- */
-
-/**
- * @method
- * @name external:Duplex~pipe
- * @param {external:Writable} out
- * @returns {external:Writable}
+ @method
+ @name module:streams.Readable~pipe
+ @param {Writable|Parser} out
+ @returns {Readable}
  */

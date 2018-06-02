@@ -18,6 +18,13 @@ module.exports = {
         "dictionaries": ["jsdoc","closure"]
     },
     "templates": {
+        "default": {
+            "staticFiles": {
+                "include": [
+                    "./jsdoc-images"
+                ]
+            }
+        },
         "cleverLinks": true,
         "monospaceLinks": false
     }

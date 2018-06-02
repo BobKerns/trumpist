@@ -8,9 +8,10 @@
 
 let COUNTER = 0;
 /**
- * Abstract query (standin)
+ * Abstract query (standin/proxy)
+ * @memberOf module:dbaccess
  */
-class Query {
+class DaQuery {
     constructor(spec) {
         // noinspection JSUnusedGlobalSymbols
         this.spec = spec;
@@ -20,7 +21,7 @@ class Query {
     }
 
     bindParams(params) {
-        return new Query({
+        return new DaQuery({
             statement: this.toString(),
             parameters: {
                 ...params,
@@ -31,7 +32,7 @@ class Query {
 
     /**
      * Return the statement as a string (if it's not already).
-     * @returns string or Query
+     * @returns {module:dbaccess.DaQuery|string}
      */
     resolve() {
         if (typeof this.statement === 'string') {
@@ -41,4 +42,4 @@ class Query {
     }
 }
 
-module.exports = Query;
+module.exports = DaQuery;

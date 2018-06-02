@@ -1,12 +1,8 @@
-.DS_Store
-*~
 .#.*
 .#*
 \#*
-build/
-**/tmp/**
 *.tmp
 *.bak
 *.save
-**/node_modules/**
-**/out/**
+node_modules/
+out/

@@ -4,10 +4,10 @@
 .#*
 \#*
 build/
-**/tmp/**
+tmp/
 *.tmp
 *.bak
 *.save
-**/node_modules/**
-**/out/**
+node_modules/
+out/
 .idea/vagrant.xml

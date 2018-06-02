@@ -8,12 +8,16 @@
  */
 
 const {
-    /** @external Readable */
+    /**
+     * @external Readable
+     * @private
+     * */
     Readable
 } = require('stream');
 
 /**
- * @implements external:Readable
+ * A stream of results from the database.
+ * @implements module:streams.Readable
  */
 class ResultStream extends Readable {
     constructor(options) {
@@ -66,12 +70,12 @@ class ResultStream extends Readable {
 
 // noinspection JSUnusedGlobalSymbols
 module.exports = {
-    /** @type external:Readable */
+    /** @type module:streams.Readable */
     ResultStream: ResultStream,
     /**
      * Construct a result stream
      * @param result
-     * @returns {external:Readable}
+     * @returns {module:streams.Readable}
      */
     resultStream(result) {
         return new ResultStream({result});
