@@ -25,8 +25,8 @@ export const ID_NULL_NODE: UUID = '00000000-0000-0000-0000-000000000000';
  * Values for the Kind: member in ThBrain's data exports for links.
  *
  * This is used in both links and nodes.
- * @see [[Node]]
- * @see [[Link]]
+ * @see [[INode]]
+ * @see [[ILink]]
  */
 export enum KIND {
     /**
