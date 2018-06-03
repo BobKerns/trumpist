@@ -13,3 +13,4 @@ out/
 .idea/vagrant.xml
 
 !.gitignore
+.gitignore
