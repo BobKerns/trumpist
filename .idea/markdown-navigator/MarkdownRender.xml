@@ -6,7 +6,7 @@
           <provider providerId="com.vladsch.idea.multimarkdown.editor.swing.html.panel" providerName="Default - Swing" />
         </PanelProvider>
       </PreviewSettings>
-      <ParserSettings gitHubSyntaxChange="false" emojiShortcuts="1" emojiImages="0">
+      <ParserSettings gitHubSyntaxChange="false" emojiShortcuts="0" emojiImages="0">
         <PegdownExtensions>
           <option name="ABBREVIATIONS" value="false" />
           <option name="ANCHORLINKS" value="true" />
@@ -34,7 +34,7 @@
           <option name="WIKILINKS" value="true" />
         </PegdownExtensions>
         <ParserOptions>
-          <option name="ADMONITION_EXT" value="false" />
+          <option name="ADMONITION_EXT" value="true" />
           <option name="ATTRIBUTES_EXT" value="false" />
           <option name="COMMONMARK_LISTS" value="true" />
           <option name="DUMMY" value="false" />
@@ -64,7 +64,7 @@
       </HtmlSettings>
       <CssSettings previewScheme="UI_SCHEME" cssUri="" isCssUriEnabled="false" isCssUriSerial="true" isCssTextEnabled="false" isDynamicPageWidth="true">
         <StylesheetProvider>
-          <provider providerId="com.vladsch.idea.multimarkdown.editor.swing.html.css" providerName="Default Swing Stylesheet" />
+          <provider providerId="com.vladsch.idea.multimarkdown.editor.javafx.html.css" providerName="Default JavaFx Stylesheet" />
         </StylesheetProvider>
         <ScriptProviders />
         <cssText />
