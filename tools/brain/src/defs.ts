@@ -149,7 +149,7 @@ export enum MEANING {
     PROTO = 0,
     /**
      * A normal link between normal nodes.
-     * * Kind will be 1, see [[KIND.NORMAL]]
+     * * Kind will be 1, see [[KIND.LINK]]
      * * Relation will be either 1 or 3,
      *   * see [[RELATION.HIERARCHY]]
      *   * see [[RELATION.JUMP]]
