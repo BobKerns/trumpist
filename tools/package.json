@@ -7,6 +7,7 @@
     "lodash": "^4.17.10",
     "logform": "^1.7.0",
     "neo4j-driver": "^1.6.1",
+    "npm-watch": "^0.3.0",
     "ramda": "^0.25.0",
     "through2-filter": "^2.0.0",
     "through2-spy": "^2.0.0",
@@ -15,10 +16,24 @@
   "deprecated": false,
   "description": "Tools for Trumpist Brain",
   "devDependencies": {
+    "@types/jsdom": "^11.0.4",
+    "@types/logform": "^1.2.0",
+    "@types/parse5": "^3.0.0",
+    "@types/ramda": "^0.25.32",
+    "@types/winston": "^2.3.9",
     "ajv": "^6.5.0",
     "eslint": "^5.0.0-alpha.3",
+    "hs-marked-extra": "^1.0.2",
+    "install": "^0.11.0",
     "jest": "^23.1.0",
-    "jsdoc": "^3.5.5"
+    "jsdoc": "^3.5.5",
+    "marked": "^0.4.0",
+    "npm": "^6.1.0",
+    "tslint": "^5.10.0",
+    "typedoc": "^0.11.1",
+    "typedoc-plugin-internal-external": "^1.0.10",
+    "typedoc-plugin-single-line-tags": "^1.0.0",
+    "typescript": "^2.9.1"
   },
   "directories": {
     "doc": "doc"
@@ -54,10 +69,24 @@
       "ecmaVersion": 2018
     }
   },
+  "watch": {
+    "build": {
+      "patterns": [
+        "brain/src"
+      ],
+      "extensions": [
+        ".js",
+        ".ts"
+      ]
+    }
+  },
   "scripts": {
     "test": "jest",
     "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
-    "doc": "npm run jsdoc && open out/${npm_package_name}/${npm_package_version}/index.html"
+    "doc": "bin/build-doc",
+    "preview": "npm run doc",
+    "view": "open out/index.html",
+    "build": "rm -f brain/*.{js,map} && tsc --project brain/"
   },
   "version": "1.0.0"
 }

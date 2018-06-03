@@ -6,6 +6,7 @@
         <entryData>
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/brain" />
+            <path value="file://$PROJECT_DIR$/tools/doc" />
           </resourceRoots>
         </entryData>
       </entry>

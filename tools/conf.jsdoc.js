@@ -15,13 +15,13 @@ module.exports = {
     "sourceType": "module",
     "tags": {
         "allowUnknownTags": true,
-        "dictionaries": ["jsdoc","closure"]
+        "dictionaries": ["jsdoc", "closure"]
     },
     "templates": {
         "default": {
             "staticFiles": {
                 "include": [
-                    "./jsdoc-images"
+                    "./images"
                 ]
             }
         },

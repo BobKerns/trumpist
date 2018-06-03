@@ -5,4 +5,5 @@
 *.bak
 *.save
 node_modules/
-out/
+out
+*.map
