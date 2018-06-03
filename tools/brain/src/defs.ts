@@ -102,7 +102,7 @@ export declare interface INode extends IBrainCommon, IBrainTyped {
     ACType: ACType;
     /** The foreground color for dawing the node. */
     ForegroundColor: COLOR;
-    /** The background color for drawing the node.
+    /** The background color for drawing the node. */
     BackgroundColor: COLOR;
      /** Always [] */
     TagIds: UUID[];
@@ -181,14 +181,7 @@ export enum MEANING {
      * * Relation: will be 1, see [[RELATION.HIERARCHY]]
      * * Direction; will be -1
      */
-    PIN = 6 /*: new MeaningDescriptor({
-        code: 6,
-        label: '_PIN',
-        Kind: KIND.LINK,
-        reverse: false,
-        Relation: [RELATION.HIERARCHY],
-        Direction: FLAG_VAL_UNSPECIFIED
-    }) */
+    PIN = 6
 };
 
 /**
