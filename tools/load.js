@@ -42,7 +42,7 @@ const {MEANING, MEANING_IDS,
     ID_NULL_NODE,
     FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED,
     KIND
-} = require('./brain/brain');
+} = require('./brain');
 
 
 const {resultStream} = require('./database/result-stream');
@@ -172,7 +172,7 @@ function linkLogger(tName, tag) {
         let opts = !data.Name
             ? ''
             : ` {Name: "${data.Name || '--'}"}`;
-        return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts}}]->(${data.ThoughtIdB})`;
+        return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts ? `{${opts}}` : ""}]->(${data.ThoughtIdB})`;
     };
     return countingLogger(tName, tag, f);
 }
