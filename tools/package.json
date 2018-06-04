@@ -87,7 +87,7 @@
     "preview": "npm run doc",
     "view": "open ../docs/api/brain/index.html",
     "build": "tsc --project brain/",
-    "publish": "../bin/publish"
+    "api": "../bin/publish-api"
   },
   "version": "1.0.0"
 }
