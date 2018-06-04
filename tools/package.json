@@ -85,8 +85,9 @@
     "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
     "doc": "bin/build-doc",
     "preview": "npm run doc",
-    "view": "open out/index.html",
-    "build": "rm -f brain/*.{js,map} && tsc --project brain/"
+    "view": "open ../docs/api/brain/index.html",
+    "build": "tsc --project brain/",
+    "publish": "../bin/publish"
   },
   "version": "1.0.0"
 }

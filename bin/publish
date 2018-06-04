@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+BASE="$(dirname "$(cd "$(dirname "${0}")"; echo "$PWD")")"
+DOCS="${BASE}/docs"
+
+check_status() {
+    if ! git diff-index --quiet --cached HEAD --; then
+        echo "You have staged changes in your GIT tree. Either commit or reset." >&2
+        exit -1;
+    fi
+}
+
+check_status
+
+build_tools() {
+    cd tools
+    npm run build
+    npm run test
+    npm run doc
+    git add "${DOCS}"
+    git commit -m "Publishing documentation."
+}
+
+build_tools

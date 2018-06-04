@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
 BASE="$(dirname "$(cd "$(dirname "${0}")"; echo "$PWD")")"
+TRUMPIST="$(dirname "${BASE}")"
+DOCS="${TRUMPIST}/docs"
 
 export PATH="${BASE}/node_modules/typedoc/bin:${BASE}/node_modules/marked/bin:$PATH"
-
-rm -rf "${BASE}/out"
 
 cd "${BASE}";
 echo "PROJECT=${PWD}"
 
-DOC="${BASE}/doc"
-OUT="${BASE}/out"
+ASSETS="${BASE}/assets"
+API="${DOCS}/api"
+rm -rf "${API}"
 
 TYPEDOC_OPTIONS="--includeDeclarations --ignoreCompilerErrors --mode modules --excludeExternals"
 TITLE="Trumpist Brain"
@@ -18,23 +19,21 @@ TITLE="Trumpist Brain"
 subproject() {
     sub="${1}"
     src="${BASE}/${sub}"
-    doc="${DOC}/${sub}"
-    dest="${BASE}/out/${sub}"
-    readme="${doc}/README.md"
+    assets="${ASSETS}/${sub}"
+    dest="${API}/${sub}"
+    readme="${assets}/README.md"
     echo "Documenting ${src} => ${dest}"
     echo "README: ${readme}"
+    mkdir -p "${dest}"
     typedoc ${TYPEDOC_OPTIONS} --name "${sub}" --tsconfig "${src}/tsconfig.json" --readme "${readme}" -out "${dest}"
-
-
-    mkdir -p "${doc}"
 }
 
 subproject brain
 
 
-for f in `find "${DOC}" -name '*.md' -print`; do
+for f in `find "${ASSETS}" -name '*.md' -print`; do
     fname="$(basename "$f" .md)"
-    oname="${OUT}/${fname}.html"
+    oname="${API}/${fname}.html"
     dir="$(dirname "${oname}")"
     mkdir -p "${dir}"
     echo "$f -> $oname"
@@ -42,9 +41,9 @@ for f in `find "${DOC}" -name '*.md' -print`; do
 done
 
 for ext in png jpg css js json html; do
-    for f in `find "${DOC}" -name "*.${ext}" -print`; do
-        fname="${f#${BASE}/doc/}"
-        oname="${OUT}/${fname}"
+    for f in `find "${ASSETS}" -name "*.${ext}" -print`; do
+        fname="${f#${ASSETS}/}"
+        oname="${API}/${fname}"
         dir="$(dirname "${oname}")"
         mkdir -p "${dir}"
         cp -v "${f}" "${oname}"

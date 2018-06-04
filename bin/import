@@ -8,7 +8,7 @@ if [ ! -r "$BRZFILE" ]; then
 fi
 
 if ! git diff-index --quiet --cached HEAD --; then
-    echo "You have staged changes in your GIT tree. Either commit or reset."
+    echo "You have staged changes in your GIT tree. Either commit or reset." >&2
     exit -1;
 fi
 
