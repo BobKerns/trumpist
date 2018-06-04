@@ -10,6 +10,7 @@
     "alwaysStrict": true,
     "listFiles": true,
     "listEmittedFiles": true,
+    "declaration": true,
     "lib": ["ESNext"],
     "types": ["ramda", "winston", "logform"]
   },
