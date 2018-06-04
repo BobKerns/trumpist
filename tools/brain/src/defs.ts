@@ -18,6 +18,10 @@ export type UUID = string;
 export type COLOR = number;
 
 
+/** Thickness as a number, appears to be integer multiples of 100. */
+export type THICKNESS = number;
+
+
 export const ID_SETTING_INIT: UUID = "a395b570-4456-519c-b534-af7b81b5aaf1";
 export const ID_NULL_NODE: UUID = '00000000-0000-0000-0000-000000000000';
 
@@ -57,7 +61,7 @@ export enum KIND {
 /**
  * Type information for Nodes and Links
  */
-declare interface IBrainTyped {
+interface IBrainTyped {
     Kind: KIND;
     TypeId?: UUID;
 }
@@ -65,7 +69,7 @@ declare interface IBrainTyped {
 /**
  * Brain Timestamps
  */
-declare interface IBrainTimeStamps {
+interface IBrainTimeStamps {
     /** Date and time the record was created. */
     CreationDateTime: TIMESTAMP;
     /** Time the record was last modified. */
@@ -75,9 +79,11 @@ declare interface IBrainTimeStamps {
 /**
  * Brain common fields
  */
-declare interface IBrainCommon extends IBrainTimeStamps {
+interface IBrainCommon extends IBrainTimeStamps {
     /** Unique ID for this record. */
     Id: UUID;
+    /** Unique ID for this brain. */
+    BrainId: UUID;
 }
 
 /** Values for the ACType: flag. */
@@ -93,7 +99,7 @@ export enum ACType {
 };
 
 /** The fields of an INode, loaded from thoughts.json. */
-export declare interface INode extends IBrainCommon, IBrainTyped {
+export interface INode extends IBrainCommon, IBrainTyped {
     /** The user-visible name of this node. */
     Name: string;
     /** The less visible description of this node. May be the empty string.
@@ -258,4 +264,6 @@ export interface ILink extends IBrainCommon, IBrainTyped {
     Relation: RELATION;
     /** How to display directionality. */
     Direction: DIRECTION;
+    /** Thickness of the drawn lines. */
+    Thickness: THICKNESS;
 }
