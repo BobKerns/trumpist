@@ -1,6 +1,7 @@
 {
   "bundleDependencies": [],
   "dependencies": {
+    "@types/node": "^10.3.1",
     "bomstrip": "^0.1.4",
     "jsdom": "^11.0.0",
     "jsonlines": "^0.1.1",
@@ -85,7 +86,7 @@
     "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
     "doc": "bin/build-doc",
     "preview": "npm run doc",
-    "view": "open ../docs/api/brain/index.html",
+    "view": "open ../docs/api/index.html",
     "build": "tsc --project brain/",
     "api": "../bin/publish-api"
   },

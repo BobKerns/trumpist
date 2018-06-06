@@ -8,48 +8,35 @@
  * @module load
  */
 
-// noinspection SpellCheckingInspection
+import {parse as parseJSON} from "../util/jsonlines";
 
-const log = require('./logging')('load');
+import {create, Logger} from "../util/logging";
+const log = create("import");
 
-/**
- * @class JSONLines
- * @protected
- */
-const JSONLines = require('jsonlines');
+import * as fs from "fs";
+import * as R from "ramda";
 
-/**
- * @function parseJSON
- * @memberOf JSONLines
- * @protected
- */
-const parseJSON = (options) => JSONLines.parse(options);
-
-/*
- *
- */
-const fs = require('fs');
-
-const R = require('ramda');
-
-const {filter, sink, logstream, thru, done, Bomstrip} = require('./streams');
-const {join, dirname, resolve} = require('path');
+import {filter, sink, logstream, thru, done, Bomstrip}  from '../util/streams';
+import {join, dirname, resolve} from 'path';
 
 const basedir = dirname(dirname(module.filename));
 const braindir = join(basedir, 'brain');
 
-const {MEANING, MEANING_IDS,
+import {
+    MEANING, MEANING_DESCRIPTORS,
     ID_NULL_NODE,
-    FLAG_DIRECTIONAL, FLAG_REVERSED, FLAG_ONE_WAY, FLAG_SPECIFIED,
-    KIND
-} = require('./brain');
+    DIRECTION,
+    KIND,
+    INode, ILink, IBrainCommon
+} from '../brain/src/index';
 
 
-const {resultStream} = require('./database/result-stream');
+import {resultStream} from "../database/result-stream";
 
-const {convertDateTime} = require('./database/neo4j-date');
+import {convertDateTime} from '../database/neo4j-date';
 
-const neo4j = require('neo4j-driver').v1;
+import * as neo4j from '../database/neo4j';
+import {XForm} from "../util/types";
 
 const user = 'neo4j';
 const password = 'admin';
@@ -152,12 +139,8 @@ WITH DISTINCT path, p, s
 RETURN p.id AS id, REDUCE(s=p.name, x IN TAIL(NODES(path)) | s + ':' + x.name) AS labels;`;
 
 //Get a data logging function
-function nodeLogger(tName, tag) {
-    let f = data => {
-        /**
-         * @name data
-         * @type Link
-         */
+function nodeLogger(tName: string, tag: string) {
+    let f = (data: INode): string => {
         if (!data.Id) {
             throw data;
         }
@@ -166,9 +149,13 @@ function nodeLogger(tName, tag) {
     return countingLogger(tName, tag, f);
 }
 
+interface AnnoatedLink extends ILink {
+    link_label: string;
+}
+
 //Get a data logging function
-function linkLogger(tName, tag) {
-    let f = data => {
+function linkLogger(tName: string, tag: string) {
+    let f = (data: AnnoatedLink) => {
         let opts = !data.Name
             ? ''
             : ` {Name: "${data.Name || '--'}"}`;
@@ -180,19 +167,16 @@ function linkLogger(tName, tag) {
 // Get a generic logging & counting stream
 // f(data) -> message
 /**
- * @param tName
- * @param tag
- * @param f
- * @returns {module:streams.Writable}
+ * Get a stream that logs a count wen it finishes.
  */
-function countingLogger(tName, tag, f) {
+function countingLogger(tName: string, tag: string, f: XForm<IBrainCommon, string>) {
     let counter = 0;
-    function count(s) {
+    function count(s: string): string {
         counter++;
         return s;
     }
     /** @type module:streams.Writable */
-    let s = sink(logstream(log, tag, data => count(f(data))));
+    let s = sink(logstream(log, tag, (data: IBrainCommon) => count(f(data))));
     s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
     return s;
 }

@@ -62,22 +62,282 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="welcome-to-trumpist-brain">Welcome to Trumpist Brain</h1>
-				<h2 id="usage">Usage</h2>
-				<p>This git project contain versions of the Trumpist Brain, in the form of expanded .brz archives. This form allows unchanged portions to be shared, and changes to be tracked in git (in addition to the history that TheBrain itself keeps).</p>
-				<p>To build a .brz archive, we need to change the BrainId, to avoid potential conflicts. The bin/build command will assign a BrainID specific to your repo (stored in .git/info/brain-guid), and generate a .brz file, storing it in the build/ subdirectory.</p>
-				<p>The &#39;jq&#39; JSON query command is required. It is widely used and readily available in repositories; I used the one in macports.</p>
-				<h2 id="2018-04-27">2018-04-27</h2>
+				<h1 id="thebrain-data-access">TheBrain Data Access</h1>
+				<p>This describes the data as exported into a zip file, with the sqlite3 data exported as json files.</p>
+				<hr>
+				<h2 id="file-organization">File Organization</h2>
+				<p>Within the zip file, are a collection of subdirectories named with node and link IDs, and at top level,
+				the following items:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>File / Directory</th>
+							<th>File</th>
+							<th>File</th>
+							<th>Purpose</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>meta.json</td>
+							<td></td>
+							<td></td>
+							<td>Contains the ExchangeFormatVersion (currently 4) and a 1 bit for thoughts with attachments?</td>
+						</tr>
+						<tr>
+							<td>thoughts.json</td>
+							<td></td>
+							<td></td>
+							<td>The <a href="modules/_src_index_d_.html#node">Node</a> data</td>
+						</tr>
+						<tr>
+							<td>links.json</td>
+							<td></td>
+							<td></td>
+							<td>The <a href="modules/_src_index_d_.html#link">Link</a> data</td>
+						</tr>
+						<tr>
+							<td>settings.json</td>
+							<td></td>
+							<td></td>
+							<td>Various opaque settings for the brain. The initial node is indicated by [ID_SETTING_INIT]{@link module:brain.ID_SETTING_INIT}</td>
+						</tr>
+						<tr>
+							<td>attachments.json</td>
+							<td></td>
+							<td></td>
+							<td>Metadata about each attachment</td>
+						</tr>
+						<tr>
+							<td>modificationlogs.json</td>
+							<td></td>
+							<td></td>
+							<td>History and undo</td>
+						</tr>
+						<tr>
+							<td>brainusers.json</td>
+							<td></td>
+							<td></td>
+							<td>Username, email, first, last</td>
+						</tr>
+						<tr>
+							<td>syncpoints.json</td>
+							<td></td>
+							<td></td>
+							<td>History of synchronizations with the cloud server</td>
+						</tr>
+						<tr>
+							<td>tombstones.json</td>
+							<td></td>
+							<td></td>
+							<td>Shares IDs with modificationlogs, adds timestamp and typecode.</td>
+						</tr>
+						<tr>
+							<td>calendarevents.json</td>
+							<td></td>
+							<td></td>
+							<td>Information about TheBrain event items, and sync with external calendars</td>
+						</tr>
+						<tr>
+							<td>access.json</td>
+							<td></td>
+							<td></td>
+							<td>Presumably, information about sharing?</td>
+						</tr>
+						<tr>
+							<td><em>brainID/</em></td>
+							<td>wallpaper.png</td>
+							<td></td>
+							<td>Wallpaper image displayed behind the graph</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>Wallpaper image displayed behind the graph</td>
+						</tr>
+						<tr>
+							<td><em>node or link ID/</em></td>
+							<td></td>
+							<td></td>
+							<td>For nodes or links with attachments, including notes and custom icons</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><em>attachment</em></td>
+							<td></td>
+							<td>File attachment (e.g. pdf, html)</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>.data/</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>.data/</td>
+							<td>Icon.png</td>
+							<td>Attached icon</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>notes/</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td>notes.html</td>
+							<td>If notes are attached, an HTML fragment. Images, etc. are also located in this directory</td>
+						</tr>
+					</tbody>
+				</table>
+				<hr>
+				<h1 id="data-model">Data Model</h1>
+				<p>TheBrain data model consists of <a href="modules/_src_index_d_.html#node">Node</a> , <a href="modules/_src_index_d_.html#link">Links</a>, and attachments.</p>
+				<p>The user model has typed links between the regular nodes (called &quot;Thoughts&quot;). In the user interface, each node has
+				three attachment points, or &quot;gates&quot;.</p>
+				<p> The gates at the top and bottom are for hierarchical linking. Each bottom gate connects to top gates on other nodes.</p>
+				<p>If you draw a family tree, you&#39;d have a link from each the
+					bottom gate on each parent, to the top gate on each child. These always go from parent to child, though they may be
+				displayed either without a direction arrow, or with it reversed. The parent is always displayed above the child.</p>
+				<p>The gate on the side (&quot;jump gate&quot;) is for non-hierarchical links. Any side gate can be connected to any other
+					side gate, in either direction. There is always a direction, but it is not shown by default. As for links in the
+				hierarchy, the side gates can show their direction reversed from the underlying direction.</p>
+				<p>In the data model, however, there are no gates. Rather, links are classed into hierarchical and non-hierarchical
+					(among other attributes) by way of the <a href="enums/_src_index_d_.relation.html">Relation:</a> field.
+					The user interface also provides tags, names and labels for nodes, labels for links, and attachments, as can be seen
+				in the following screenshot.</p>
+				<p><img src="image/screenshot.png" alt="TheBrain Screenshot"></p>
+				<p>The nodes arrayed along the top of the screen are called &quot;pins&quot;, and provide quick access to a few selected nodes.
+				We will discuss them more later, as they are part of the data model.</p>
+				<p>The nodes along the bottom are breadcrumbs, are per-session, so not part of the data model.</p>
+				<p>The main data consists of:</p>
 				<ul>
-					<li>Adds more Prevezon filings and related modelling re disqualification</li>
-					<li>DOJ IG report on McCabe</li>
-					<li>Manafort filings on supervision</li>
-					<li>Improvements to Russian model, including Alma-Ata protocol and other USSR dissolution</li>
-					<li>Patriot Legal Expense Fund Trust (fund for legal expenses for Trumpists caught up in Mueller investigation)</li>
-					<li>Complaints against Trump campaign (FEC, Lieu-Rice letter)</li>
+					<li>[Node]{@link module:brain.Node} data, including user visible nodes, types, tags etc.</li>
+					<li>[Link]{@link module:brain.Link} data connecting the various nodes</li>
 				</ul>
-				<h2 id="2018-04-07">2018-04-07</h2>
-				<p>Initial export </p>
+				<p>All objects in the data model are identified by an Id in the form of a [UUID]{@link module:brain.UUID} string.
+					Each instance of a TheBrain collection (&quot;brain&quot;) is identified with a [UUID]{@link module:brain.UUID} in the
+				BrainId field.</p>
+				<h2 id="node-details"><a href="modules/_src_index_d_.html#node">Node</a> Details</h2>
+				<p>Nodes have a number of attributes, which can be seen here:
+				<img src="image/node-info.png" alt="Node Editor"></p>
+				<ul>
+					<li>In the upper left, we have an icon (a kind of attachment).</li>
+					<li>A name (&quot;Dan Coats&quot;). This is how the node is normally displayed (abbreviated if necessary).</li>
+					<li>A label (&quot;Director of National Intelligence&quot;). This is presented in hovers, can be searched, etc.</li>
+					<li>Foreground and background colors for displaying th node. (These may be inherited from the type).</li>
+					<li>A lock/unlock icon, denoting whether it is public or private.</li>
+					<li>A node type (&quot;Intelligence&quot;). This is represented as a separate node.</li>
+					<li>The two icons to the left bring up a menu, and edit history for this node.</li>
+					<li>The edit button to the right takes you to edit the type node (&quot;Intelligence&quot;, in this case).</li>
+					<li>&quot;GOP, Investigator&quot; are a list of tags. These are actually separate nodes, specially linked.</li>
+					<li>These are typically displayed as icons or small text on the lower right of the node.</li>
+					<li>Modification and Creation timestamps.</li>
+					<li>The ID of the node.</li>
+				</ul>
+				<hr>
+				<h2 id="link-details"><a href="modules/_src_index_d_.html#link">Link</a> Details</h2>
+				<p>Links always have a direction, from &quot;ThoughtA&quot; to &quot;ThoughtB&quot;. They can be displayed without a direction, or with the
+				direction reversed.</p>
+				<p>Unlike nodes, they only have a Name: field, not a Label: field. The Name: field is displayed as a label on the arc,
+				if present. If not, if the link has a type, the type is used, or no label is drawn.</p>
+				<p>Links may have a color, used for drawing the line.
+					In addition to the links between user nodes, links are used behind the scenes for connecting to node types, denoting
+				the type hierarchy, and pinned.</p>
+				<p>Valid combinations of flags on <a href="modules/_src_index_d_.html#link">Links</a>:</p>
+				<table>
+					<thead>
+						<tr>
+							<th style="text-align:center">[Meaning:]{@link module:brain.Link.MEANING}</th>
+							<th style="text-align:center">label</th>
+							<th>[Kind]{@link module:brain~KIND}</th>
+							<th>[Relation]{@link module:brain.Link.RELATION}</th>
+							<th>Direction</th>
+							<th>reverse</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align:center">0 (MEANING.PROTO)</td>
+							<td style="text-align:center">_PROTO</td>
+							<td>2 (KIND.TYPE)</td>
+							<td>0 (PROTO)</td>
+							<td>-1,5,8,9</td>
+							<td>false</td>
+						</tr>
+						<tr>
+							<td style="text-align:center">1 (MEANING.NORMAL)</td>
+							<td style="text-align:center"><em>&lt;user></em></td>
+							<td>1 (KIND.LINK)</td>
+							<td>1 (HIERARCHY)<br>3 (JUMP)</td>
+							<td>-1,5,8,9,11</td>
+							<td>false</td>
+						</tr>
+						<tr>
+							<td style="text-align:center">2 (MEANING.MEMBER)</td>
+							<td style="text-align:center">_TYPE</td>
+							<td>2 (KIND.TYPE)</td>
+							<td>1 (HIERARCHY)</td>
+							<td>-1</td>
+							<td>true</td>
+						</tr>
+						<tr>
+							<td style="text-align:center">3 (MEANING.SUBTYPE)</td>
+							<td style="text-align:center">_SUPER</td>
+							<td>1 (KIND.LINK)</td>
+							<td>1 (HIERARCHY)</td>
+							<td>-1</td>
+							<td>true</td>
+						</tr>
+						<tr>
+							<td style="text-align:center">5 (MEANING.TAG)</td>
+							<td style="text-align:center">_TAG</td>
+							<td>1 (KIND.LINK)</td>
+							<td>1 (HIERARCHY)</td>
+							<td>-1</td>
+							<td>true</td>
+						</tr>
+						<tr>
+							<td style="text-align:center">6 (MEANING.PIN)</td>
+							<td style="text-align:center">_PIN</td>
+							<td>1 (KIND.LINK)</td>
+							<td>1 (HIERARCHY)</td>
+							<td>-1</td>
+							<td>false</td>
+						</tr>
+					</tbody>
+				</table>
+				<p>Here, the &quot;label&quot; column refers to a label we apply for this case, not the Label: field in the brain node data.</p>
+				<hr>
+				<h2 id="node-types">Node Types</h2>
+				<p>User nodes (&quot;thoughts&quot;) are typed, with the type being represented by a type node, which in turn are arranged
+				in a hierarchy.</p>
+				<p><img src="image/type-hierarchy.png" alt="Type hierarchy"></p>
+				<p>Here, &quot;Intelligence&quot;, &quot;USOfficial&quot;, and &quot;USPerson&quot; are type nodes; &quot;Dan Coats&quot; is a &quot;thought&quot; or regular node.</p>
+				<p>The Intelligence type links to &quot;Dan Coats&quot; by a [MEANING.MEMBER]{@link module:brain.Link.MEANING} link, extending
+				from type to instance.</p>
+				<p>Similarly, each super type links to each of its subtypes. (This is the reverse of most object-oriented systems).
+				These links are tagged with [MEANING.SUBTYPE]{@link module:brain.Link.MEANING}.</p>
+				<p>Each typed node has a TypeId: field. This is the same information that can be found by following the
+					[MEANING.MEMBER]{@link module:brain.Link.MEANING} link back to the type. However, it is easier and faster to look up
+				an ID, and consistent with how link types are found (links do not have type nodes, but rather prototype links).</p>
+				<hr>
+				<h2 id="tags">Tags</h2>
+				<p>Tags are represented as nodes, with a link from the tag to each node tagged wih that node.</p>
+				<p>The Tag nodes have a <a href="modules/_src_index_d_.html#node">Kind:</a>.{@link module:brain~KIND} field set to
+				[KIND.TAG]{@link module:brain~KIND}, but they are otherwise ordinary nodes.</p>
+				<p>Each tag is linked to each node having that tag (as opposed to the other way around). As you can see, there can be
+				a very large number of links from each tag. Each node has a TagIds: field, but it is always an empty array.</p>
+				<hr>
+				<h2 id="pins">Pins</h2>
+				<p>Pins are denoted by linking from a singleton node named &quot;Pinned&quot;, with Kind: [KIND.SPECIAL]{@link module:brain~KIND},
+				and a link with Meaning: [MEANING.PIN]{@link module:brain.Link.MEANING}.</p>
+				<blockquote>
+					<p>Note: These names are the arbitrary result of reverse engineering of the data. Both could be SPECIAL or both PIN,
+					depending on how TheBrain chooses to evolve.</p>
+				</blockquote>
+				<hr>
+				<hr>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

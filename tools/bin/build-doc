@@ -9,7 +9,7 @@ export PATH="${BASE}/node_modules/typedoc/bin:${BASE}/node_modules/marked/bin:$P
 cd "${BASE}";
 echo "PROJECT=${PWD}"
 
-ASSETS="${BASE}/assets"
+ASSETS="${TRUMPIST}/assets"
 API="${DOCS}/api"
 rm -rf "${API}"
 
@@ -29,6 +29,7 @@ subproject() {
 }
 
 subproject brain
+subproject database
 
 
 for f in `find "${ASSETS}" -name '*.md' -print`; do

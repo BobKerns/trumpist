@@ -79,7 +79,7 @@ interface IBrainTimeStamps {
 /**
  * Brain common fields
  */
-interface IBrainCommon extends IBrainTimeStamps {
+export interface IBrainCommon extends IBrainTimeStamps {
     /** Unique ID for this record. */
     Id: UUID;
     /** Unique ID for this brain. */
@@ -102,7 +102,7 @@ export enum ACType {
 export interface INode extends IBrainCommon, IBrainTyped {
     /** The user-visible name of this node. */
     Name: string;
-    /** The less visible description of this node. May be the empty string.
+    /** The less visible description of this node. May be the empty string. */
     Label: string;
     /** Access control flag, public/private. */
     ACType: ACType;
@@ -254,6 +254,8 @@ MEANING_DESCRIPTORS[MEANING.PIN] = {
  * The field of an ILink loaded from links.json.
  */
 export interface ILink extends IBrainCommon, IBrainTyped {
+    /** h name of the link, if any */
+    Name: string,
      /** The Id of the "from" node. */
     ThoughtIdA: UUID;
     /** The ID of the "to" node. */
