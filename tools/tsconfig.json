@@ -12,14 +12,11 @@
     "listEmittedFiles": true,
     "declaration": true,
     "lib": ["ESNext"],
-    "types": ["ramda", "winston", "logform", "node", "neo4j-driver"]
+    "types": ["ramda", "winston", "logform", "node", "neo4j-driver", "jest-test"]
   },
   "include": [
     "**/*.ts"
   ],
   "exclude": [
-    "**/*.d.ts",
-    "node_modules",
-    "./node_modules"
   ]
 }

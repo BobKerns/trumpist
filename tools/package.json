@@ -21,6 +21,7 @@
   "deprecated": false,
   "description": "Tools for Trumpist Brain",
   "devDependencies": {
+    "@types/jest": "^23.0.0",
     "@types/jsdom": "^11.0.4",
     "@types/logform": "^1.2.0",
     "@types/parse5": "^3.0.0",
@@ -34,6 +35,7 @@
     "jsdoc": "^3.5.5",
     "marked": "^0.4.0",
     "npm": "^6.1.0",
+    "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",
     "typedoc": "^0.11.1",
     "typedoc-plugin-internal-external": "^1.0.10",
@@ -84,6 +86,20 @@
         ".ts"
       ]
     }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   },
   "types": [
     "@types/"
