@@ -19,11 +19,9 @@ import {Nullable} from "../util/types";
 import * as fs from "fs";
 import * as R from "ramda";
 
-import {filter, sink, logstream, thru, done, Bomstrip}  from '../util/streams';
+import {filter, sink, logstream, thru, done, Bomstrip, pipeline} from '../util/streams';
 import {join, dirname, resolve} from 'path';
 
-const basedir = dirname(dirname(module.filename));
-const braindir = join(basedir, 'brain');
 
 import {
     MEANING, MEANING_DESCRIPTORS,
@@ -42,6 +40,7 @@ import * as neo4j from '../database/neo4j';
 import {AnyParams, Extensible, XForm} from "../util/types";
 import {ILinkResult, INodeResult} from "./defs";
 import isExtensible = Reflect.isExtensible;
+import {Source} from "./source";
 
 const user = 'neo4j';
 const password = 'admin';
@@ -229,20 +228,6 @@ const LINKS: AnyParams = {};
 
 LINKS[ID_NULL_NODE] = {};
 
-/**
- * Open a JSON-per-line file for reading.
- */
-
-function openJSON(file: string) {
-    let path = resolve(braindir, file);
-    let f: Readable = fs.createReadStream(path, 'utf8');
-    let input = f;
-    let parser = parseJSON();
-    input
-        .pipe(new Bomstrip())
-        .pipe(parser);
-    return {input, parser, path};
-}
 
 const OMIT_PROPS = ['Name', 'Label', 'CreationDateTime', 'ModificationDateTime', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
 
@@ -271,9 +256,9 @@ function nodeOpts(node: INode|ILink) : INodeResult {
     return v as INodeResult;
 }
 
-async function loadNodeMetadata(session: neo4j.Session) {
-    let {input, parser, path} = openJSON('thoughts.json');
-    log.info(`Scanning ${path} for node metadata.`);
+async function loadNodeMetadata(session: neo4j.Session, source: Source) {
+    let input = source.open('thoughts.json');
+    log.info(`Scanning ${input.path} for node metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_NODE));
     await session.writeTransaction(tx => tx.run(C_INDEX_NODE_NAME));
     await session.writeTransaction(tx => tx.run(C_INDEX_NODE_LABEL));
@@ -290,9 +275,11 @@ async function loadNodeMetadata(session: neo4j.Session) {
         let logstr = nodeLogger('Metadata', 'M');
         let tail: Writable, dead: boolean;
         let fail = (e: Error) => {
-            dead = true;
-            input.destroy(e);
-            tail.destroy(e);
+            if (!dead) {
+                dead = true;
+                input.destroy(e);
+                tail.destroy(e);
+            }
         };
         async function doMetadata(data: INode) {
             if (dead) {
@@ -323,12 +310,7 @@ async function loadNodeMetadata(session: neo4j.Session) {
                 throw e;
             }
         }
-        let filter2 = checkStep(() => tail, filter);
-        tail = parser
-            .pipe(filter2(doMetadata))
-            .pipe(logstr)
-            .on('error', (e) => fail(e));
-        return await done(tail);
+        return pipeline(input, filter(doMetadata), logstr);
     });
 }
 
@@ -404,48 +386,46 @@ function linkMeaningLabel(t: ILink) {
     return info.label;
 }
 
-async function loadLinkMetadata(session: neo4j.Session) {
-    await loadLinkTypes(session);
-    await loadSupertypeRelations(session);
+async function loadLinkMetadata(session: neo4j.Session, source: Source) {
+    await loadLinkTypes(session, source);
+    await loadSupertypeRelations(session, source);
     return session;
 }
 
-async function loadLinkTypes(session: neo4j.Session) {
+async function loadLinkTypes(session: neo4j.Session, source: Source) {
     LINKS[ID_ROOT_LINK] = {
         id: ID_ROOT_LINK,
         Name: 'Link',
         link_label: 'Link'
     };
     let logstr = linkLogger('Link', 'L');
-    let {input, parser, path} = openJSON(('links.json'));
-    log.info(`Scanning ${path} for link metadata.`);
+    let input = source.open(('links.json'));
+    log.info(`Scanning ${input.path} for link metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
-        let tail: Writable;
-        let thru2 = checkStep(() => tail, thru);
-        let filter2 = checkStep(() => tail, filter);
+        let dead = false;
         let proc = (t: ILink) => {
             return tx.run(C_ADD_LINK, linkOpts(t));
         };
-        // noinspection JSUnresolvedFunction
-        tail = parser
-            .pipe(filter2(t => t.Meaning === MEANING.PROTO))
-            .pipe(thru2((t: Extensible<ILink>) => t.link_label = linkLabel(t)))
-            .pipe(thru2((t: Extensible<ILink>) => LINKS[t.Id] = t))
-            .pipe(thru2(proc))
-            .pipe(logstr)
-            .on('error', (e) => input.destroy(e));
-        await done(tail);
+        return pipeline(
+            input,
+            filter(t => t.Meaning === MEANING.PROTO),
+            thru((t: Extensible<ILink>) => t.link_label = linkLabel(t)),
+            thru((t: Extensible<ILink>) => LINKS[t.Id] = t),
+            thru(proc),
+            logstr
+        );
     });
     return session;
 }
 
-async function loadSupertypeRelations(session: neo4j.Session) {
+async function loadSupertypeRelations(session: neo4j.Session, source: Source) {
     let logstr = linkLogger('Link', 'L');
-    let {input, parser, path} = openJSON(('links.json'));
-    log.info(`Scanning ${path} for supertype metadata.`);
+    let input = source.open(('links.json'));
+    log.info(`Scanning ${input.path} for supertype metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
+        let dead = false;
         let tail: Writable;
         let thru2 = checkStep(() => tail, thru);
         let filter2 = checkStep(() => tail, filter);
@@ -459,20 +439,25 @@ async function loadSupertypeRelations(session: neo4j.Session) {
                 });
         };
         // noinspection JSUnresolvedFunction
-        tail = parser
+        tail = input
             .pipe(filter2(t => t.Meaning === MEANING.SUBTYPE))
             .pipe(thru2((t: ILink) => LINKS[t.Id] = t))
             .pipe(thru2(proc))
             .pipe(logstr)
-            .on('error', (e) => input.destroy(e));
+            .on('error', (e) => {
+                if (!dead) {
+                    dead = true;
+                    input.destroy(e);
+                }
+            });
         await done(tail);
     });
     return session;
 }
 
-async function loadMetadata(session: neo4j.Session) {
-    await loadNodeMetadata(session);
-    await loadLinkMetadata(session);
+async function loadMetadata(session: neo4j.Session, source: Source) {
+    await loadNodeMetadata(session, source);
+    await loadLinkMetadata(session, source);
     log.info('Linking to root types');
     await session.writeTransaction(tx => tx.run(C_LINK_ROOTS, {}));
     await loadTypeLabels(session);
@@ -493,19 +478,18 @@ SET n += $props;`;
     return stmt;
 }
 
-async function loadNodes(session: neo4j.Session) {
-    let {input, parser, path} = openJSON('thoughts.json');
-    log.info(`Loading nodes from ${path}.`);
-    await session.writeTransaction(async tx => {
+async function loadNodes(session: neo4j.Session, source: Source) {
+    let input = source.open("thoughts.json");
+    log.info(`Loading nodes from ${input.path}.`);
+    return session.writeTransaction(async tx => {
+        let dead = false;
         let logstr = nodeLogger('Nodes', 'N');
-        // noinspection JSUnresolvedFunction
-        let tail: Writable = parser
-            .pipe(filter((t: INode) => t.Kind === KIND.NODE))
-            .pipe(thru((t: INode) => tx.run(getNodeStmt(t), nodeOpts(t))
-                .catch(e => tail.emit('error', e))))
-            .pipe(logstr);
-        tail.on('error', (e) => input.destroy(e));
-        return await done(tail);
+        return pipeline(
+            input,
+            filter((t: INode) => t.Kind === KIND.NODE),
+            thru((t: INode) => tx.run(getNodeStmt(t), nodeOpts(t))),
+            logstr
+        );
     });
 }
 
@@ -543,38 +527,31 @@ RETURN l;`;
 }
 
 // Load the actual link data.
-async function loadLinks(session: neo4j.Session) {
-    let {input, parser, path} = openJSON('links.json');
-    log.info(`Loading links from ${path}.`);
+async function loadLinks(session: neo4j.Session, source: Source) {
+    let input = source.open('links.json');
+    log.info(`Loading links from ${input.path}.`);
     await session.writeTransaction(async tx => {
+        let dead = false;
         let logstr = linkLogger('Links', '-');
         let typeidLabel = (t: ILink) => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
-        let tail: Writable;
-        let filter2 = checkStep(() => tail, filter);
-        let thru2 = checkStep(() => tail, thru);
-        // noinspection JSUnresolvedFunction
-        tail = parser
-            .pipe(filter2(t => t.Meaning !== MEANING.PROTO && t.Meaning !== MEANING.SUBTYPE))
-            .pipe(thru2((t: Extensible<ILink>) => t.link_options = linkOpts(t)))
-            .pipe(thru2((t: Extensible<ILink>) => t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)))
-            .pipe(thru2((t: Extensible<ILink>) => tx.run(getLinkStmt(t), t.link_options)
-                .catch(e => {
-                    tail.emit('error', e);
-                    throw e;
-                })))
-            .pipe(logstr)
-            .on('error', (e) => input.destroy(e));
-        return await done(tail);
+        return pipeline(
+            filter(t => t.Meaning !== MEANING.PROTO && t.Meaning !== MEANING.SUBTYPE),
+            thru((t: Extensible<ILink>) => t.link_options = linkOpts(t)),
+            thru((t: Extensible<ILink>) =>
+                t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)),
+            thru((t: Extensible<ILink>) => tx.run(getLinkStmt(t), t.link_options)),
+            logstr
+        );
     });
 }
 
-async function load() {
-    let driver = neo4j.driver(uri, neo4j.auth.basic(user, password));
+export async function load(source: Source) {
+    let driver = neo4j.driver(uri, neo4j.auth.basic(user, password), {maxTransactionRetryTime: 3000});
     let session = driver.session(neo4j.WRITE);
     try {
-        await loadMetadata(session);
-        await loadNodes(session);
-        await loadLinks(session);
+        await loadMetadata(session, source);
+        await loadNodes(session, source);
+        await loadLinks(session, source);
     } catch (e) {
         log.error(`Error: ${e.code || 'MISC'} ${e.message} ${e.stack}`);
     } finally {
@@ -583,6 +560,3 @@ async function load() {
     }
 
 }
-
-load()
-    .catch(() => process.exit(-1));

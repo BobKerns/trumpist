@@ -4,5 +4,6 @@
     <option name="enableServiceForProjectsWithoutConfig" value="true" />
     <option name="recompileOnChanges" value="true" />
     <option name="scopeName" value="Code" />
+    <option name="showAllErrors" value="true" />
   </component>
 </project>

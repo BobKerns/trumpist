@@ -51,7 +51,11 @@ export interface Session extends Marker, Parent {
 }
 
 /**
- *  An iterator to allow iteration over the results with ```for await (const x ...) {...}```.
+ *  An iterator to allow iteration over the results with
+ *
+ *  ```
+ *  for await (const x ...) {...}
+ *  ```.
  */
 export interface RecordIterableIterator extends AsyncIterableIterator<Record> {
     // At the conclusion of the iteration, we can obtain the result summary.
@@ -121,7 +125,7 @@ export interface ResultSummary {
 
 /**
  * The various ways to access result, provide additional information in a [[ResultSummary]] when complete.
- * As it returns a ```Promise```, it can be requested at any time.
+ * As it returns a `Promise`, it can be requested at any time.
  */
 interface ResultSummaryProvider {
     getResultSummary(): Promise<ResultSummary>;
@@ -154,7 +158,7 @@ export interface Record {
 /**
  * An object-mode stream that provides a series of Record values. Once the results have been read, a
  * ResultSummary can be obtained with helpful, possibly implementation-dependent information, through
- * listening for the ```"result"``` event.
+ * listening for the `"result"` event.
  */
 export interface RecordStream extends Readable, ResultSummaryProvider {
 
@@ -165,8 +169,8 @@ export interface ResultIterator extends AsyncIterableIterator<Record>, ResultSum
 
 /**
  * Parameters supplied to [[Provider]] constructors.
- * ```database``` is provided to allow referencing it in error messages.
- * ```log``` is the standad logger suppiled by the framework.
+ * `database` is provided to allow referencing it in error messages.
+ * `log` is the standad logger suppiled by the framework.
  */
 export interface ConnectionParameters {
     /** The name of the database type requested. */

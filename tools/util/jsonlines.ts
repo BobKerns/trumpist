@@ -13,9 +13,12 @@ export interface Stringifyer extends Transform {
 
 }
 
-const {stringify_any, parse_any} = require("jsonlines");
+const jsl: {[k: string]: any} = require("jsonlines");
+console.error(`Here: ${jsl.stringify}`);
 
-export const stringify = stringify_any as () => Stringifyer;
+const {stringify: stringify_any, parse: parse_any} = jsl;
+
+export const stringify = stringify_any as typeof stringify_any;
 
 
-export const parse: (options?: AnyParams) => Parser = parse_any as (options: AnyParams) => Parser;
+export const parse: (options?: AnyParams) => Parser = parse_any as typeof parse_any;

@@ -99,7 +99,11 @@ export abstract class Session<I> extends Base<Database<any>, I> {
 }
 
 /**
- *  An iterator to allow iteration over the results with ```for await (const x ...) {...}```.
+ *  An iterator to allow iteration over the results with
+ *
+ *  ```
+ *  for await (const x ...) {...}
+ *  ```.
  */
 export interface ResultIterableIterator extends AsyncIterableIterator<api.Record> {
     /**

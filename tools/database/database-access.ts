@@ -73,7 +73,7 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
     /**
      * Access the database, ensuring cleanup.
      * @param fn Callback that performs work with access to this database.
-     * @returns a ```Promise``` with the value of ```fn```, or reflecting any error thrown.
+     * @returns a `Promise` with the value of `fn`, or reflecting any error thrown.
      */
     async withDatabase<T>(fn: api.DatabaseCallback<T>): Promise<T> {
         let log = this.log;

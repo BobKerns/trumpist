@@ -37,6 +37,7 @@ subproject database
 subproject util
 subproject model
 subproject import
+subproject cmd
 
 
 for f in `find "${ASSETS}" -name '*.md' -print`; do

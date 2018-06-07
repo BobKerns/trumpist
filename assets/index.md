@@ -7,5 +7,6 @@ Welcome to Trumpist Brain
 * [Database API](database/index.html)
 * [Model API](model/index.html)
 * [Data Import](import/index.html);
+* [Command Line Interface](cmd/index.html)
 * [Utilities](util/index.html);
 
