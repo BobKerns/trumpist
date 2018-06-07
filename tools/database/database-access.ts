@@ -73,7 +73,7 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
     /**
      * Access the database, ensuring cleanup.
      * @param fn Callback that performs work with access to this database.
-     * @returns {Promise<*>} Returns a ```Promise``` with the value of ```fn```, or reflecting any error thrown.
+     * @returns a ```Promise``` with the value of ```fn```, or reflecting any error thrown.
      */
     async withDatabase<T>(fn: api.DatabaseCallback<T>): Promise<T> {
         let log = this.log;
@@ -91,8 +91,6 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
 
 /**
  * A Driver wrapper for the underlying driver implementation that serves as a factory for connections.
- * @public
- * @memberOf module:dbaccess
  */
 class Database extends Base<DatabaseAccess, spi.Database<any>> implements api.Database {
     // Internal
@@ -190,7 +188,7 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
     /**
      * Execute a read-only transaction.
      * @param fn
-     * @returns {Promise<*>} The return value from the transaction.
+     * @returns The return value from the transaction.
      */
     async withReadTransaction<T>(fn: api.TransactionCallback<T>) : Promise<T> {
         return this.withTransaction(fn, false);
@@ -200,9 +198,7 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
     /**
      * Execute a transaction that can modify data.
      *
-     * @param {module:dbaccess.DaSession~transactionCallback} fn
-     * @returns {Promise<*>} The return value from the transaction.
-     * @public
+     * @param fn
      */
     async withWriteTransaction<T>(fn: api.TransactionCallback<T>) : Promise<T> {
         return this.withTransaction(fn, true);
@@ -210,7 +206,6 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
 
     /**
      * Close the session, freeing any resources
-     * @returns {Promise<*>}
      */
     async close(): Promise<void> {
         return this.spiObject.close();
@@ -219,7 +214,6 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
 
 /**
  * The transaction object presented to application code
- * @memberOf module:dbaccess
  */
 class Transaction extends Base<Session, spi.Transaction<any>> implements  api.Transaction {
     readonly writeAccess: boolean;
@@ -231,7 +225,7 @@ class Transaction extends Base<Session, spi.Transaction<any>> implements  api.Tr
     /**
      * Execute a query.
      * @param query The query to execute. It must be fully resolvable with the supplied params
-     * @param {Object} params Parameters to flesh out the query.
+     * @param params Parameters to flesh out the query.
      */
     async run<T>(query: api.Query, params: api.QueryParameters, fn: (q: api.Query, p: api.QueryParameters) => T) {
         let name = `${query.name || 'anon'}:${this.id}:${nextId()}`;
@@ -251,7 +245,7 @@ class Transaction extends Base<Session, spi.Transaction<any>> implements  api.Tr
 
     /**
      * Give the implementation a chance to roll back if it doesn't do so organically on withTransaction.
-     * @param {Error} e The cause for rollback, probably ignored.
+     * @param e The cause for rollback, probably ignored.
      */
     private async rollback(e: Error): Promise<void> {
         return this.spiObject.rollback(e);

@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "system",
+    "module": "commonjs",
     "target": "es6",
     "sourceMap": true,
     "noImplicitAny": true,

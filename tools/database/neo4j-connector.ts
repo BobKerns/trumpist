@@ -42,7 +42,7 @@ export class Neo4JConnector_3_4 extends Provider {
     /**
      * See [[DatabaseAccess]]
      * @param  parent   The [[DatabaseAccess]] instance that instantiated this connector.
-     * @param {Object} options
+     * @param options
      * @param options.uri
      * @param options.user
      * @param options.password

@@ -5,13 +5,16 @@
 
 /**
  * Module that loads data from a data source (exported JSON files) into the database.
- * @module load
  */
+
+import {Readable, Writable, Transform, Duplex} from "stream";
 
 import {parse as parseJSON} from "../util/jsonlines";
 
 import {create, Logger} from "../util/logging";
 const log = create("import");
+
+import {Nullable} from "../util/types";
 
 import * as fs from "fs";
 import * as R from "ramda";
@@ -36,7 +39,9 @@ import {resultStream} from "../database/result-stream";
 import {convertDateTime} from '../database/neo4j-date';
 
 import * as neo4j from '../database/neo4j';
-import {XForm} from "../util/types";
+import {AnyParams, Extensible, XForm} from "../util/types";
+import {ILinkResult, INodeResult} from "./defs";
+import isExtensible = Reflect.isExtensible;
 
 const user = 'neo4j';
 const password = 'admin';
@@ -153,7 +158,9 @@ interface AnnoatedLink extends ILink {
     link_label: string;
 }
 
-//Get a data logging function
+/**
+ * Get a data logging function
+ */
 function linkLogger(tName: string, tag: string) {
     let f = (data: AnnoatedLink) => {
         let opts = !data.Name
@@ -164,31 +171,28 @@ function linkLogger(tName: string, tag: string) {
     return countingLogger(tName, tag, f);
 }
 
-// Get a generic logging & counting stream
-// f(data) -> message
 /**
- * Get a stream that logs a count wen it finishes.
+ * Get a stream that logs a count when it finishes.
  */
-function countingLogger(tName: string, tag: string, f: XForm<IBrainCommon, string>) {
+function countingLogger<F>(tName: string, tag: string, f: XForm<F, string>) {
     let counter = 0;
     function count(s: string): string {
         counter++;
         return s;
     }
-    /** @type module:streams.Writable */
-    let s = sink(logstream(log, tag, (data: IBrainCommon) => count(f(data))));
+    let s = sink(logstream(log, tag, (data: F) => count(f(data))));
     s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
     return s;
 }
 
+type ThruBuilder<F,T,S extends Duplex> = (s:XForm<F,T>)=>S;
 /**
- *
- * @param {function(): module:streams.Writable} tailFn -- a future value of tail, since we use this result in constructing it.
- * @param {function(*): *} checkedFn
- * @returns {function(*): *}
+ * Convert a stream builder to one that destroys the pipe on error.
+ * @param tailFn -- a future value of tail, since we use this result in constructing it.
+ * @param  checkedFn
  */
-function checkStep(tailFn, checkedFn) {
-    function check(f) {
+function checkStep<F,T,S extends Duplex>(tailFn: () => Writable, checkedFn: ThruBuilder<F,T,S>): ThruBuilder<F,T,S> {
+    function check(f: XForm<F,T>): XForm<F,T> {
         return t => {
             try {
                 return f(t);
@@ -203,9 +207,8 @@ function checkStep(tailFn, checkedFn) {
 
 /**
  * Table of node types.
- * @type {{}}
  */
-const TYPES = {
+const TYPES: AnyParams = {
     [ID_NULL_NODE]: {
         Id: ID_NULL_NODE,
         link_label: 'Node:_Node'
@@ -213,36 +216,27 @@ const TYPES = {
 };
 /**
  * Table of tags
- * @type {{}}
  */
-const TAGS = {};
+const TAGS: AnyParams = {};
 /**
  * Table of special nodes
- * @type {{}}
  */
-const SPECIALS = {};
+const SPECIALS: AnyParams = {};
 /**
  * Table of link types
- * @type {{}}
  */
-const LINKS = {};
+const LINKS: AnyParams = {};
 
 LINKS[ID_NULL_NODE] = {};
 
 /**
  * Open a JSON-per-line file for reading.
- * @param file
- * @returns {{input: module:streams.Readable, parser: module:streams.Duplex, path: *}}
  */
 
-function openJSON(file) {
+function openJSON(file: string) {
     let path = resolve(braindir, file);
-    /** @type {*} */
-    let f = fs.createReadStream(path, 'utf8');
-    ignore(f);
-    /** @type {module:streams.Readable} */
+    let f: Readable = fs.createReadStream(path, 'utf8');
     let input = f;
-    /** @type module:streams.Duplex */
     let parser = parseJSON();
     input
         .pipe(new Bomstrip())
@@ -250,22 +244,21 @@ function openJSON(file) {
     return {input, parser, path};
 }
 
-function ignore() {
+const OMIT_PROPS = ['Name', 'Label', 'CreationDateTime', 'ModificationDateTime', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
 
-}
+type DbVal1 = string | number | boolean | null;
 /**
- *
- * @type {string[]}
+ * Types we can store in the Database.
  */
+type DbVal = DbVal1 | DbVal1[];
 
-const OMIT_PROPS = ['Name', 'Label', 'CreationDateTime', 'ModificationDateTime', 'BrainId', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
-
-function nodeOpts(t) {
+function nodeOpts(node: INode|ILink) : INodeResult {
+    let t = node as Extensible<INode, DbVal>
     let brainKeys = R.difference(R.keys(t), OMIT_PROPS);
-    let brainProps = {};
-    let fix = v => (typeof v === 'number' ? neo4j.int(v) : v);
+    let brainProps: AnyParams = {};
+    let fix = (v: DbVal) => (typeof v === 'number' ? neo4j.int(v) : v);
     brainKeys.forEach(k => brainProps['brain_' + k] = fix(t[k]));
-    return {
+    let v = {
         id: t.Id,
         props: {
             name: t.Name,
@@ -275,9 +268,10 @@ function nodeOpts(t) {
             ...brainProps
         }
     };
+    return v as INodeResult;
 }
 
-async function loadNodeMetadata(session) {
+async function loadNodeMetadata(session: neo4j.Session) {
     let {input, parser, path} = openJSON('thoughts.json');
     log.info(`Scanning ${path} for node metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_NODE));
@@ -294,13 +288,13 @@ async function loadNodeMetadata(session) {
     await session.writeTransaction(tx => tx.run(C_ROOTS));
     await session.writeTransaction(async tx => {
         let logstr = nodeLogger('Metadata', 'M');
-        let tail, dead;
-        let fail = e => {
+        let tail: Writable, dead: boolean;
+        let fail = (e: Error) => {
             dead = true;
             input.destroy(e);
             tail.destroy(e);
         };
-        async function doMetadata(data) {
+        async function doMetadata(data: INode) {
             if (dead) {
                 log.info(`Skipping ${data.Id} due to prior error`);
                 return false;
@@ -322,7 +316,6 @@ async function loadNodeMetadata(session) {
                     case KIND.NODE:
                         return false;
                     default:
-                        // noinspection ExceptionCaughtLocallyJS
                         throw new Error(`Unknown Kind: ${data.Kind}`);
                 }
             } catch (e) {
@@ -331,7 +324,6 @@ async function loadNodeMetadata(session) {
             }
         }
         let filter2 = checkStep(() => tail, filter);
-        // noinspection JSUnresolvedFunction
         tail = parser
             .pipe(filter2(doMetadata))
             .pipe(logstr)
@@ -342,13 +334,13 @@ async function loadNodeMetadata(session) {
 
 const RE_LABEL = /[^a-zA-Z0-9:]/g;
 
-async function loadTypeLabels(session) {
+async function loadTypeLabels(session: neo4j.Session) {
     log.info('Loading composite node type labels from database');
-    let failure = null;
-    let processData = data => {
+    let failure: Nullable<Error> = null;
+    let processData = (data: neo4j.Record) => {
         try {
-            // noinspection UnnecessaryLocalVariableJS
-            let labels = data.get('labels').split(':').map(v => v.replace(RE_LABEL, '_')).join(':');
+            let cleanLabel = (v: string) => v.replace(RE_LABEL, '_');
+            let labels = data.get('labels').split(':').map(cleanLabel).join(':');
             TYPES[data.get('id')].labels = labels;
             return data;
         } catch (e) {
@@ -356,14 +348,10 @@ async function loadTypeLabels(session) {
             throw e;
         }
     };
-    let tail;
+    let tail: Writable;
     let thru2 = checkStep(() => tail, thru);
-    /**
-     *
-     * @type {module:streams.Writable}
-     */
-    let log2 = countingLogger('Label', 'L', data => `${data.get('id')}: ${TYPES[data.get('id')].labels}`);
-    /** @type {module:streams.Readable} */
+    let record_template = (data: neo4j.Record) => `${data.get('id')}: ${TYPES[data.get('id')].labels}`;
+    let log2 = countingLogger('Label', 'L', record_template);
     let rs = resultStream(session.run(C_LOAD_TYPE_LABELS));
     tail = rs.pipe(thru2(processData))
         .pipe(log2);
@@ -376,14 +364,15 @@ async function loadTypeLabels(session) {
         })
 }
 
-function linkOpts(t) {
-    let result = nodeOpts(t);
+function linkOpts(t: ILink): ILinkResult {
+    let nodeReusult: any = nodeOpts(t);
+    let result = nodeReusult as ILinkResult;
     let flags = t.Direction < 0 ? 0 : t.Direction;
-    let hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL.code));
-    let reversed = result.props.dir_reversed = (flags & FLAG_REVERSED) > 0 || MEANING_IDS[t.Meaning].reverse;
-    result.props.dir_shown = (flags & FLAG_DIRECTIONAL) > 0;
-    result.props.dir_one_way = (flags & FLAG_ONE_WAY) > 0;
-    result.props.dir_specified = (flags & FLAG_SPECIFIED) > 0;
+    let hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL));
+    let reversed = result.props.dir_reversed = (flags & DIRECTION.REVERSED) > 0 || MEANING_DESCRIPTORS[t.Meaning].reverse || false;
+    result.props.dir_shown = (flags & DIRECTION.DIRECTIONAL) > 0;
+    result.props.dir_one_way = (flags & DIRECTION.ONE_WAY) > 0;
+    result.props.dir_specified = (flags & DIRECTION.SPECIFIED) > 0;
     if (reversed && ((t.Meaning !== 1) || !hierarchy)) {
         result.from_id = t.ThoughtIdB;
         result.to_id = t.ThoughtIdA;
@@ -394,11 +383,11 @@ function linkOpts(t) {
     return result;
 }
 
-function linkLabel(t) {
+function linkLabel(t: ILink): String {
     return linkMeaningLabel(t) || linkProtoLabel(t);
 }
 
-function linkProtoLabel(t) {
+function linkProtoLabel(t: ILink) {
     let tid = t.TypeId;
     let proto = tid && LINKS[tid];
     if (proto) {
@@ -407,21 +396,21 @@ function linkProtoLabel(t) {
     return 'Link';
 }
 
-function linkMeaningLabel(t) {
-    let info = MEANING_IDS[t.Meaning];
+function linkMeaningLabel(t: ILink) {
+    let info = MEANING_DESCRIPTORS[t.Meaning];
     if (!info) {
         throw new Error(`Unknown Brain link Meaning: ${t.Meaning}`);
     }
     return info.label;
 }
 
-async function loadLinkMetadata(session) {
+async function loadLinkMetadata(session: neo4j.Session) {
     await loadLinkTypes(session);
     await loadSupertypeRelations(session);
     return session;
 }
 
-async function loadLinkTypes(session) {
+async function loadLinkTypes(session: neo4j.Session) {
     LINKS[ID_ROOT_LINK] = {
         id: ID_ROOT_LINK,
         Name: 'Link',
@@ -432,35 +421,35 @@ async function loadLinkTypes(session) {
     log.info(`Scanning ${path} for link metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
-        let tail;
+        let tail: Writable;
         let thru2 = checkStep(() => tail, thru);
         let filter2 = checkStep(() => tail, filter);
-        let proc = t => {
+        let proc = (t: ILink) => {
             return tx.run(C_ADD_LINK, linkOpts(t));
         };
         // noinspection JSUnresolvedFunction
         tail = parser
-            .pipe(filter2(t => t.Meaning === MEANING.PROTO.code))
-            .pipe(thru2(t => t.link_label = linkLabel(t)))
-            .pipe(thru2(t => LINKS[t.Id] = t))
+            .pipe(filter2(t => t.Meaning === MEANING.PROTO))
+            .pipe(thru2((t: Extensible<ILink>) => t.link_label = linkLabel(t)))
+            .pipe(thru2((t: Extensible<ILink>) => LINKS[t.Id] = t))
             .pipe(thru2(proc))
             .pipe(logstr)
-            .on('error', () => input.close());
+            .on('error', (e) => input.destroy(e));
         await done(tail);
     });
     return session;
 }
 
-async function loadSupertypeRelations(session) {
+async function loadSupertypeRelations(session: neo4j.Session) {
     let logstr = linkLogger('Link', 'L');
     let {input, parser, path} = openJSON(('links.json'));
     log.info(`Scanning ${path} for supertype metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
-        let tail;
+        let tail: Writable;
         let thru2 = checkStep(() => tail, thru);
         let filter2 = checkStep(() => tail, filter);
-        let proc = t => {
+        let proc = (t: Extensible<ILink>) => {
             t.link_options = linkOpts(t);
             t.link_label = '_SUPER';
             return tx.run(getLinkStmt(t), t.link_options)
@@ -471,34 +460,26 @@ async function loadSupertypeRelations(session) {
         };
         // noinspection JSUnresolvedFunction
         tail = parser
-            .pipe(filter2(t => t.Meaning === MEANING.SUBTYPE.code))
-            .pipe(thru2(t => LINKS[t.Id] = t))
+            .pipe(filter2(t => t.Meaning === MEANING.SUBTYPE))
+            .pipe(thru2((t: ILink) => LINKS[t.Id] = t))
             .pipe(thru2(proc))
             .pipe(logstr)
-            .on('error', () => input.close());
+            .on('error', (e) => input.destroy(e));
         await done(tail);
     });
     return session;
 }
 
-const util = require('util');
-
-async function loadMetadata(session) {
+async function loadMetadata(session: neo4j.Session) {
     await loadNodeMetadata(session);
     await loadLinkMetadata(session);
     log.info('Linking to root types');
-    await session.writeTransaction(tx => tx.run(C_LINK_ROOTS, {})
-        .then(v => {
-            log.info("LINKED: " + util.inspect(v));
-        }).catch(e => {
-            log.error(`Failed to link roots: ${e.message}`);
-            throw e;
-        }));
+    await session.writeTransaction(tx => tx.run(C_LINK_ROOTS, {}));
     await loadTypeLabels(session);
     return session;
 }
 
-function getNodeStmt(t) {
+function getNodeStmt(t: INode) {
     let id = t.TypeId || ID_NULL_NODE;
     let existing = TYPES[id].statement;
     if (existing) {
@@ -512,23 +493,23 @@ SET n += $props;`;
     return stmt;
 }
 
-async function loadNodes(session) {
+async function loadNodes(session: neo4j.Session) {
     let {input, parser, path} = openJSON('thoughts.json');
     log.info(`Loading nodes from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = nodeLogger('Nodes', 'N');
         // noinspection JSUnresolvedFunction
-        let tail = parser
-            .pipe(filter(t => t.Kind === KIND.NODE))
-            .pipe(thru(t => tx.run(getNodeStmt(t), nodeOpts(t))
+        let tail: Writable = parser
+            .pipe(filter((t: INode) => t.Kind === KIND.NODE))
+            .pipe(thru((t: INode) => tx.run(getNodeStmt(t), nodeOpts(t))
                 .catch(e => tail.emit('error', e))))
             .pipe(logstr);
-        tail.on('error', () => input.close());
+        tail.on('error', (e) => input.destroy(e));
         return await done(tail);
     });
 }
 
-function getLinkStmt(t) {
+function getLinkStmt(t: Extensible<ILink>) {
     let id = t.TypeId;
     if (id && !LINKS[id]) {
         throw new Error(`Missing type definition: ${id}`);
@@ -562,27 +543,27 @@ RETURN l;`;
 }
 
 // Load the actual link data.
-async function loadLinks(session) {
+async function loadLinks(session: neo4j.Session) {
     let {input, parser, path} = openJSON('links.json');
     log.info(`Loading links from ${path}.`);
     await session.writeTransaction(async tx => {
         let logstr = linkLogger('Links', '-');
-        let typeidLabel = t => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
-        let tail;
+        let typeidLabel = (t: ILink) => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
+        let tail: Writable;
         let filter2 = checkStep(() => tail, filter);
         let thru2 = checkStep(() => tail, thru);
         // noinspection JSUnresolvedFunction
         tail = parser
-            .pipe(filter2(t => t.Meaning !== MEANING.PROTO.code && t.Meaning !== MEANING.SUBTYPE.code))
-            .pipe(thru2(t => t.link_options = linkOpts(t)))
-            .pipe(thru2(t => t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)))
-            .pipe(thru2(t => tx.run(getLinkStmt(t), t.link_options)
+            .pipe(filter2(t => t.Meaning !== MEANING.PROTO && t.Meaning !== MEANING.SUBTYPE))
+            .pipe(thru2((t: Extensible<ILink>) => t.link_options = linkOpts(t)))
+            .pipe(thru2((t: Extensible<ILink>) => t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)))
+            .pipe(thru2((t: Extensible<ILink>) => tx.run(getLinkStmt(t), t.link_options)
                 .catch(e => {
                     tail.emit('error', e);
                     throw e;
                 })))
             .pipe(logstr)
-            .on('error', () => input.close());
+            .on('error', (e) => input.destroy(e));
         return await done(tail);
     });
 }

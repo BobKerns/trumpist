@@ -19,11 +19,11 @@ class ERR_STREAM_PREMATURE_CLOSE extends Error {
     }
 };
 
-import {Callback, ExtraProps, Nullable, Stream} from "./types";
+import {Callback, Extensible, Nullable, Stream} from "./types";
 
 function noop() {}
 
-function isRequest(stream: ExtraProps<Stream>) {
+function isRequest(stream: Extensible<Stream>) {
     return stream.setHeader && typeof stream.abort === 'function';
 }
 
@@ -47,7 +47,7 @@ export function finished(stream:Stream, opts: Nullable<StreamOptions|Callback>, 
         let cb: Function = callback as Function;
         return cb.call(obj, ...args);
     }
-    let istream = stream as ExtraProps<Stream>;
+    let istream = stream as Extensible<Stream>;
     if (typeof opts === 'function') return finished(istream, null, opts);
     if (!opts) opts = {};
 

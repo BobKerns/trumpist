@@ -18,4 +18,4 @@ const {stringify_any, parse_any} = require("jsonlines");
 export const stringify = stringify_any as () => Stringifyer;
 
 
-export const parse: (options: AnyParams) => Parser = parse_any as (options: AnyParams) => Parser;
+export const parse: (options?: AnyParams) => Parser = parse_any as (options: AnyParams) => Parser;

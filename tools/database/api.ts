@@ -140,14 +140,13 @@ export interface CollectedResults extends ResultSummaryProvider {
 }
 
 /**
- * This is what to implement to provide access to a result of running a [[Query]]}. It provides access to one "row"
+ * This is what to implement to provide access to a result of running a [[Query]]. It provides access to one "row"
  * or unit of information; one query may result in zero or more [[Record]] being returned.
  */
 export interface Record {
     /**
      * Return one value from the result.
-     * @param {string} key
-     * @returns {any}
+     * @param key
      */
     get(key: string): any;
 }

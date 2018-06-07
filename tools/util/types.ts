@@ -41,4 +41,4 @@ export type Callback = (val?: any, err?: Error) => void;
 /**
  * Give access to additional properties no declared. Useful when working with Javascript types with ad hoc extension.
  */
-export type ExtraProps<T,V=any> = T & AnyParams<V>;
+export type Extensible<T,V=any> = T & AnyParams<V>;

@@ -10,7 +10,7 @@ type ResultStreamOptions = {
     result: neo4j.Result;
 };
 
-type NeoResult = neo4j.ResultSummary<neo4j.Integer>;
+type NeoResult = neo4j.ResultSummary;
 type Accept<T> = (accept: T) => void;
 type Reject<T=Error> = (reject?: T) => void;
 

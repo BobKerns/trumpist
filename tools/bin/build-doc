@@ -13,7 +13,11 @@ ASSETS="${TRUMPIST}/assets"
 API="${DOCS}/api"
 rm -rf "${API}"
 
-TYPEDOC_OPTIONS="--includeDeclarations --ignoreCompilerErrors --mode modules --excludeExternals"
+#TYPEDOC_OPTIONS="--includeDeclarations --ignoreCompilerErrors --mode commonjs --excludeExternals --exclude 'node_modules/@types/ramda' -target ES6"
+
+TYPEDOC_OPTIONS="--includeDeclarations --ignoreCompilerErrors -excludeExternals"
+
+
 TITLE="Trumpist Brain"
 
 subproject() {
@@ -30,6 +34,9 @@ subproject() {
 
 subproject brain
 subproject database
+subproject util
+subproject model
+subproject import
 
 
 for f in `find "${ASSETS}" -name '*.md' -print`; do

@@ -14,8 +14,12 @@
     "lib": ["ESNext"],
     "types": ["ramda", "winston", "logform", "node", "neo4j-driver"]
   },
+  "include": [
+    "**/*.ts"
+  ],
   "exclude": [
+    "**/*.d.ts",
     "node_modules",
-    "../node_modules"
+    "./node_modules"
   ]
 }

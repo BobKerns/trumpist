@@ -81,13 +81,16 @@
       ]
     }
   },
+  "types": [
+    "@types/"
+  ],
   "scripts": {
     "test": "jest",
     "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
     "doc": "bin/build-doc",
     "preview": "npm run doc",
     "view": "open ../docs/api/index.html",
-    "build": "tsc --project brain/",
+    "build": "tsc --project tsconfig.json",
     "api": "../bin/publish-api"
   },
   "version": "1.0.0"

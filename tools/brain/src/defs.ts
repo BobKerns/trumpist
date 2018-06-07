@@ -136,11 +136,11 @@ export enum DIRECTION {
     /** The link is asymmetric and should show an arrowhead, */
     DIRECTIONAL = 1,
     /** The link is reversed compared to the prototype/link type. */
-    FLAG_REVERSED = 2,
+    REVERSED = 2,
     /** The link is marked "one way" and should not be followed in the reverse direction. */
     ONE_WAY = 4,
     /** The link has had its direction specified, overriding the default from prototype or general. */
-    FLAG_SPECIFIED = 8
+    SPECIFIED = 8
 };
 
 /**
@@ -255,7 +255,7 @@ MEANING_DESCRIPTORS[MEANING.PIN] = {
  */
 export interface ILink extends IBrainCommon, IBrainTyped {
     /** h name of the link, if any */
-    Name: string,
+    Name: string;
      /** The Id of the "from" node. */
     ThoughtIdA: UUID;
     /** The ID of the "to" node. */

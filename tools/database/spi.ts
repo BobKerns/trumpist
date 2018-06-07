@@ -48,7 +48,7 @@ export type TransactionCallback<T,I> = (tx: Transaction<I>) => Maybe<T>;
  * * [[Database]]
  * * [[Session]]
  * * [[Transaction]]
- * * [[[Record]]
+ * * [[Record]]
  * * [[ResultSummary]]
  * * [[RecordStream]]
  */
@@ -180,7 +180,6 @@ export class ResultSummary implements api.ResultSummary {
 export abstract class CollectedResults implements api.CollectedResults {
     /**
      * Get an array of results from the summary.
-     * @returns {Record[]}
      */
     abstract getResults(): api.Record[];
     abstract getResultSummary(): Promise<ResultSummary>;

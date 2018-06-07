@@ -12,23 +12,24 @@ import {Duplex, pipeline as s_pipeline, Readable, Transform, Writable} from "str
 import {finished as s_finished} from "./finished";
 import {Logger} from "./logging";
 
-import {Nullable, XForm, Template, AnyParams, Callback, ExtraProps} from "./types";
+import {Nullable, XForm, Template, AnyParams, Callback, Extensible} from "./types";
 
 
 export const pipeline = promisify(s_pipeline);
 export const finished = promisify(s_finished);
 
-export const Bomstrip = require('bomstrip') as Duplex;
+export interface Bomstrip extends Duplex{
+
+}
+export const Bomstrip = require('bomstrip') as new () => Bomstrip;
 
 /**
  * Likely should be repalcd with [[finished]]
  * @param stream Readable, Writable, or both
- * @returns {Promise<any>}
  */
-export function done(stream: Readable) {
-    return new Promise((resolve, reject) => {
-        stream.on('close', () => resolve(stream));
-        stream.on('finish', () => resolve(stream));
+export function done(stream: Readable|Writable): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        stream.on('finish', () => resolve());
         stream.on('error', (e) => reject(e));
     });
 }
@@ -71,7 +72,7 @@ export function filter(f: XForm<any,any>) : Duplex {
  * @param f Called on each value output
  */
 export function sink<T>(f: XForm<T, void>) : Writable {
-    let s: ExtraProps<Duplex> = filter(v => ++s.count && f && f(v) && false) as ExtraProps<Duplex>;
+    let s: Extensible<Duplex> = filter(v => ++s.count && f && f(v) && false) as Extensible<Duplex>;
     s.count = 0;
     return s;
 }
