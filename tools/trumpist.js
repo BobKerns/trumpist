@@ -2,5 +2,6 @@
 /*
  * Copyright (c) 2018 Bob Kerns.
  */
-require('./import/load');
+Object.defineProperty(exports, "__esModule", { value: true });
+require("./import/load");
 //# sourceMappingURL=trumpist.js.map

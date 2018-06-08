@@ -33,7 +33,7 @@ export interface Parent {
 }
 
 /**
- * This repesents a particularized access, e.g. a configured driver ready to
+ * This represents a particularized access, e.g. a configured driver ready to
  * provide sessions/connections. Shared between "threads" of execution.
  */
 export interface Database extends Marker, Parent {
@@ -73,17 +73,17 @@ export interface Transaction extends Marker, Parent {
     queryIterator(query: Query, params: object): Promise<ResultIterator>;
 }
 
-export type Resolution<T extends Query> = {
+export interface Resolution<T extends Query> {
     statement: string | T;
     parameters: QueryParameters;
-};
+}
 /**
  * An abstract query
  */
 export interface Query {
     name?: string;
     /**
-     * Returns a string if fully resolved, or a partially-resollved (curried) query if parameters remain to be supplied.
+     * Returns a string if fully resolved, or a partially-resolved (curried) query if parameters remain to be supplied.
      * This is necessary because some queries cannot be formed until some of the parameters are supplied; they act as
      * templates.
      */
@@ -91,10 +91,10 @@ export interface Query {
 }
 
 /**
- * Map spcifying query parameters.
+ * Map specifying query parameters.
  */
 export interface QueryParameters {
-    [k: string]: any
+    [k: string]: any;
 }
 
 /**
@@ -170,7 +170,7 @@ export interface ResultIterator extends AsyncIterableIterator<Record>, ResultSum
 /**
  * Parameters supplied to [[Provider]] constructors.
  * `database` is provided to allow referencing it in error messages.
- * `log` is the standad logger suppiled by the framework.
+ * `log` is the standard logger supplied by the framework.
  */
 export interface ConnectionParameters {
     /** The name of the database type requested. */
@@ -179,7 +179,7 @@ export interface ConnectionParameters {
     log: Logger;
     /** Implementation-dependent keys are allowed. */
     [key: string]: any;
-};
+}
 
 let ID_COUNTER: number = 0;
 

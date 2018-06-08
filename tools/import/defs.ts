@@ -29,7 +29,7 @@ export interface ILinkResult {
         brain_BrainId: UUID;
         brain_Kind: KIND;
         brain_TypeId?: UUID;
-    }
+    };
 }
 
 export interface INodeResult {
@@ -39,12 +39,8 @@ export interface INodeResult {
         label: string;
         creationTime: DateTime;
         modifiedTime: DateTime;
-        brain_Meaning: MEANING;
-        brain_Relation: RELATION;
-        brain_Direction: DIRECTION;
-        brain_Thickness: THICKNESS;
         brain_BrainId: UUID;
         brain_Kind: KIND;
         brain_TypeId?: UUID;
-    }
+    };
 }

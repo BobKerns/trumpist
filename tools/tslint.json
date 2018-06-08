@@ -2,16 +2,24 @@
   "extends": "tslint:recommended",
   "rulesDirectory": [],
   "rules": {
-    "max-line-length": {
-      "options": [120]
-    },
     "new-parens": true,
     "no-arg": true,
-    "no-bitwise": true,
+    "no-bitwise": false,
+    "no-namespace": false,
     "no-conditional-assignment": true,
     "no-consecutive-blank-lines": false,
     "ordered-imports": false,
     "quotemark": false,
+    "no-empty-interface": false,
+    "interface-name": false,
+    "object-literal-shorthand": false,
+    "max-line-length": false,
+    "max-classes-per-file": false,
+    "member-ordering": false,
+    "arrow-parens": false,
+    "no-empty": false,
+    "class-name": false,
+    "object-literal-sort-keys": false,
     "no-console": {
       "severity": "warning",
       "options": [

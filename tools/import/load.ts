@@ -28,7 +28,7 @@ import {
     ID_NULL_NODE,
     DIRECTION,
     KIND,
-    INode, ILink, IBrainCommon
+    INode, ILink, IBrainCommon,
 } from '../brain/src/index';
 
 
@@ -36,7 +36,9 @@ import {resultStream} from "../database/result-stream";
 
 import {convertDateTime} from '../database/neo4j-date';
 
-import * as neo4j from '../database/neo4j';
+
+import {v1 as neo4j} from 'neo4j-driver';
+
 import {AnyParams, Extensible, XForm} from "../util/types";
 import {ILinkResult, INodeResult} from "./defs";
 import isExtensible = Reflect.isExtensible;
@@ -47,14 +49,14 @@ const password = 'admin';
 const uri = 'bolt://localhost:7687';
 
 // ID of node representing root of the node _Type hierarchy
-const ID_ROOT_TYPE='ROOT-TYPE';
+const ID_ROOT_TYPE = 'ROOT-TYPE';
 // ID of node representing root of the _Tag hierarchy.
 // No hierarchy is currently implemented, but intent is to produce queries for all subtags.
-const ID_ROOT_TAG='ROOT-TAG';
+const ID_ROOT_TAG = 'ROOT-TAG';
 // ID of node representing the root of the _Special hierarchy. This is trivial, containing one special, Pinned.
-const ID_ROOT_SPECIAL='ROOT-SPECIAL';
+const ID_ROOT_SPECIAL = 'ROOT-SPECIAL';
 // ID of node representing the root of the _Link hierarchy.
-const ID_ROOT_LINK='ROOT-LINK';
+const ID_ROOT_LINK = 'ROOT-LINK';
 
 // The Neo4J labels we apply to each of our meta types.
 const L_TYPE = "_Type:_Meta";
@@ -142,9 +144,11 @@ MATCH path=(p)-[:_SUPER *1..10]->(s {id: "ROOT-TYPE"})
 WITH DISTINCT path, p, s
 RETURN p.id AS id, REDUCE(s=p.name, x IN TAIL(NODES(path)) | s + ':' + x.name) AS labels;`;
 
-//Get a data logging function
+/**
+ * Get a data logging function
+ */
 function nodeLogger(tName: string, tag: string) {
-    let f = (data: INode): string => {
+    const f = (data: INode): string => {
         if (!data.Id) {
             throw data;
         }
@@ -161,8 +165,8 @@ interface AnnoatedLink extends ILink {
  * Get a data logging function
  */
 function linkLogger(tName: string, tag: string) {
-    let f = (data: AnnoatedLink) => {
-        let opts = !data.Name
+    const f = (data: AnnoatedLink) => {
+        const opts = !data.Name
             ? ''
             : ` {Name: "${data.Name || '--'}"}`;
         return `${data.Id}: ${data.Kind}/${data.Meaning}/${data.Relation}/${data.Direction} (${data.ThoughtIdA})-[:${data.link_label || '?'}${opts ? `{${opts}}` : ""}]->(${data.ThoughtIdB})`;
@@ -179,19 +183,19 @@ function countingLogger<F>(tName: string, tag: string, f: XForm<F, string>) {
         counter++;
         return s;
     }
-    let s = sink(logstream(log, tag, (data: F) => count(f(data))));
-    s.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
-    return s;
+    const stream = sink(logstream(log, tag, (data: F) => count(f(data))));
+    stream.on('finish', () => log.info(`${tag}: ===> Loaded ${counter} ${tName} types`));
+    return stream;
 }
 
-type ThruBuilder<F,T,S extends Duplex> = (s:XForm<F,T>)=>S;
+type ThruBuilder<F, T, S extends Duplex> = (s: XForm<F, T>) => S;
 /**
  * Convert a stream builder to one that destroys the pipe on error.
  * @param tailFn -- a future value of tail, since we use this result in constructing it.
  * @param  checkedFn
  */
-function checkStep<F,T,S extends Duplex>(tailFn: () => Writable, checkedFn: ThruBuilder<F,T,S>): ThruBuilder<F,T,S> {
-    function check(f: XForm<F,T>): XForm<F,T> {
+function checkStep<F, T, S extends Duplex>(tailFn: () => Writable, checkedFn: ThruBuilder<F, T, S>): ThruBuilder<F, T, S> {
+    function check(f: XForm<F, T>): XForm<F, T> {
         return t => {
             try {
                 return f(t);
@@ -210,8 +214,8 @@ function checkStep<F,T,S extends Duplex>(tailFn: () => Writable, checkedFn: Thru
 const TYPES: AnyParams = {
     [ID_NULL_NODE]: {
         Id: ID_NULL_NODE,
-        link_label: 'Node:_Node'
-    }
+        link_label: 'Node:_Node',
+    },
 };
 /**
  * Table of tags
@@ -237,27 +241,27 @@ type DbVal1 = string | number | boolean | null;
  */
 type DbVal = DbVal1 | DbVal1[];
 
-function nodeOpts(node: INode|ILink) : INodeResult {
-    let t = node as Extensible<INode, DbVal>
-    let brainKeys = R.difference(R.keys(t), OMIT_PROPS);
-    let brainProps: AnyParams = {};
-    let fix = (v: DbVal) => (typeof v === 'number' ? neo4j.int(v) : v);
+function nodeOpts(node: INode|ILink): INodeResult {
+    const t = node as Extensible<INode, DbVal>;
+    const brainKeys = R.difference(R.keys(t), OMIT_PROPS);
+    const brainProps: AnyParams = {};
+    const fix = (val: DbVal) => (typeof val === 'number' ? neo4j.int(val) : val);
     brainKeys.forEach(k => brainProps['brain_' + k] = fix(t[k]));
-    let v = {
+    const v = {
         id: t.Id,
         props: {
             name: t.Name,
             label: t.Label || t.Name,
             creationTime: convertDateTime(t.CreationDateTime),
             modifiedTime: convertDateTime(t.ModificationDateTime),
-            ...brainProps
-        }
+            ...brainProps,
+        },
     };
-    return v as INodeResult;
+    return v as any as INodeResult;
 }
 
 async function loadNodeMetadata(session: neo4j.Session, source: Source) {
-    let input = source.open('thoughts.json');
+    const input = source.open('thoughts.json');
     log.info(`Scanning ${input.path} for node metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_NODE));
     await session.writeTransaction(tx => tx.run(C_INDEX_NODE_NAME));
@@ -272,13 +276,12 @@ async function loadNodeMetadata(session: neo4j.Session, source: Source) {
     await session.writeTransaction(tx => tx.run(C_INDEX_SPECIAL_LABEL));
     await session.writeTransaction(tx => tx.run(C_ROOTS));
     await session.writeTransaction(async tx => {
-        let logstr = nodeLogger('Metadata', 'M');
-        let tail: Writable, dead: boolean;
-        let fail = (e: Error) => {
+        const logstr = nodeLogger('Metadata', 'M');
+        let dead: boolean;
+        const fail = (e: Error) => {
             if (!dead) {
                 dead = true;
                 input.destroy(e);
-                tail.destroy(e);
             }
         };
         async function doMetadata(data: INode) {
@@ -318,11 +321,11 @@ const RE_LABEL = /[^a-zA-Z0-9:]/g;
 
 async function loadTypeLabels(session: neo4j.Session) {
     log.info('Loading composite node type labels from database');
-    let failure: Nullable<Error> = null;
-    let processData = (data: neo4j.Record) => {
+    const failure: Nullable<Error> = null;
+    const processData = (data: neo4j.Record) => {
         try {
-            let cleanLabel = (v: string) => v.replace(RE_LABEL, '_');
-            let labels = data.get('labels').split(':').map(cleanLabel).join(':');
+            const cleanLabel = (v: string) => v.replace(RE_LABEL, '_');
+            const labels = data.get('labels').split(':').map(cleanLabel).join(':');
             TYPES[data.get('id')].labels = labels;
             return data;
         } catch (e) {
@@ -330,12 +333,11 @@ async function loadTypeLabels(session: neo4j.Session) {
             throw e;
         }
     };
-    let tail: Writable;
-    let thru2 = checkStep(() => tail, thru);
-    let record_template = (data: neo4j.Record) => `${data.get('id')}: ${TYPES[data.get('id')].labels}`;
-    let log2 = countingLogger('Label', 'L', record_template);
-    let rs = resultStream(session.run(C_LOAD_TYPE_LABELS));
-    tail = rs.pipe(thru2(processData))
+    const thru2 = checkStep(() => tail, thru);
+    const recordTemplate = (data: neo4j.Record) => `${data.get('id')}: ${TYPES[data.get('id')].labels}`;
+    const log2 = countingLogger('Label', 'L', recordTemplate);
+    const rs = resultStream(session.run(C_LOAD_TYPE_LABELS));
+    const tail: Writable = rs.pipe(thru2(processData))
         .pipe(log2);
     return await done(tail)
         .then(v => {
@@ -343,15 +345,15 @@ async function loadTypeLabels(session: neo4j.Session) {
                 throw failure;
             }
             return v;
-        })
+        });
 }
 
 function linkOpts(t: ILink): ILinkResult {
-    let nodeReusult: any = nodeOpts(t);
-    let result = nodeReusult as ILinkResult;
-    let flags = t.Direction < 0 ? 0 : t.Direction;
-    let hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL));
-    let reversed = result.props.dir_reversed = (flags & DIRECTION.REVERSED) > 0 || MEANING_DESCRIPTORS[t.Meaning].reverse || false;
+    const nodeReusult: any = nodeOpts(t);
+    const result = nodeReusult as ILinkResult;
+    const flags = t.Direction < 0 ? 0 : t.Direction;
+    const hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL));
+    const reversed = result.props.dir_reversed = (flags & DIRECTION.REVERSED) > 0 || MEANING_DESCRIPTORS[t.Meaning].reverse || false;
     result.props.dir_shown = (flags & DIRECTION.DIRECTIONAL) > 0;
     result.props.dir_one_way = (flags & DIRECTION.ONE_WAY) > 0;
     result.props.dir_specified = (flags & DIRECTION.SPECIFIED) > 0;
@@ -365,13 +367,13 @@ function linkOpts(t: ILink): ILinkResult {
     return result;
 }
 
-function linkLabel(t: ILink): String {
+function linkLabel(t: ILink): string {
     return linkMeaningLabel(t) || linkProtoLabel(t);
 }
 
 function linkProtoLabel(t: ILink) {
-    let tid = t.TypeId;
-    let proto = tid && LINKS[tid];
+    const tid = t.TypeId;
+    const proto = tid && LINKS[tid];
     if (proto) {
         return proto.Name;
     }
@@ -379,7 +381,7 @@ function linkProtoLabel(t: ILink) {
 }
 
 function linkMeaningLabel(t: ILink) {
-    let info = MEANING_DESCRIPTORS[t.Meaning];
+    const info = MEANING_DESCRIPTORS[t.Meaning];
     if (!info) {
         throw new Error(`Unknown Brain link Meaning: ${t.Meaning}`);
     }
@@ -396,15 +398,14 @@ async function loadLinkTypes(session: neo4j.Session, source: Source) {
     LINKS[ID_ROOT_LINK] = {
         id: ID_ROOT_LINK,
         Name: 'Link',
-        link_label: 'Link'
+        link_label: 'Link',
     };
-    let logstr = linkLogger('Link', 'L');
-    let input = source.open(('links.json'));
+    const logstr = linkLogger('Link', 'L');
+    const input = source.open(('links.json'));
     log.info(`Scanning ${input.path} for link metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
-        let dead = false;
-        let proc = (t: ILink) => {
+        const proc = (t: ILink) => {
             return tx.run(C_ADD_LINK, linkOpts(t));
         };
         return pipeline(
@@ -413,23 +414,23 @@ async function loadLinkTypes(session: neo4j.Session, source: Source) {
             thru((t: Extensible<ILink>) => t.link_label = linkLabel(t)),
             thru((t: Extensible<ILink>) => LINKS[t.Id] = t),
             thru(proc),
-            logstr
+            logstr,
         );
     });
     return session;
 }
 
 async function loadSupertypeRelations(session: neo4j.Session, source: Source) {
-    let logstr = linkLogger('Link', 'L');
-    let input = source.open(('links.json'));
+    const logstr = linkLogger('Link', 'L');
+    const input = source.open(('links.json'));
     log.info(`Scanning ${input.path} for supertype metadata.`);
     await session.writeTransaction(tx => tx.run(C_ID_CONSTRAINT_META));
     await session.writeTransaction(async tx => {
         let dead = false;
         let tail: Writable;
-        let thru2 = checkStep(() => tail, thru);
-        let filter2 = checkStep(() => tail, filter);
-        let proc = (t: Extensible<ILink>) => {
+        const thru2 = checkStep(() => tail, thru);
+        const filter2 = checkStep(() => tail, filter);
+        const proc = (t: Extensible<ILink>) => {
             t.link_options = linkOpts(t);
             t.link_label = '_SUPER';
             return tx.run(getLinkStmt(t), t.link_options)
@@ -465,13 +466,13 @@ async function loadMetadata(session: neo4j.Session, source: Source) {
 }
 
 function getNodeStmt(t: INode) {
-    let id = t.TypeId || ID_NULL_NODE;
-    let existing = TYPES[id].statement;
+    const id = t.TypeId || ID_NULL_NODE;
+    const existing = TYPES[id].statement;
     if (existing) {
         return existing;
     }
-    let labels = TYPES[id].labels;
-    let stmt = `
+    const labels = TYPES[id].labels;
+    const stmt = `
 MERGE (n:${labels} {id: $id})
 SET n += $props;`;
     TYPES[id].statement = stmt;
@@ -479,35 +480,34 @@ SET n += $props;`;
 }
 
 async function loadNodes(session: neo4j.Session, source: Source) {
-    let input = source.open("thoughts.json");
+    const input = source.open("thoughts.json");
     log.info(`Loading nodes from ${input.path}.`);
     return session.writeTransaction(async tx => {
-        let dead = false;
-        let logstr = nodeLogger('Nodes', 'N');
+        const logstr = nodeLogger('Nodes', 'N');
         return pipeline(
             input,
             filter((t: INode) => t.Kind === KIND.NODE),
             thru((t: INode) => tx.run(getNodeStmt(t), nodeOpts(t))),
-            logstr
+            logstr,
         );
     });
 }
 
 function getLinkStmt(t: Extensible<ILink>) {
-    let id = t.TypeId;
+    const id = t.TypeId;
     if (id && !LINKS[id]) {
         throw new Error(`Missing type definition: ${id}`);
     }
-    let existing = id &&  LINKS[id].statement;
+    const existing = id &&  LINKS[id].statement;
     if (existing) {
         return existing;
     }
-    let parent = (id && (LINKS[id].Name || LINKS[id].Label));
-    let label =  parent || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label;
+    const parent = (id && (LINKS[id].Name || LINKS[id].Label));
+    const label =  parent || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label;
     if (!label) {
         throw new Error('unknown link label');
     }
-    let stmt = `
+    const stmt = `
 OPTIONAL MATCH (f1:_Node {id: $from_id})
 OPTIONAL MATCH (t1:_Node {id: $to_id})
 OPTIONAL MATCH (f2:_Meta {id: $from_id})
@@ -528,26 +528,26 @@ RETURN l;`;
 
 // Load the actual link data.
 async function loadLinks(session: neo4j.Session, source: Source) {
-    let input = source.open('links.json');
+    const input = source.open('links.json');
     log.info(`Loading links from ${input.path}.`);
     await session.writeTransaction(async tx => {
-        let dead = false;
-        let logstr = linkLogger('Links', '-');
-        let typeidLabel = (t: ILink) => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
+        const dead = false;
+        const logstr = linkLogger('Links', '-');
+        const typeidLabel = (t: ILink) => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
         return pipeline(
             filter(t => t.Meaning !== MEANING.PROTO && t.Meaning !== MEANING.SUBTYPE),
             thru((t: Extensible<ILink>) => t.link_options = linkOpts(t)),
             thru((t: Extensible<ILink>) =>
                 t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)),
             thru((t: Extensible<ILink>) => tx.run(getLinkStmt(t), t.link_options)),
-            logstr
+            logstr,
         );
     });
 }
 
 export async function load(source: Source) {
-    let driver = neo4j.driver(uri, neo4j.auth.basic(user, password), {maxTransactionRetryTime: 3000});
-    let session = driver.session(neo4j.WRITE);
+    const driver = neo4j.driver(uri, neo4j.auth.basic(user, password), {maxTransactionRetryTime: 3000});
+    const session = driver.session(neo4j.session.WRITE);
     try {
         await loadMetadata(session, source);
         await loadNodes(session, source);

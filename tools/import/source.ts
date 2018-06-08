@@ -26,15 +26,15 @@ export interface Connection extends Readable {
 
 
 export class FilesystemSource implements Source {
-    directory: string;
+    public readonly directory: string;
     constructor(directory: string) {
         this.directory = directory;
     }
-    open(file: string): Connection {
+    public open(file: string): Connection {
 
-        let pathname = path.resolve(this.directory, file);
-        let input: Readable = fs.createReadStream(pathname, 'utf8');
-        let chain = pipeline(input, new Bomstrip(), parseJSON()) as any as Connection;
+        const pathname = path.resolve(this.directory, file);
+        const input: Readable = fs.createReadStream(pathname, 'utf8');
+        const chain = pipeline(input, new Bomstrip(), parseJSON()) as any as Connection;
         chain.path = pathname;
         return chain;
     }

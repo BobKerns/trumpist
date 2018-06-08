@@ -6,9 +6,9 @@ import {Source} from "./source";
 import {AnyParams} from "../util/types";
 
 export class Loader {
-    source: Source;
-    databaseSpec: AnyParams;
+    private readonly source: Source;
+    private readonly atabaseSpec: AnyParams;
     constructor(source: Source) {
-        this.source;
+        this.source = source;
     }
 }

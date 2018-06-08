@@ -12,21 +12,19 @@ const basedir = dirname(dirname(dirname(module.filename)));
 const braindir = join(basedir, 'brain');
 
 
-let argv = yargs
+const argv = yargs
     .strict()
     .help()
     .version()
     .command('import', "Import a brain",
-        (yargs) => yargs
+        (yyargs) => yyargs
             .option('brz', {
-                description: 'Location of a .brz file to import'
+                description: 'Location of a .brz file to import',
             })
             .option('dir', {
                 description: 'location of a directory to import',
-                default: braindir
+                default: braindir,
             }),
-        (argv) => load(new FilesystemSource(argv.dir)))
+        (yargv) => load(new FilesystemSource(yargv.dir)))
     .demandCommand(1, "You must supply a command.")
     .argv;
-
-console.log(`${argv.help}`);

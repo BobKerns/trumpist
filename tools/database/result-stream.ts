@@ -6,31 +6,33 @@
 import {Readable} from "stream";
 import * as neo4j from "./neo4j";
 
-type ResultStreamOptions = {
+
+interface ResultStreamOptions {
     result: neo4j.Result;
-};
+}
 
 type NeoResult = neo4j.ResultSummary;
 type Accept<T> = (accept: T) => void;
-type Reject<T=Error> = (reject?: T) => void;
+type Reject<T= Error> = (reject?: T) => void;
 
 /**
  * A stream of results from the database.
  */
 export class ResultStream extends Readable {
-    result: neo4j.Result;
-    summary: Promise<NeoResult>;
+    private result: neo4j.Result;
+    private summary: Promise<NeoResult>;
     private continue: Accept<undefined>;
     private reading: Promise<void>;
     constructor(options: ResultStreamOptions) {
         super({objectMode: true});
         this.result = options.result;
-        let stream = this;
-        let summary_ok: Accept<NeoResult>,
-            summary_err: Reject, data_err: Reject;
+        const stream = this;
+        let summaryOk: Accept<NeoResult>;
+        let summaryErr: Reject;
+        let dataErr: Reject;
         this.summary = new Promise<NeoResult>((accept: Accept<NeoResult>, reject: Reject) => {
-            summary_ok = accept;
-            summary_err = reject;
+            summaryOk = accept;
+            summaryErr = reject;
         }).then((summary) => {
             this.push(null);
             return summary;
@@ -38,7 +40,7 @@ export class ResultStream extends Readable {
         function wait() {
             return new Promise((accept: Accept<void>, reject) => {
                 stream.continue = accept;
-                data_err = reject;
+                dataErr = reject;
             });
         }
         this.result.subscribe({
@@ -53,16 +55,16 @@ export class ResultStream extends Readable {
             async onCompleted(summary: neo4j.ResultSummary) {
                 // We have to wait for any pending reading to finish.
                 await stream.reading;
-                summary_ok(summary);
+                summaryOk(summary);
             },
             onError(error: Error) {
                 stream.emit('error', error);
-            }
+            },
         });
         this.reading = wait();
         this.on('error', (e) => {
-            summary_err(e);
-            data_err(e);
+            summaryErr(e);
+            dataErr(e);
         });
     }
 

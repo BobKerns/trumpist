@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Neo4J's driver's typescript exports are all messed up.
+# This makes them usable, though flattened, rather than grouped in namespaces.
+# As far as I can tell, I'd have to redclare everything to achieve that, and I tink
+# this is more convenient in any case.
+
+BASE="$(dirname "$(cd "$(dirname "${0}")"; echo "$PWD")")"
+NEO4J="${BASE}/database/neo4j"
+rm -f "${NEO4J}"/*
+ln -s "../../node_modules/neo4j-driver/lib/v1/"* "${NEO4J}/"
+
+for dts in "${BASE}/node_modules/neo4j-driver/types/v1/"*.d.ts; do
+      dt="${NEO4J}/$(basename "${dts}" .d.ts).ts"
+      sed -e s/declare// <"${dts}" >"${dt}"
+done
+
+cd "${NEO4J}";
+tsc

@@ -54,7 +54,7 @@ export enum KIND {
     /**
      * Special link for pinned items.
      */
-    SPECIAL = 5
+    SPECIAL = 5,
 }
 
 
@@ -95,8 +95,8 @@ export enum ACType {
     /**
      * Node is not shared.
      */
-    PRIVATE = 1
-};
+    PRIVATE = 1,
+}
 
 /** The fields of an INode, loaded from thoughts.json. */
 export interface INode extends IBrainCommon, IBrainTyped {
@@ -106,7 +106,7 @@ export interface INode extends IBrainCommon, IBrainTyped {
     Label: string;
     /** Access control flag, public/private. */
     ACType: ACType;
-    /** The foreground color for dawing the node. */
+    /** The foreground color for drawing the node. */
     ForegroundColor: COLOR;
     /** The background color for drawing the node. */
     BackgroundColor: COLOR;
@@ -123,7 +123,7 @@ export enum RELATION {
     /** Hierarchical links (vertical) */
     HIERARCHY = 1,
     /** Jump links (i.e. horizontal, non-hierarchical) */
-    JUMP = 3
+    JUMP = 3,
 }
 
 /**
@@ -140,8 +140,8 @@ export enum DIRECTION {
     /** The link is marked "one way" and should not be followed in the reverse direction. */
     ONE_WAY = 4,
     /** The link has had its direction specified, overriding the default from prototype or general. */
-    SPECIFIED = 8
-};
+    SPECIFIED = 8,
+}
 
 /**
  * Interpretation of the Meaning: attribute in Brain links.
@@ -187,22 +187,22 @@ export enum MEANING {
      * * Relation: will be 1, see [[RELATION.HIERARCHY]]
      * * Direction; will be -1
      */
-    PIN = 6
-};
+    PIN = 6,
+}
 
 /**
  * A descriptor for a [[MEANING]]
  */
 export interface MeaningDescriptor {
-    //** The expected Kind: [[KIND]] field */
+    /** The expected Kind: [[KIND]] field */
     Kind: KIND;
-    //** The label we assign to arrows wih this meaning (if not a user-defined arrow type) */
+    /** The label we assign to arrows wih this meaning (if not a user-defined arrow type) */
     label?: string;
     /** If true, the Brain model uses the arrow in the opposite direction from our usage, so reverse on input. */
     reverse?: boolean;
     /** One or more expected values for the Relation: [[RELATION]] field. */
     Relation: RELATION[];
-    /** Expected value for the Direction: [[Directon]] field. */
+    /** Expected value for the Direction: [[Direction]] field. */
     Direction?: DIRECTION;
 }
 
@@ -214,40 +214,40 @@ MEANING_DESCRIPTORS[MEANING.PROTO] = {
     label: '_PROTO',
     reverse: false,
     Kind: KIND.TYPE,
-    Relation: [RELATION.PROTO]
+    Relation: [RELATION.PROTO],
 };
 MEANING_DESCRIPTORS[MEANING.NORMAL] = {
     Kind: KIND.LINK,
     reverse: false,
-    Relation: [RELATION.HIERARCHY, RELATION.JUMP]
+    Relation: [RELATION.HIERARCHY, RELATION.JUMP],
 };
 MEANING_DESCRIPTORS[MEANING.MEMBER] = {
     label: '_TYPE',
     reverse: true,
     Kind: KIND.TYPE,
     Relation: [RELATION.HIERARCHY],
-    Direction: DIRECTION.UNSPECIFIED
+    Direction: DIRECTION.UNSPECIFIED,
 };
 MEANING_DESCRIPTORS[MEANING.SUBTYPE] = {
     label: '_SUPER',
     reverse: true,
     Kind: KIND.LINK,
     Relation: [RELATION.HIERARCHY],
-    Direction: DIRECTION.UNSPECIFIED
+    Direction: DIRECTION.UNSPECIFIED,
 };
 MEANING_DESCRIPTORS[MEANING.TAG] = {
     label: '_TAG',
     reverse: true,
     Kind: KIND.LINK,
     Relation: [RELATION.HIERARCHY],
-    Direction: DIRECTION.UNSPECIFIED
+    Direction: DIRECTION.UNSPECIFIED,
 };
 MEANING_DESCRIPTORS[MEANING.PIN] = {
     label: '_PIN',
     Kind: KIND.LINK,
     reverse: false,
     Relation: [RELATION.HIERARCHY],
-    Direction: DIRECTION.UNSPECIFIED
+    Direction: DIRECTION.UNSPECIFIED,
 };
 
 /**
@@ -262,7 +262,7 @@ export interface ILink extends IBrainCommon, IBrainTyped {
     ThoughtIdB: UUID;
     /** The high level meaning of this arrow. */
     Meaning: MEANING;
-    /** How the arow connects the nodes. */
+    /** How the arrow connects the nodes. */
     Relation: RELATION;
     /** How to display directionality. */
     Direction: DIRECTION;

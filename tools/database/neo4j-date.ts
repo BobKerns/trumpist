@@ -2,21 +2,23 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-/**
- * @module dbaccess
- */
+import * as neo4j from './neo4j';
 
-const {types: {DateTime}} = require('neo4j-driver').v1;
+// const neo4j = require('neo4j-driver').v1;
 
-export function convertDateTime(date: Date | string | number) {
+export function convertDateTime(date: Date | string | number): neo4j.DateTime<number> {
     if (date instanceof Date) {
         // All set
     } else if ((typeof date === 'string') || (typeof date === 'number')) {
         date = new Date(date);
     } else {
         throw new TypeError(`Incorrect type in convertDateTime(${date})`);
+    console.log(`Foo: ${typeof neo4j.DateTime}`);
     }
-    return new DateTime(
+
+    const d = new neo4j.Date(2018, 10, 30);
+
+    return new neo4j.DateTime(
         date.getUTCFullYear(),
         date.getUTCMonth(),
         date.getUTCDate(),
@@ -24,6 +26,6 @@ export function convertDateTime(date: Date | string | number) {
         date.getUTCMinutes(),
         date.getUTCSeconds(),
         date.getUTCMilliseconds() * 1000, // nanoseconds
-        0 // TZ
+        0,  // TZ
     );
 }
