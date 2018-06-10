@@ -10,12 +10,34 @@
  * We accept either a string, or a function that produces a string. If it's a function,
  * we only call it if logging is enabled.
  */
+
 export type LogMessage = string | (() => string);
 /**
  * Our logging, configured.
  */
-const { createLogger, format, transports } = require('winston');
+const { createLogger, format, transports, addColors } = require('winston');
 
+const levelSpecs = {
+    levels: {
+        severe: 0,
+        error: 1,
+        warn: 2,
+        info: 3,
+        debug: 4,
+        trace: 5,
+    },
+    colors: {
+        severe: "bold red yellowBG",
+        error: "bold red",
+        warn: "red",
+        info: "black",
+        debug: "blue",
+        trace: "dim blue cyanBG",
+    }
+}
+
+// Errors out
+addColors(levelSpecs.colors);
 
 export interface Logger {
     trace(msg: LogMessage): void
@@ -47,7 +69,8 @@ const myFormat = format.printf((info: LoggerInfo) => {
  * @param key the name for the logger
  */
 function createNew(key: string): Logger {
-    return createLogger({
+    let logger =createLogger({
+        levels: levelSpecs.levels,
         format: format.combine(
             format.colorize(),
             format.label({label: key}),
@@ -55,4 +78,7 @@ function createNew(key: string): Logger {
         ),
         transports: [new transports.Console()]
     });
+    logger.toString = () => `[Logger ${key}]`;
+    logger.key = key;
+    return logger;
 }
