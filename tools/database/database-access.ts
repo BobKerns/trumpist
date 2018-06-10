@@ -5,7 +5,7 @@
 'use strict';
 
 import {create as createLog, Logger} from "../util/logging";
-const defaultLog = createLog('database');
+const defaultLog = createLog('databaseXXX');
 import * as spi from "./spi";
 import * as api from "./api";
 import {Neo4JConnector, Neo4JConnector_3_4} from "./neo4j-connector";
@@ -40,10 +40,10 @@ class Base<P extends (api.Parent & api.Marker) | undefined, S extends spi.Marker
         return this.spiObjectFuture.value;
     }
 
-    constructor(spiObject: (self: Base<any, any>) => S, parent: P, parentDb?: string) {
+    constructor(spiObject: (self: Base<any, any>) => S, parent: P, parentDb?: string, parentLog?: Logger) {
         this.spiObjectFuture = future(() => spiObject(this));
-        this.log = parent && parent!.log || defaultLog;
-        this.database = parent && parent!.database || parentDb || "DB";
+        this.log = parentLog || parent && parent!.log || defaultLog;
+        this.database = parentDb || parent && parent!.database || "DB";
         this.parent = parent;
         this.id = `${(parent && parent!.id) || parentDb || this.database}/${nextId()}`;
     }
@@ -72,7 +72,8 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
      * Create a Database Access object.
      */
     constructor(options: DbOptions) {
-        super((self: Base<any, any>) => DatabaseAccess.createSPI(options, self as DatabaseAccess), undefined, options.database);
+        const {database, log} = options;
+        super((self: Base<any, any>) => DatabaseAccess.createSPI(options, self as DatabaseAccess), undefined, database, log);
     }
 
     /**
@@ -114,6 +115,7 @@ class Database extends Base<DatabaseAccess, spi.Database> implements api.Databas
     public async withSession<T>(cb: api.SessionCallback<T>, writeAccess: boolean = false): Promise<T> {
         const dir = writeAccess ? 'WRITE' : 'READ';
         let nsession: Session;
+        // Why is this necessary? An async arrow function is still an arrow function!
         const wrapped: SessionCallback<T> = async (session: spi.Session) => {
             nsession = new Session(session, this);
             const id = nsession.id;
@@ -160,17 +162,14 @@ class Session extends Base<Database, spi.Session> implements api.Session {
             const dir = writeAccess ? 'WRITE' : 'READ';
             const id = outer.id;
             try {
-                // noinspection SpellCheckingInspection
                 log.trace(`TXFBEG: ${name} ${id} ${dir} transaction function begin`);
                 const val = await fn(outer);
-                // noinspection SpellCheckingInspection
                 log.trace(`TXFEND: ${name} ${id} ${dir} transaction function returned ${val}`);
                 if (writeAccess) {
                     await tx.commit();
                 }
                 return val;
             } catch (e) {
-                // noinspection SpellCheckingInspection
                 log.error(`TXFEND: ${name} ${dir} transaction failed: ${e.message}\n${e.stack}`);
                 if (writeAccess) {
                     await tx.rollback(e);
