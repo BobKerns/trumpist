@@ -72,6 +72,11 @@
 				<ul class="tsd-hierarchy">
 					<li>
 						<span class="target">ResultIterator</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="_test_mockdb_.mockresultiterator.html" class="tsd-signature-type">MockResultIterator</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -109,7 +114,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.resultiterator.html">ResultIterator</a>.<a href="../interfaces/_api_.resultiterator.html#___asynciterator">__@asyncIterator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L214">spi.ts:214</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L271">spi.ts:271</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AsyncIterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.record.html" class="tsd-signature-type">Record</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -127,7 +132,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.resultiterator.html">ResultIterator</a>.<a href="../interfaces/_api_.resultiterator.html#getresultsummary">getResultSummary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L218">spi.ts:218</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L275">spi.ts:275</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_spi_.resultsummary.html" class="tsd-signature-type">ResultSummary</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -145,7 +150,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.resultiterator.html">ResultIterator</a>.<a href="../interfaces/_api_.resultiterator.html#next">next</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L216">spi.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L273">spi.ts:273</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -166,35 +171,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_api_.html">"api"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_.html">"neo4j"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -207,10 +185,10 @@
 						<a href="_spi_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.database.html" class="tsd-kind-icon">Database</a>
+						<a href="_spi_.databaseimpl.html" class="tsd-kind-icon">Database<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_spi_.provider.html" class="tsd-kind-icon">Provider</a>
+						<a href="_spi_.providerimpl.html" class="tsd-kind-icon">Provider<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_spi_.recordstream.html" class="tsd-kind-icon">Record<wbr>Stream</a>
@@ -237,13 +215,19 @@
 						<a href="_spi_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.session.html" class="tsd-kind-icon">Session</a>
+						<a href="_spi_.sessionimpl.html" class="tsd-kind-icon">Session<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+						<a href="_spi_.transactionimpl.html" class="tsd-kind-icon">Transaction<wbr>Impl</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.marker.html" class="tsd-kind-icon">Marker</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.provider.html" class="tsd-kind-icon">Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.query.html" class="tsd-kind-icon">Query</a>
@@ -251,14 +235,35 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.resultiterableiterator.html" class="tsd-kind-icon">Result<wbr>Iterable<wbr>Iterator</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.session.html" class="tsd-kind-icon">Session</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#basefuturekeys" class="tsd-kind-icon">Base<wbr>Future<wbr>Keys</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#providerfactory" class="tsd-kind-icon">Provider<wbr>Factory</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#providers" class="tsd-kind-icon">PROVIDERS</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#getproviderfactory" class="tsd-kind-icon">get<wbr>Provider<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#registerproviderfactory" class="tsd-kind-icon">register<wbr>Provider<wbr>Factory</a>
 					</li>
 				</ul>
 			</nav>

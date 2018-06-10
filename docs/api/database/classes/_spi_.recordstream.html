@@ -84,6 +84,11 @@
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">RecordStream</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="_test_mockdb_.mockrecordstream.html" class="tsd-signature-type">MockRecordStream</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -100,10 +105,10 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_spi_.recordstream.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="_spi_.recordstream.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -155,12 +160,12 @@
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
 					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Record<wbr>Stream<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.recordstream.html" class="tsd-signature-type">RecordStream</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
@@ -168,7 +173,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Readable.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L198">spi.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L255">spi.ts:255</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_spi_.recordstream.html" class="tsd-signature-type">RecordStream</a></h4>
@@ -220,7 +225,7 @@
 					<div class="tsd-signature tsd-kind-icon">summary<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_spi_.resultsummary.html" class="tsd-signature-type">ResultSummary</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L198">spi.ts:198</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L255">spi.ts:255</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -546,7 +551,7 @@
 					<a name="destroy" class="tsd-anchor"></a>
 					<h3>destroy</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">?: </span><a href="_neo4j_error_d_.neo4jerror.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -560,7 +565,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> error: <span class="tsd-signature-type">Error</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> error: <a href="_neo4j_error_d_.neo4jerror.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -743,7 +748,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.recordstream.html">RecordStream</a>.<a href="../interfaces/_api_.recordstream.html#getresultsummary">getResultSummary</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L208">spi.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L265">spi.ts:265</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_spi_.resultsummary.html" class="tsd-signature-type">ResultSummary</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2308,35 +2313,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_api_.html">"api"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_.html">"neo4j"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -2349,17 +2327,17 @@
 						<a href="_spi_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.database.html" class="tsd-kind-icon">Database</a>
+						<a href="_spi_.databaseimpl.html" class="tsd-kind-icon">Database<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_spi_.provider.html" class="tsd-kind-icon">Provider</a>
+						<a href="_spi_.providerimpl.html" class="tsd-kind-icon">Provider<wbr>Impl</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_spi_.recordstream.html" class="tsd-kind-icon">Record<wbr>Stream</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
 								<a href="_spi_.recordstream.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
@@ -2481,13 +2459,19 @@
 						<a href="_spi_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.session.html" class="tsd-kind-icon">Session</a>
+						<a href="_spi_.sessionimpl.html" class="tsd-kind-icon">Session<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+						<a href="_spi_.transactionimpl.html" class="tsd-kind-icon">Transaction<wbr>Impl</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.marker.html" class="tsd-kind-icon">Marker</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.provider.html" class="tsd-kind-icon">Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.query.html" class="tsd-kind-icon">Query</a>
@@ -2495,14 +2479,35 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.resultiterableiterator.html" class="tsd-kind-icon">Result<wbr>Iterable<wbr>Iterator</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.session.html" class="tsd-kind-icon">Session</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#basefuturekeys" class="tsd-kind-icon">Base<wbr>Future<wbr>Keys</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#providerfactory" class="tsd-kind-icon">Provider<wbr>Factory</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#providers" class="tsd-kind-icon">PROVIDERS</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#getproviderfactory" class="tsd-kind-icon">get<wbr>Provider<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#registerproviderfactory" class="tsd-kind-icon">register<wbr>Provider<wbr>Factory</a>
 					</li>
 				</ul>
 			</nav>

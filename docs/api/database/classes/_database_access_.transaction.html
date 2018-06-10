@@ -78,7 +78,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_database_access_.base.html" class="tsd-signature-type">Base</a><span class="tsd-signature-symbol">&lt;</span><a href="_database_access_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_database_access_.base.html" class="tsd-signature-type">Base</a><span class="tsd-signature-symbol">&lt;</span><a href="_database_access_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">Transaction</span>
@@ -90,6 +90,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_api_.marker.html" class="tsd-signature-type">Marker</a></li>
 					<li><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a></li>
 				</ul>
 			</section>
@@ -109,9 +110,15 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_database_access_.transaction.html#database" class="tsd-kind-icon">database</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_database_access_.transaction.html#id" class="tsd-kind-icon">id</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_database_access_.transaction.html#log" class="tsd-kind-icon">log</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_database_access_.transaction.html#parent" class="tsd-kind-icon">parent</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_database_access_.transaction.html#spiobject" class="tsd-kind-icon">spi<wbr>Object</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_database_access_.transaction.html#writeaccess" class="tsd-kind-icon">write<wbr>Access</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_database_access_.transaction.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_database_access_.transaction.html#spiobjectfuture" class="tsd-kind-icon">spi<wbr>Object<wbr>Future</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported"><a href="_database_access_.transaction.html#writeaccess" class="tsd-kind-icon">write<wbr>Access</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected tsd-is-not-exported">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_database_access_.transaction.html#spiobject" class="tsd-kind-icon">spi<wbr>Object</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
@@ -134,20 +141,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="_database_access_.session.html" class="tsd-signature-type">Session</a>, writeAccess<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_database_access_.transaction.html" class="tsd-signature-type">Transaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.transaction.html" class="tsd-signature-type">Transaction</a>, parent<span class="tsd-signature-symbol">: </span><a href="_database_access_.session.html" class="tsd-signature-type">Session</a>, writeAccess<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_database_access_.transaction.html" class="tsd-signature-type">Transaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L219">database-access.ts:219</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L224">database-access.ts:224</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>transaction: <a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>transaction: <a href="../interfaces/_spi_.transaction.html" class="tsd-signature-type">Transaction</a></h5>
 								</li>
 								<li>
 									<h5>parent: <a href="_database_access_.session.html" class="tsd-signature-type">Session</a></h5>
@@ -171,7 +178,7 @@
 						<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#database">database</a></p>
 						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#database">database</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L32">database-access.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L29">database-access.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -183,7 +190,7 @@
 						<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#id">id</a></p>
 						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#id">id</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L33">database-access.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L30">database-access.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -195,41 +202,68 @@
 						<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#log">log</a></p>
 						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#log">log</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L31">database-access.ts:31</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="parent" class="tsd-anchor"></a>
-					<h3>parent</h3>
-					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="_database_access_.session.html" class="tsd-signature-type">Session</a></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#parent">parent</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L30">database-access.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L28">database-access.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
-					<a name="spiobject" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> spi<wbr>Object</h3>
-					<div class="tsd-signature tsd-kind-icon">spi<wbr>Object<span class="tsd-signature-symbol">:</span> <a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="parent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> parent</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="_database_access_.session.html" class="tsd-signature-type">Session</a></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#spiobject">spiObject</a></p>
+						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#parent">parent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L29">database-access.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L33">database-access.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+					<a name="spiobjectfuture" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> spi<wbr>Object<wbr>Future</h3>
+					<div class="tsd-signature tsd-kind-icon">spi<wbr>Object<wbr>Future<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#spiobjectfuture">spiObjectFuture</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L32">database-access.ts:32</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
 					<a name="writeaccess" class="tsd-anchor"></a>
-					<h3>write<wbr>Access</h3>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> write<wbr>Access</h3>
 					<div class="tsd-signature tsd-kind-icon">write<wbr>Access<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L219">database-access.ts:219</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L224">database-access.ts:224</a></li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected tsd-is-not-exported">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+					<a name="spiobject" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> spi<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> spiObject<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">S</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_database_access_.base.html">Base</a>.<a href="_database_access_.base.html#spiobject">spiObject</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L39">database-access.ts:39</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Defer constructing our SPI instance until it&#39;s actually needed, to avoid circiular dependencies in constructo
+									execution.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">S</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
@@ -244,7 +278,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L257">database-access.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L262">database-access.ts:262</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -267,7 +301,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#query">query</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L262">database-access.ts:262</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L267">database-access.ts:267</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -299,7 +333,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#queryiterator">queryIterator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L271">database-access.ts:271</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L276">database-access.ts:276</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +365,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_api_.transaction.html">Transaction</a>.<a href="../interfaces/_api_.transaction.html#querystream">queryStream</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L267">database-access.ts:267</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L272">database-access.ts:272</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -362,7 +396,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L250">database-access.ts:250</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L255">database-access.ts:255</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -393,7 +427,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/database-access.ts#L230">database-access.ts:230</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/database-access.ts#L235">database-access.ts:235</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -458,35 +492,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_api_.html">"api"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_.html">"neo4j"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -521,14 +528,17 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_database_access_.transaction.html#log" class="tsd-kind-icon">log</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
 								<a href="_database_access_.transaction.html#parent" class="tsd-kind-icon">parent</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
-								<a href="_database_access_.transaction.html#spiobject" class="tsd-kind-icon">spi<wbr>Object</a>
+								<a href="_database_access_.transaction.html#spiobjectfuture" class="tsd-kind-icon">spi<wbr>Object<wbr>Future</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
 								<a href="_database_access_.transaction.html#writeaccess" class="tsd-kind-icon">write<wbr>Access</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+								<a href="_database_access_.transaction.html#spiobject" class="tsd-kind-icon">spi<wbr>Object</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private tsd-is-not-exported">
 								<a href="_database_access_.transaction.html#commit" class="tsd-kind-icon">commit</a>

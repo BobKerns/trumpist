@@ -78,7 +78,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transaction</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_spi_.transactionimpl.html" class="tsd-signature-type">TransactionImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transaction</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">Neo4JTransaction</span>
@@ -97,14 +97,21 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-inherited tsd-is-not-exported">
+						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#database" class="tsd-kind-icon">database</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#impl" class="tsd-kind-icon">impl</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#log" class="tsd-kind-icon">log</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#_impl" class="tsd-kind-icon">_impl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#parent" class="tsd-kind-icon">parent</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-inherited tsd-is-not-exported">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#database" class="tsd-kind-icon">database</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#impl" class="tsd-kind-icon">impl</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#log" class="tsd-kind-icon">log</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported"><a href="_neo4j_connector_.neo4jtransaction.html#outer" class="tsd-kind-icon">outer</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
@@ -127,20 +134,23 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Neo4JTransaction<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Transaction</span>, parent<span class="tsd-signature-symbol">: </span><a href="_neo4j_connector_.neo4jsession.html" class="tsd-signature-type">Neo4JSession</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_neo4j_connector_.neo4jtransaction.html" class="tsd-signature-type">Neo4JTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Neo4JTransaction<span class="tsd-signature-symbol">(</span>transaction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Transaction</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="_neo4j_connector_.neo4jsession.html" class="tsd-signature-type">Neo4JSession</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_neo4j_connector_.neo4jtransaction.html" class="tsd-signature-type">Neo4JTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#constructor">constructor</a></p>
+								<p>Overrides <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/neo4j-connector.ts#L118">neo4j-connector.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/neo4j-connector.ts#L109">neo4j-connector.ts:109</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>transaction: <span class="tsd-signature-type">Transaction</span></h5>
+								</li>
+								<li>
+									<h5>outer: <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5>parent: <a href="_neo4j_connector_.neo4jsession.html" class="tsd-signature-type">Neo4JSession</a></h5>
@@ -151,62 +161,122 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-not-exported">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected tsd-is-not-exported">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="database" class="tsd-anchor"></a>
-					<h3>database</h3>
-					<div class="tsd-signature tsd-kind-icon">database<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+					<a name="_impl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _impl</h3>
+					<div class="tsd-signature tsd-kind-icon">_impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transaction</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#database">database</a></p>
+						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#_impl">_impl</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L26">spi.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L33">spi.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="id" class="tsd-anchor"></a>
-					<h3>id</h3>
-					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#id">id</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L27">spi.ts:27</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="impl" class="tsd-anchor"></a>
-					<h3>impl</h3>
-					<div class="tsd-signature tsd-kind-icon">impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Transaction</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L23">spi.ts:23</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-					<a name="log" class="tsd-anchor"></a>
-					<h3>log</h3>
-					<div class="tsd-signature tsd-kind-icon">log<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#log">log</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L25">spi.ts:25</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
 					<a name="parent" class="tsd-anchor"></a>
-					<h3>parent</h3>
-					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> parent</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">P</a></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#parent">parent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L24">spi.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L34">spi.ts:34</a></li>
 						</ul>
 					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-not-exported">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="database" class="tsd-anchor"></a>
+					<h3>database</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> database<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#database">database</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L28">spi.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#id">id</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L29">spi.ts:29</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="impl" class="tsd-anchor"></a>
+					<h3>impl</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> impl<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transaction</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L31">spi.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Transaction</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="log" class="tsd-anchor"></a>
+					<h3>log</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> log<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Logger</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#log">log</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L27">spi.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Logger</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+					<a name="outer" class="tsd-anchor"></a>
+					<h3>outer</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> outer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">O</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#outer">outer</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L30">spi.ts:30</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">O</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
@@ -220,9 +290,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_spi_.transaction.html">Transaction</a>.<a href="_spi_.transaction.html#commit">commit</a></p>
+								<p>Inherited from <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#commit">commit</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L132">spi.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L190">spi.ts:190</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -245,9 +315,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_spi_.transaction.html">Transaction</a>.<a href="_spi_.transaction.html#query">query</a></p>
+								<p>Overrides <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#query">query</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/neo4j-connector.ts#L134">neo4j-connector.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/neo4j-connector.ts#L125">neo4j-connector.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -272,9 +342,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_spi_.transaction.html">Transaction</a>.<a href="_spi_.transaction.html#queryiterator">queryIterator</a></p>
+								<p>Overrides <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#queryiterator">queryIterator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/neo4j-connector.ts#L140">neo4j-connector.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/neo4j-connector.ts#L131">neo4j-connector.ts:131</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -299,9 +369,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="_spi_.transaction.html">Transaction</a>.<a href="_spi_.transaction.html#querystream">queryStream</a></p>
+								<p>Overrides <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#querystream">queryStream</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/neo4j-connector.ts#L137">neo4j-connector.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/neo4j-connector.ts#L128">neo4j-connector.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -326,9 +396,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_spi_.transaction.html">Transaction</a>.<a href="_spi_.transaction.html#rollback">rollback</a></p>
+								<p>Inherited from <a href="_spi_.transactionimpl.html">TransactionImpl</a>.<a href="_spi_.transactionimpl.html#rollback">rollback</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L141">spi.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L198">spi.ts:198</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -358,7 +428,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/neo4j-connector.ts#L125">neo4j-connector.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/neo4j-connector.ts#L116">neo4j-connector.ts:116</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,40 +458,16 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_api_.html">"api"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_.html">"neo4j"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_neo4j_connector_.neo4jconnector.html" class="tsd-kind-icon">Neo4JConnector</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_neo4j_connector_.neo4jconnector_3_4.html" class="tsd-kind-icon">Neo4JConnector_<wbr>3_4</a>
 					</li>
@@ -442,20 +488,26 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+								<a href="_neo4j_connector_.neo4jtransaction.html#_impl" class="tsd-kind-icon">_impl</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected tsd-is-not-exported">
+								<a href="_neo4j_connector_.neo4jtransaction.html#parent" class="tsd-kind-icon">parent</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#database" class="tsd-kind-icon">database</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#id" class="tsd-kind-icon">id</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#impl" class="tsd-kind-icon">impl</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#log" class="tsd-kind-icon">log</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
-								<a href="_neo4j_connector_.neo4jtransaction.html#parent" class="tsd-kind-icon">parent</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
+								<a href="_neo4j_connector_.neo4jtransaction.html#outer" class="tsd-kind-icon">outer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-not-exported">
 								<a href="_neo4j_connector_.neo4jtransaction.html#commit" class="tsd-kind-icon">commit</a>
@@ -481,9 +533,6 @@
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/_neo4j_connector_.neo4jparams.html" class="tsd-kind-icon">Neo4JParams</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_neo4j_connector_.html#neo4jconnector" class="tsd-kind-icon">Neo4JConnector</a>
 					</li>
 				</ul>
 			</nav>

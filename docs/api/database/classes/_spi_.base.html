@@ -60,7 +60,7 @@
 					<a href="_spi_.base.html">Base</a>
 				</li>
 			</ul>
-			<h1>Class Base&lt;P, I&gt;</h1>
+			<h1>Class Base&lt;O, P, I&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -70,6 +70,9 @@
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
+					<li>
+						<h4>O<span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.marker.html" class="tsd-signature-type">Marker</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_api_.parent.html" class="tsd-signature-type">Parent</a></h4>
+					</li>
 					<li>
 						<h4>P<span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.parent.html" class="tsd-signature-type">Parent</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_spi_.marker.html" class="tsd-signature-type">Marker</a></h4>
 					</li>
@@ -85,16 +88,16 @@
 						<span class="target">Base</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="_spi_.provider.html" class="tsd-signature-type">Provider</a>
+								<a href="_spi_.providerimpl.html" class="tsd-signature-type">ProviderImpl</a>
 							</li>
 							<li>
-								<a href="_spi_.database.html" class="tsd-signature-type">Database</a>
+								<a href="_spi_.databaseimpl.html" class="tsd-signature-type">DatabaseImpl</a>
 							</li>
 							<li>
-								<a href="_spi_.session.html" class="tsd-signature-type">Session</a>
+								<a href="_spi_.sessionimpl.html" class="tsd-signature-type">SessionImpl</a>
 							</li>
 							<li>
-								<a href="_spi_.transaction.html" class="tsd-signature-type">Transaction</a>
+								<a href="_spi_.transactionimpl.html" class="tsd-signature-type">TransactionImpl</a>
 							</li>
 						</ul>
 					</li>
@@ -104,38 +107,46 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_spi_.base.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-protected"><a href="_spi_.base.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-private-protected">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_spi_.base.html#_impl" class="tsd-kind-icon">_impl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_spi_.base.html#_outer" class="tsd-kind-icon">_outer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_spi_.base.html#parent" class="tsd-kind-icon">parent</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_spi_.base.html#database" class="tsd-kind-icon">database</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_spi_.base.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_spi_.base.html#impl" class="tsd-kind-icon">impl</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_spi_.base.html#log" class="tsd-kind-icon">log</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_spi_.base.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_spi_.base.html#database" class="tsd-kind-icon">database</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_spi_.base.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_spi_.base.html#impl" class="tsd-kind-icon">impl</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_spi_.base.html#log" class="tsd-kind-icon">log</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_spi_.base.html#outer" class="tsd-kind-icon">outer</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-protected">
 					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, parent<span class="tsd-signature-symbol">?: </span><a href="" class="tsd-signature-type">P</a>, parentDb<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.base.html" class="tsd-signature-type">Base</a></li>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Base<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">P</span>, parentDb<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.base.html" class="tsd-signature-type">Base</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L27">spi.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L34">spi.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -145,10 +156,16 @@
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-siganture">
 											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>otter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>otter: <span class="tsd-signature-type">O</span></h5>
+														</li>
+													</ul>
 													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">I</span></h4>
 												</li>
 											</ul>
@@ -156,7 +173,10 @@
 									</ul>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <a href="" class="tsd-signature-type">P</a></h5>
+									<h5>outer: <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>parent: <span class="tsd-signature-type">P</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parentDb: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
@@ -167,57 +187,125 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="_impl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _impl</h3>
+					<div class="tsd-signature tsd-kind-icon">_impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L33">spi.ts:33</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_outer" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _outer</h3>
+					<div class="tsd-signature tsd-kind-icon">_outer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">O</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L26">spi.ts:26</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="parent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> parent</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">P</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L34">spi.ts:34</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="database" class="tsd-anchor"></a>
 					<h3>database</h3>
-					<div class="tsd-signature tsd-kind-icon">database<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L26">spi.ts:26</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> database<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L28">spi.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="id" class="tsd-anchor"></a>
 					<h3>id</h3>
-					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L27">spi.ts:27</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L29">spi.ts:29</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="impl" class="tsd-anchor"></a>
 					<h3>impl</h3>
-					<div class="tsd-signature tsd-kind-icon">impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">I</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L23">spi.ts:23</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> impl<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L31">spi.ts:31</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="log" class="tsd-anchor"></a>
 					<h3>log</h3>
-					<div class="tsd-signature tsd-kind-icon">log<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L25">spi.ts:25</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> log<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Logger</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L27">spi.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Logger</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="parent" class="tsd-anchor"></a>
-					<h3>parent</h3>
-					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">P</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f841bb5/tools/database/spi.ts#L24">spi.ts:24</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="outer" class="tsd-anchor"></a>
+					<h3>outer</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> outer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">O</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/f843bff/tools/database/spi.ts#L30">spi.ts:30</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">O</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -227,35 +315,8 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_api_.html">"api"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_index_.html">"index"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_.html">"neo4j"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 				</ul>
 			</nav>
@@ -266,23 +327,32 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.base.html" class="tsd-kind-icon">Base</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-protected">
 								<a href="_spi_.base.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="_spi_.base.html#_impl" class="tsd-kind-icon">_impl</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="_spi_.base.html#_outer" class="tsd-kind-icon">_outer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="_spi_.base.html#parent" class="tsd-kind-icon">parent</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_spi_.base.html#database" class="tsd-kind-icon">database</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_spi_.base.html#id" class="tsd-kind-icon">id</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_spi_.base.html#impl" class="tsd-kind-icon">impl</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_spi_.base.html#log" class="tsd-kind-icon">log</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_spi_.base.html#parent" class="tsd-kind-icon">parent</a>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_spi_.base.html#outer" class="tsd-kind-icon">outer</a>
 							</li>
 						</ul>
 					</li>
@@ -292,10 +362,10 @@
 						<a href="_spi_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.database.html" class="tsd-kind-icon">Database</a>
+						<a href="_spi_.databaseimpl.html" class="tsd-kind-icon">Database<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_spi_.provider.html" class="tsd-kind-icon">Provider</a>
+						<a href="_spi_.providerimpl.html" class="tsd-kind-icon">Provider<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_spi_.recordstream.html" class="tsd-kind-icon">Record<wbr>Stream</a>
@@ -307,13 +377,19 @@
 						<a href="_spi_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.session.html" class="tsd-kind-icon">Session</a>
+						<a href="_spi_.sessionimpl.html" class="tsd-kind-icon">Session<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+						<a href="_spi_.transactionimpl.html" class="tsd-kind-icon">Transaction<wbr>Impl</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.marker.html" class="tsd-kind-icon">Marker</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.provider.html" class="tsd-kind-icon">Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.query.html" class="tsd-kind-icon">Query</a>
@@ -321,14 +397,35 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.resultiterableiterator.html" class="tsd-kind-icon">Result<wbr>Iterable<wbr>Iterator</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.session.html" class="tsd-kind-icon">Session</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#basefuturekeys" class="tsd-kind-icon">Base<wbr>Future<wbr>Keys</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#providerfactory" class="tsd-kind-icon">Provider<wbr>Factory</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_spi_.html#providers" class="tsd-kind-icon">PROVIDERS</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#getproviderfactory" class="tsd-kind-icon">get<wbr>Provider<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#registerproviderfactory" class="tsd-kind-icon">register<wbr>Provider<wbr>Factory</a>
 					</li>
 				</ul>
 			</nav>
