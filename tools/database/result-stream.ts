@@ -11,7 +11,7 @@ interface ResultStreamOptions {
     result: neo4j.Result;
 }
 
-type NeoResult = neo4j.ResultSummary;
+type NeoResult = neo4j.ResultSummary<number>;
 type Accept<T> = (accept: T) => void;
 type Reject<T= Error> = (reject?: T) => void;
 
@@ -52,7 +52,7 @@ export class ResultStream extends Readable {
                 });
                 return stream.reading;
             },
-            async onCompleted(summary: neo4j.ResultSummary) {
+            async onCompleted(summary: neo4j.ResultSummary<any>) {
                 // We have to wait for any pending reading to finish.
                 await stream.reading;
                 summaryOk(summary);

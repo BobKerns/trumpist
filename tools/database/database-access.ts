@@ -11,6 +11,7 @@ import * as api from "./api";
 import {Neo4JConnector, Neo4JConnector_3_4} from "./neo4j-connector";
 import {SessionCallback} from "./spi";
 import {CollectedResults, RecordStream, ResultIterator, Query, nextId} from "./api";
+import {Future, future} from "../util/future";
 
 export interface DbOptions {
     /** The type of the database. Currently must be "neo4j" or "neo4j@3.4" */
@@ -23,34 +24,12 @@ export interface DbOptions {
     id?: string;
 }
 
-function once<T>(f: () => T): () => T {
-    let done = false;
-    let err: Error;
-    let val: T;
-    return () => {
-        if (done) {
-            if (err) {
-                throw err;
-            }
-            return val;
-        }
-        done = true;
-        try {
-            val = f();
-        } catch (e) {
-            err = e;
-            throw e;
-        }
-        return val;
-    };
-}
-
-class Base<P extends (api.Parent & api.Marker) | undefined, S extends spi.Marker> {
+class Base<P extends (api.Parent & api.Marker) | undefined, S extends spi.Marker> implements api.Marker {
     public readonly log: Logger;
     public readonly database: string;
     public readonly id: string;
 
-    protected spiObjectFuture: () => S;
+    protected spiObjectFuture: Future<S>;
     protected readonly parent: P;
 
     /**
@@ -58,14 +37,15 @@ class Base<P extends (api.Parent & api.Marker) | undefined, S extends spi.Marker
      * execution.
      */
     protected get spiObject() {
-        return this.spiObjectFuture();
+        return this.spiObjectFuture.value;
     }
 
     constructor(spiObject: (self: Base<any, any>) => S, parent: P, parentDb?: string) {
-        this.spiObjectFuture = once(() => spiObject(this));
-        this.log = this.parent && parent!.log || defaultLog;
-        this.database = this.parent && parent!.database || parentDb || "DB";
-        this.id = `${(this.parent && parent!.id) || parentDb}/${nextId()}`;
+        this.spiObjectFuture = future(() => spiObject(this));
+        this.log = parent && parent!.log || defaultLog;
+        this.database = parent && parent!.database || parentDb || "DB";
+        this.parent = parent;
+        this.id = `${(parent && parent!.id) || parentDb || this.database}/${nextId()}`;
     }
 }
 
@@ -81,16 +61,11 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
     private static createSPI(options: DbOptions, self: DatabaseAccess): spi.Provider {
         const {database, log} = options;
         const params: spi.ConnectionParameters = ((options.parameters || {database, log}) as spi.ConnectionParameters);
-        switch (database) {
-            case "neo4j": {
-                return new Neo4JConnector(self, params);
-            }
-            case "neo4j@3.4": {
-                return new Neo4JConnector_3_4(self, params);
-            }
-            default:
-                throw new Error(`The database ${database} is not supported.`);
+        const factory = spi.getProviderFactory(database);
+        if (!factory) {
+            throw new Error(`The database "${database}" is not supported.`);
         }
+        return factory(self, params);
     }
 
     /**
@@ -109,7 +84,8 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
         const log = this.log;
         try {
             log.debug(`Using database ${this.database}.`);
-            const val = await this.spiObject.withDatabase(driver => fn(new Database(driver, this)));
+            let outer: api.Database;
+            const val = await this.spiObject.withDatabase(() => outer, driver => fn(new Database(driver, this)));
             log.debug(`Finished with database ${this.database}.`);
             return val;
         } catch (e) {
@@ -122,9 +98,9 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
 /**
  * A Driver wrapper for the underlying driver implementation that serves as a factory for connections.
  */
-class Database extends Base<DatabaseAccess, spi.Database<any>> implements api.Database {
+class Database extends Base<DatabaseAccess, spi.Database> implements api.Database {
     // Internal
-    constructor(driver: spi.Database<any>, parent: DatabaseAccess) {
+    constructor(driver: spi.Database, parent: DatabaseAccess) {
         super(() => driver, parent);
     }
 
@@ -136,10 +112,11 @@ class Database extends Base<DatabaseAccess, spi.Database<any>> implements api.Da
      * @returns the return value from the session
      */
     public async withSession<T>(cb: api.SessionCallback<T>, writeAccess: boolean = false): Promise<T> {
-        const id = nextId();
         const dir = writeAccess ? 'WRITE' : 'READ';
-        const wrapped: SessionCallback<T, any> = async (session: spi.Session<any>) => {
-            const nsession = new Session(session, this);
+        let nsession: Session;
+        const wrapped: SessionCallback<T> = async (session: spi.Session) => {
+            nsession = new Session(session, this);
+            const id = nsession.id;
             try {
                 this.log.trace(`SESBEG: ${id} ${dir} Session begin`);
                 const val = await cb(nsession);
@@ -152,7 +129,7 @@ class Database extends Base<DatabaseAccess, spi.Database<any>> implements api.Da
                 await nsession.close();
             }
         };
-        return await this.spiObject.withSession(wrapped, writeAccess);
+        return await this.spiObject.withSession(() => nsession, wrapped, writeAccess);
     }
 
     /**
@@ -166,25 +143,26 @@ class Database extends Base<DatabaseAccess, spi.Database<any>> implements api.Da
 /**
  * Session object exposed to the application code. Factory for transactions.
  */
-class Session extends Base<Database, spi.Session<any>> implements api.Session {
-    constructor(session: spi.Session<any>, parent: Database) {
+class Session extends Base<Database, spi.Session> implements api.Session {
+    constructor(session: spi.Session, parent: Database) {
         super(() => session, parent);
     }
 
     /**
      * Execute a transaction. It will be committed on successful completion, or rolled back on error.
      */
-    public async withTransaction<T>(fn: api.TransactionCallback<T>, writeAccess= false) {
-        const id = nextId();
+    public async withTransaction<T>(fn: api.TransactionCallback<T>, writeAccess= false): Promise<T> {
         const log = this.log;
         const name = fn.name || 'anon';
-        const inner: spi.TransactionCallback<T, any> = async tx => {
-            const transaction = new Transaction(tx, this, writeAccess);
+        let outer: Transaction;
+        const inner: spi.TransactionCallback<T> = async tx => {
+            outer = new Transaction(tx, this, writeAccess);
             const dir = writeAccess ? 'WRITE' : 'READ';
+            const id = outer.id;
             try {
                 // noinspection SpellCheckingInspection
                 log.trace(`TXFBEG: ${name} ${id} ${dir} transaction function begin`);
-                const val = await fn(transaction);
+                const val = await fn(outer);
                 // noinspection SpellCheckingInspection
                 log.trace(`TXFEND: ${name} ${id} ${dir} transaction function returned ${val}`);
                 if (writeAccess) {
@@ -201,10 +179,9 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
             }
         };
         try {
-            // noinspection SpellCheckingInspection
+            const id = this.id;
             log.debug(`TXBEG: ${name} ${id} READ transaction begin`);
-            const val = await this.spiObject.withTransaction(inner, writeAccess);
-            // noinspection SpellCheckingInspection
+            const val = await this.spiObject.withTransaction(() => outer, inner, writeAccess);
             log.trace(`TXEND: ${name} ${id} READ transaction returned ${val}`);
             return val;
         } catch (e) {
@@ -243,9 +220,9 @@ class Session extends Base<Database, spi.Session<any>> implements api.Session {
 /**
  * The transaction object presented to application code
  */
-class Transaction extends Base<Session, spi.Transaction<any>> implements  api.Transaction {
+class Transaction extends Base<Session, spi.Transaction> implements  api.Transaction {
     private readonly writeAccess: boolean;
-    constructor(transaction: spi.Transaction<any>, parent: Session, writeAccess= false) {
+    constructor(transaction: spi.Transaction, parent: Session, writeAccess= false) {
         super(() => transaction, parent);
         this.writeAccess = writeAccess;
     }
@@ -300,3 +277,4 @@ class Transaction extends Base<Session, spi.Transaction<any>> implements  api.Tr
         return this.run(query, params, () => this.spiObject.queryIterator(query, params));
     }
 }
+

@@ -23,7 +23,6 @@ export type seconds = number;
  A marker for api vs spi classes. Helps to prevent passing the wrong one in a generic type.
   */
 export interface Marker {
-
 }
 
 export interface Parent {
