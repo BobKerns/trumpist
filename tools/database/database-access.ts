@@ -112,26 +112,25 @@ export class Database extends Base<DatabaseAccess, spi.Database> implements api.
      * @param writeAccess true if write access is needed.
      * @returns the return value from the session
      */
-    public async withSession<T>(cb: api.SessionCallback<T>, writeAccess: boolean = false): Promise<T> {
-        const dir = writeAccess ? 'WRITE' : 'READ';
+    public async withSession<T>(mode: api.Mode, cb: api.SessionCallback<T>): Promise<T> {
         let nsession: Session;
         // Why is this necessary? An async arrow function is still an arrow function!
         const wrapped: SessionCallback<T> = async (session: spi.Session) => {
-            nsession = new Session(session, this);
+            nsession = new Session(session, this, mode);
             const id = nsession.id;
             try {
-                this.log.trace(`SESBEG: ${id} ${dir} Session begin`);
+                this.log.trace(`SESBEG: ${id} ${mode} Session begin`);
                 const val = await cb(nsession);
-                this.log.trace(`SESEND: ${id} ${dir} Session returns ${val}`);
+                this.log.trace(`SESEND: ${id} ${mode} Session returns ${val}`);
                 return val;
             } catch (e) {
-                this.log.error(`SESER: ${id} ${dir} Session failed: ${e.message}\n${e.stack}`);
+                this.log.error(`SESER: ${id} ${mode} Session failed: ${e.message}\n${e.stack}`);
                 throw e;
             } finally {
                 await nsession.close();
             }
         };
-        return await this.spiObject.withSession(() => nsession, wrapped, writeAccess);
+        return await this.spiObject.withSession(mode,() => nsession, wrapped);
     }
 
     /**
@@ -146,32 +145,34 @@ export class Database extends Base<DatabaseAccess, spi.Database> implements api.
  * Session object exposed to the application code. Factory for transactions.
  */
 export class Session extends Base<Database, spi.Session> implements api.Session {
-    constructor(session: spi.Session, parent: Database) {
+    public readonly mode: api.Mode;
+    constructor(session: spi.Session, parent: Database, mode: api.Mode) {
         super(() => session, parent);
+        this.mode = mode;
     }
 
     /**
      * Execute a transaction. It will be committed on successful completion, or rolled back on error.
      */
-    public async withTransaction<T>(fn: api.TransactionCallback<T>, writeAccess= false): Promise<T> {
+    public async withTransaction<T>(mode: api.Mode, fn: api.TransactionCallback<T>): Promise<T> {
         const log = this.log;
         const name = fn.name || 'anon';
         let outer: Transaction;
         const inner: spi.TransactionCallback<T> = async tx => {
-            outer = new Transaction(tx, this, writeAccess);
-            const dir = writeAccess ? 'WRITE' : 'READ';
+            outer = new Transaction(tx, this, mode);
             const id = outer.id;
+            const modeName: string = api.Mode[mode];
             try {
-                log.trace(`TXFBEG: ${name} ${id} ${dir} transaction function begin`);
+                log.trace(`TXFBEG: ${name} ${id} ${modeName} transaction function begin`);
                 const val = await fn(outer);
-                log.trace(`TXFEND: ${name} ${id} ${dir} transaction function returned ${val}`);
-                if (writeAccess) {
+                log.trace(`TXFEND: ${name} ${id} ${modeName} transaction function returned ${val}`);
+                if (mode === api.Mode.WRITE) {
                     await tx.commit();
                 }
                 return val;
             } catch (e) {
-                log.error(`TXFEND: ${name} ${dir} transaction failed: ${e.message}\n${e.stack}`);
-                if (writeAccess) {
+                log.error(`TXFEND: ${name} ${modeName} transaction failed: ${e.message}\n${e.stack}`);
+                if (mode === api.Mode.WRITE) {
                     await tx.rollback(e);
                 }
                 throw e;
@@ -180,32 +181,13 @@ export class Session extends Base<Database, spi.Session> implements api.Session 
         try {
             const id = this.id;
             log.debug(`TXBEG: ${name} ${id} READ transaction begin`);
-            const val = await this.spiObject.withTransaction(() => outer, inner, writeAccess);
+            const val = await this.spiObject.withTransaction(mode,() => outer, inner);
             log.trace(`TXEND: ${name} ${id} READ transaction returned ${val}`);
             return val;
         } catch (e) {
             this.log.error(`END: ${name} READ transaction failed: ${e.message}\n${e.stack}`);
             throw e;
         }
-    }
-
-    /**
-     * Execute a read-only transaction.
-     * @param fn
-     * @returns The return value from the transaction.
-     */
-    public async withReadTransaction<T>(fn: api.TransactionCallback<T>): Promise<T> {
-        return this.withTransaction(fn, false);
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * Execute a transaction that can modify data.
-     *
-     * @param fn
-     */
-    public async withWriteTransaction<T>(fn: api.TransactionCallback<T>): Promise<T> {
-        return this.withTransaction(fn, true);
     }
 
     /**
@@ -220,10 +202,10 @@ export class Session extends Base<Database, spi.Session> implements api.Session 
  * The transaction object presented to application code
  */
 export class Transaction extends Base<Session, spi.Transaction> implements  api.Transaction {
-    private readonly writeAccess: boolean;
-    constructor(transaction: spi.Transaction, parent: Session, writeAccess= false) {
+    public readonly mode: api.Mode;
+    constructor(transaction: spi.Transaction, parent: Session, mode: api.Mode) {
         super(() => transaction, parent);
-        this.writeAccess = writeAccess;
+        this.mode = mode;
     }
 
     /**

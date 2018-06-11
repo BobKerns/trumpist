@@ -32,12 +32,21 @@ export interface Parent {
 }
 
 /**
+ * A session or transaction can be in read or write mode. Specifying them correctly isn't just a matter of safety;
+ * a read-mode request can be routed to a read-only replica.
+ */
+export enum Mode {
+    READ,
+    WRITE
+}
+
+/**
  * This represents a particularized access, e.g. a configured driver ready to
  * provide sessions/connections. Shared between "threads" of execution.
  */
 export interface Database extends Marker, Parent {
     /** Obtain a session to begin a series of transactions. */
-    withSession<T>(cb: SessionCallback<T>, writeAccess?: boolean): Promise<T>;
+    withSession<T>(mode: Mode, cb: SessionCallback<T>): Promise<T>;
 }
 
 /**
@@ -45,8 +54,9 @@ export interface Database extends Marker, Parent {
  * be interleaved.
  */
 export interface Session extends Marker, Parent {
+    readonly mode: Mode;
     /** Use a transaction to perform a series of queries. */
-    withTransaction<T>(cb: TransactionCallback<T>, writeAccess: boolean): Promise<T>;
+    withTransaction<T>(mode: Mode, cb: TransactionCallback<T>): Promise<T>;
 }
 
 /**
@@ -64,6 +74,7 @@ export interface RecordIterableIterator extends AsyncIterableIterator<Record> {
  * An abstract transaction, within which we can perform multiple queries.
  */
 export interface Transaction extends Marker, Parent {
+    readonly mode: Mode;
     /** Perform a query and obtain the collected results all at once. */
     query(query: Query, params: object): Promise<CollectedResults>;
     /** Perform a query, and obtain the results as a stream. */

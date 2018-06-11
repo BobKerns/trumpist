@@ -10,6 +10,8 @@ import DatabaseAccess from "./database-access";
 import {Logger} from "../util/logging";
 import {QueryParameters} from "./api";
 import {future, Future} from "../util/future";
+import {SessionMode} from "neo4j-driver/v1";
+import {READ, WRITE} from "neo4j-driver/v1/driver";
 
 interface Neo4JParams extends spi.ConnectionParameters {
     url: string;
@@ -60,15 +62,21 @@ export class Neo4JConnector extends Neo4JConnector_3_4 {
     }
 }
 
+function convertMode(mode: api.Mode): SessionMode {
+    switch (mode) {
+        case api.Mode.READ: return READ;
+        case api.Mode.WRITE: return WRITE;
+    }
+}
+
 class Neo4JDriver extends spi.DatabaseImpl<neo4j.Driver> {
     constructor(outer: Future<api.Database>, driver: neo4j.Driver, parent: Neo4JConnector_3_4) {
         super(() => driver, outer, parent);
     }
 
     /** @inheritDoc */
-    public async withSession<T, I>(outer: () => api.Session, fn: spi.SessionCallback<T>, write: boolean): Promise<T> {
-        const mode = write ? neo4j.session.WRITE : neo4j.session.READ;
-        const impl = (await this.impl).session(mode);
+    public async withSession<T, I>(mode: api.Mode, outer: () => api.Session, fn: spi.SessionCallback<T>): Promise<T> {
+        const impl = (await this.impl).session(convertMode(mode));
         const session: any = new Neo4JSession(() => impl, future(outer), this);
         return await fn(session);
     }
@@ -88,9 +96,9 @@ class Neo4JSession extends spi.SessionImpl<neo4j.Session> {
     }
 
     /** @inheritDoc */
-    public async withTransaction<T>(outer: () => api.Transaction, fn: spi.TransactionCallback<T>, writeAccess= true) {
+    public async withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, fn: spi.TransactionCallback<T>) {
         const session = await this.impl;
-        if (writeAccess) {
+        if (mode === api.Mode.WRITE) {
             return await session.writeTransaction(tx => fn(new Neo4JTransaction(tx, future(outer), this)));
         } else {
             return await session.readTransaction(tx => fn(new Neo4JTransaction(tx, future(outer), this)));
@@ -111,7 +119,6 @@ class Neo4JTransaction extends spi.TransactionImpl<neo4j.Transaction> {
         super(() => transaction, outer, parent);
     }
 
-    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     public async run(query: spi.Query, params: QueryParameters) {
         const q = new Neo4JQuery(query, params);

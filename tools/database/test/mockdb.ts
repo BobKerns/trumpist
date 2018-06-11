@@ -28,18 +28,20 @@ export class MockDatabase extends spi.DatabaseImpl<void> {
         super(() => {}, outer, parent);
     }
 
-    public async withSession<T>(outer: () => api.Session, cb: spi.SessionCallback<T>, writeAccess: boolean): Promise<T> {
-        return cb(new MockSession(future(outer), this));
+    public async withSession<T>(mode: api.Mode, outer: () => api.Session, cb: spi.SessionCallback<T>): Promise<T> {
+        return cb(new MockSession(future(outer), this, mode));
     }
 }
 
 export class MockSession extends spi.SessionImpl<void> {
-    constructor(outer: Future<api.Session>, parent: MockDatabase) {
+    public readonly mode: api.Mode;
+    constructor(outer: Future<api.Session>, parent: MockDatabase, mode: api.Mode) {
         super(() => {}, outer, parent);
+        this.mode = mode;
     }
 
-    public async withTransaction<T>(outer: () => api.Transaction, cb: spi.TransactionCallback<T>, writeAccess: boolean): Promise<T> {
-        return cb(new MockTransaction(future(outer), this));
+    public async withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: spi.TransactionCallback<T>): Promise<T> {
+        return cb(new MockTransaction(future(outer), this, mode));
     }
 }
 
@@ -160,8 +162,10 @@ export class MockQuery implements spi.Query {
 }
 
 export class MockTransaction extends spi.TransactionImpl<void> {
-    constructor(outer: Future<api.Transaction>, parent: spi.Session) {
+    public readonly mode: api.Mode;
+    constructor(outer: Future<api.Transaction>, parent: spi.Session, mode: api.Mode) {
         super(() => {}, outer, parent);
+        this.mode = mode;
     }
     public async query(query: MockQuery, params: object): Promise<spi.CollectedResults> {
         return new MockCollectedResults(query);

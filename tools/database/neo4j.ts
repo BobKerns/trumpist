@@ -8,7 +8,6 @@ import {NumberOrInteger} from "./neo4j/graph-types";
 
 export * from './neo4j/record';
 export {default as Record} from './neo4j/record';
-export * from './neo4j/session';
 export * from './neo4j/transaction';
 export {default as Transaction} from './neo4j/transaction';
 export * from "./neo4j/driver";

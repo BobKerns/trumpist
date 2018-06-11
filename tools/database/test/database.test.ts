@@ -11,7 +11,7 @@ import {Logger, create} from "../../util/logging";
 import {match} from "minimatch";
 
 import {MockQuery, MockRecord, MockResultSummary} from "./mockdb";
-import {Parent} from "../api";
+import {Parent, Mode} from "../api";
 
 
 jest.mock('../neo4j');
@@ -71,7 +71,7 @@ describe('Database Access', () => {
     it("Instantiates a session", () => {
         const access: DatabaseAccess = createAccess({});
         return expect(access.withDatabase((dbdriver) => {
-            return dbdriver.withSession((session => {
+            return dbdriver.withSession(Mode.READ, (session => {
                 return checkCommon(session, Session, /^mock(?:\/\d+){3}$/,
                     'withTransaction');
             }))
@@ -83,12 +83,12 @@ describe('Database Access', () => {
     it("Instantiates a transaction", () => {
         const access: DatabaseAccess = createAccess({});
         return expect(access.withDatabase((dbdriver) => {
-            return dbdriver.withSession((session => {
-                return session.withTransaction(tx => {
+            return dbdriver.withSession(Mode.READ, session => {
+                return session.withTransaction(Mode.READ, tx => {
                    return checkCommon(tx, Transaction, /^mock(?:\/\d+){4}$/,
                        "query", "queryStream", "queryIterator");
-                }, true);
-            }))
+                });
+            })
         }))
             .resolves
             .toBe(CALLED);
@@ -98,8 +98,8 @@ describe('Database Access', () => {
         it("performs a collected query", () => {
             const access: DatabaseAccess = createAccess({});
             return expect(access.withDatabase((dbdriver) => {
-                return dbdriver.withSession((session => {
-                    return session.withTransaction(async tx => {
+                return dbdriver.withSession(Mode.READ,session => {
+                    return session.withTransaction(Mode.READ, async tx => {
                         let x = await tx.query(new MockQuery({testData: "collected"}), {});
                         let results = x.getResults();
                         expect(results).toBeTruthy();
@@ -108,8 +108,8 @@ describe('Database Access', () => {
                         expect(results[0]).toBeInstanceOf(MockRecord);
                         expect(results[0].get('testData')).toEqual("collected");
                         return CALLED;
-                    }, true);
-                }))
+                    });
+                })
             }))
                 .resolves
                 .toBe(CALLED);
@@ -118,8 +118,8 @@ describe('Database Access', () => {
         it("performs a stream query", () => {
             const access: DatabaseAccess = createAccess({});
             return expect(access.withDatabase((dbdriver) => {
-                return dbdriver.withSession((session => {
-                    return session.withTransaction(async tx => {
+                return dbdriver.withSession(Mode.READ, session => {
+                    return session.withTransaction(Mode.READ, async tx => {
                         let stream = await tx.queryStream(new MockQuery({streamData: "stream"}), {});
                         return new Promise((accept, reject) => {
                             stream
@@ -136,8 +136,8 @@ describe('Database Access', () => {
                                 .on('end', () => accept(CALLED));
                         });
 
-                    }, true);
-                }))
+                    });
+                })
             }))
                 .resolves
                 .toBe(CALLED);

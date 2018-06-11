@@ -86,7 +86,7 @@ export abstract class ProviderImpl extends Base<DatabaseAccess, DatabaseAccess, 
 
 export interface Database extends Parent, Marker {
     /** Obtain a session to begin a series of transactions. */
-    withSession<T>(outer: () => api.Session, cb: SessionCallback<T>, writeAccess: boolean): Promise<T>;
+    withSession<T>(mode: api.Mode, outer: () => api.Session, cb: SessionCallback<T>): Promise<T>;
 
     close(): Promise<void>;
 }
@@ -100,7 +100,7 @@ export abstract class DatabaseImpl<I> extends Base<api.Database, Provider, I> im
         super(impl, outer, parent);
     }
     /** Obtain a session to begin a series of transactions. */
-    public abstract withSession<T>(outer: () => api.Session, cb: SessionCallback<T>, writeAccess: boolean): Promise<T>;
+    public abstract withSession<T>(mode: api.Mode, outer: () => api.Session, cb: SessionCallback<T>): Promise<T>;
 
     public async close(): Promise<void> {
     }
@@ -108,7 +108,7 @@ export abstract class DatabaseImpl<I> extends Base<api.Database, Provider, I> im
 
 export interface Session extends Parent, Marker {
     /** Use a transaction to perform a series of queries. */
-    withTransaction<T>(outer: () => api.Transaction, cb: TransactionCallback<T>, writeAccess: boolean): Promise<T>;
+    withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: TransactionCallback<T>): Promise<T>;
     /** Optional close implementation. */
     close(): Promise<void>;
 }
@@ -123,7 +123,7 @@ export abstract class SessionImpl<I> extends Base<api.Session, Database, I> impl
         super(impl, outer, parent);
     }
     /** Use a transaction to perform a series of queries. */
-    public abstract withTransaction<T>(outer: () => api.Transaction, cb: TransactionCallback<T>, writeAccess: boolean): Promise<T>;
+    public abstract withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: TransactionCallback<T>): Promise<T>;
     /** Optional close implementation. */
     public async close(): Promise<void> {
     }
