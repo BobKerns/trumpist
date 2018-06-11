@@ -10,7 +10,7 @@ import DatabaseAccess, {Database, Session, Transaction} from "../database-access
 import {Logger, create} from "../../util/logging";
 import {match} from "minimatch";
 
-import "./mockdb";
+import {MockQuery, MockRecord, MockResultSummary} from "./mockdb";
 import {Parent} from "../api";
 
 
@@ -93,4 +93,55 @@ describe('Database Access', () => {
             .resolves
             .toBe(CALLED);
     });
+
+    describe('testing querying', () => {
+        it("performs a collected query", () => {
+            const access: DatabaseAccess = createAccess({});
+            return expect(access.withDatabase((dbdriver) => {
+                return dbdriver.withSession((session => {
+                    return session.withTransaction(async tx => {
+                        let x = await tx.query(new MockQuery({testData: "collected"}), {});
+                        let results = x.getResults();
+                        expect(results).toBeTruthy();
+                        expect(Array.isArray(results)).toBeTruthy();
+                        expect(results.length).toBe(1);
+                        expect(results[0]).toBeInstanceOf(MockRecord);
+                        expect(results[0].get('testData')).toEqual("collected");
+                        return CALLED;
+                    }, true);
+                }))
+            }))
+                .resolves
+                .toBe(CALLED);
+        });
+
+        it("performs a stream query", () => {
+            const access: DatabaseAccess = createAccess({});
+            return expect(access.withDatabase((dbdriver) => {
+                return dbdriver.withSession((session => {
+                    return session.withTransaction(async tx => {
+                        let stream = await tx.queryStream(new MockQuery({streamData: "stream"}), {});
+                        return new Promise((accept, reject) => {
+                            stream
+                                .on('data', (data: MockRecord) =>{
+                                    expect(data).toBeTruthy();
+                                    expect(data).toBeInstanceOf(MockRecord);
+                                    expect(data.get("streamData")).toEqual("stream");
+                                })
+                                .on('result', (result) => {
+                                    expect(result).toBeTruthy();
+                                    expect(result).toBeInstanceOf(MockResultSummary);
+                                })
+                                .on('error', (e) => reject(e))
+                                .on('end', () => accept(CALLED));
+                        });
+
+                    }, true);
+                }))
+            }))
+                .resolves
+                .toBe(CALLED);
+        });
+    });
+
 });

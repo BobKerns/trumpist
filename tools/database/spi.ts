@@ -252,9 +252,9 @@ export abstract class CollectedResults implements api.CollectedResults {
  * listening for the ```"result"``` event.
  */
 export abstract class RecordStream extends Readable implements api.RecordStream {
-    private readonly summary: Promise<ResultSummary>;
+    protected readonly summary: Promise<ResultSummary>;
     protected constructor() {
-        super();
+        super({objectMode: true});
         this.summary = new Promise<ResultSummary>((success, failure) => {
             this
                 .on('result', summary => success(summary))

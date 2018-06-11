@@ -8,10 +8,10 @@
 
 import * as spi from "../spi";
 import * as api from "../api";
-import DatabaseAccess from "../database-access";
 import {ConnectionParameters} from "../api";
-import {CollectedResults, ResultIterator} from "../spi";
+import DatabaseAccess from "../database-access";
 import {Future, future} from "../../util/future";
+import {AnyParams} from "../../util/types";
 
 export class MockProvider extends spi.ProviderImpl {
     constructor(parent: DatabaseAccess, parameters: ConnectionParameters) {
@@ -44,46 +44,118 @@ export class MockSession extends spi.SessionImpl<void> {
 }
 
 export class MockResultSummary extends spi.ResultSummary {
+    private readonly query: MockQuery;
+    constructor(query: MockQuery) {
+        super();
+        this.query = query;
+    }
 }
 
 export class MockCollectedResults extends spi.CollectedResults {
-    public async getResultSummary(): Promise<spi.ResultSummary> {
-        return new MockResultSummary();
+    public readonly query: MockQuery;
+    private readonly results: MockRecord[];
+
+    constructor(query: MockQuery) {
+        super();
+        this.query = query;
+        if (Array.isArray(query.result)) {
+            this.results = query.result.map((r: AnyParams) => new MockRecord(r));
+        }
+    }
+    public async getResultSummary(): Promise<MockResultSummary> {
+        return new MockResultSummary(this.query);
     }
 
-    public getResults(): api.Record[] {
-        return [];
+    public getResults(): MockRecord[] {
+        return this.results;
     }
 }
 
 export class MockRecord implements api.Record {
+    private readonly data: AnyParams;
+    constructor(data: AnyParams) {
+        this.data = data;
+    }
+
     public get(key: string): any {
-        return null;
+        if (! this.data.hasOwnProperty(key)) {
+            throw new Error(`Key ${key} is not present in the result, even as a null.`)
+        }
+        return this.data[key];
     }
 }
 
-export class MockIteratorResult implements IteratorResult<api.Record> {
+export class MockIteratorResult implements IteratorResult<MockRecord> {
     public done: boolean = true;
-    public value: api.Record = new MockRecord();
+    public value: MockRecord;
+    constructor(record: MockRecord) {
+        this.value = record;
+    }
 }
 
 export class MockResultIterator extends spi.ResultIterator {
-    public [Symbol.asyncIterator](): AsyncIterableIterator<api.Record> {
-        return new MockResultIterator();
+    private results: MockCollectedResults;
+    private iterator: Iterator<MockRecord>;
+    constructor(query: MockQuery) {
+        let results = new MockCollectedResults(query);
+        super();
+        this.results = results;
+        this.iterator = results.getResults().values();
+    }
+    public [Symbol.asyncIterator](): AsyncIterableIterator<MockRecord> {
+        return this;
     }
 
     public async getResultSummary(): Promise<MockResultSummary> {
-        return new MockResultSummary();
+        return this.results.getResultSummary();
     }
 
-    public async next(value?: any): Promise<IteratorResult<api.Record>> {
-        return new MockIteratorResult();
+    public async next(value?: any): Promise<IteratorResult<MockRecord>> {
+        return this.iterator.next();
     }
 }
 
 export class MockRecordStream extends spi.RecordStream {
-    constructor() {
+    public query: MockQuery;
+    constructor(query: MockQuery) {
         super();
+        this.query = query;
+    }
+
+    public _read() {
+        const result = this.query.result;
+        if (result instanceof Error) {
+            let e = new Error(result.message);
+            Object.assign(e, result);
+            (e as any).prototype = (result as any).prototype;
+            this.emit('error', e);
+            return;
+        }
+        result.forEach(r => this.emit('data', new MockRecord(r)));
+        this.emit('result', new MockResultSummary(this.query));
+        this.emit('end');
+    }
+
+    public getResultSummary() : Promise<MockResultSummary> {
+        return super.getResultSummary() as Promise<MockResultSummary>;
+    }
+}
+
+
+export class MockQuery implements spi.Query {
+    public name: string;
+    public parameters: api.QueryParameters;
+    public statement: spi.Query | string;
+    public result: AnyParams[] | Error;
+    constructor(...result: (AnyParams|Error)[]) {
+        this.result = result;
+    }
+
+    public resolve(params: object): api.Resolution<this> {
+        return {
+            statement: this,
+            parameters: {},
+        };
     }
 }
 
@@ -91,16 +163,16 @@ export class MockTransaction extends spi.TransactionImpl<void> {
     constructor(outer: Future<api.Transaction>, parent: spi.Session) {
         super(() => {}, outer, parent);
     }
-    public async query(query: spi.Query, params: object): Promise<spi.CollectedResults> {
-        return new MockCollectedResults();
+    public async query(query: MockQuery, params: object): Promise<spi.CollectedResults> {
+        return new MockCollectedResults(query);
     }
 
-    public async queryIterator(query: spi.Query, params: object): Promise<spi.ResultIterator> {
-        return new MockResultIterator();
+    public async queryIterator(query: MockQuery, params: object): Promise<spi.ResultIterator> {
+        return new MockResultIterator(query);
     }
 
-    public async queryStream(query: spi.Query, params: object): Promise<spi.RecordStream> {
-        return new MockRecordStream();
+    public async queryStream(query: MockQuery, params: object): Promise<spi.RecordStream> {
+        return new MockRecordStream(query);
     }
 }
 
