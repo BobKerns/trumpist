@@ -71,4 +71,17 @@ describe('Database Access', () => {
             .resolves
             .toBe(CALLED);
     });
+
+    it("Instantiates a transaction", () => {
+        const access: DatabaseAccess = createAccess({});
+        return expect(access.withDatabase((dbdriver) => {
+            return dbdriver.withSession((session => {
+                return session.withTransaction(() => {
+                   return CALLED;
+                }, true);
+            }))
+        }))
+            .resolves
+            .toBe(CALLED);
+    });
 });
