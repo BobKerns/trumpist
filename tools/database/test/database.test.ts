@@ -5,12 +5,13 @@
 import "jest";
 
 import * as db from "..";
-import DatabaseAccess from "../database-access";
+import DatabaseAccess, {Database, Session, Transaction} from "../database-access";
 
 import {Logger, create} from "../../util/logging";
 import {match} from "minimatch";
 
 import "./mockdb";
+import {Parent} from "../api";
 
 
 jest.mock('../neo4j');
@@ -31,22 +32,30 @@ function createAccess({database}: {database?: string}) {
     });
 }
 
+const commonProps = ["parent", "database", "id", "log"];
+
+function checkCommon(dbobj: Parent, cls: Function, idpattern: RegExp, ...props: string[]) {
+    expect(dbobj).toBeInstanceOf(cls);
+    [...commonProps, ...props].forEach(prop => expect(dbobj)
+        .toHaveProperty(prop));
+    expect(dbobj.database).toBe("mock");
+    expect(dbobj.id).toMatch(idpattern);
+    expect(dbobj.log.toString()).toBe(log.toString());
+    return CALLED;
+}
+
 describe('Database Access', () => {
     it('Instantiate access', () => {
         const access: DatabaseAccess = createAccess({});
-        expect(access.database).toBe("mock");
-        expect(access.id).toMatch(/^mock\/\d+$/);
-        expect(access.log.toString()).toBe(log.toString());
+        checkCommon(access, DatabaseAccess, /^mock(?:\/\d+)$/,
+            "withDatabase");
     });
 
     it("Instantiates a DB driver", () => {
         const access: DatabaseAccess =createAccess({});
         return expect(access.withDatabase((dbdriver) => {
-            expect(dbdriver).toBeTruthy();
-            expect(dbdriver.id).toMatch(/^mock\/\d+\/\d+$/);
-            expect(dbdriver.database).toBe("mock");
-            expect(dbdriver.log.toString()).toBe(log.toString());
-            return CALLED;
+            return checkCommon(dbdriver, Database, /^mock(?:\/\d+){2}$/,
+                "withSession")
         }))
             .resolves
             .toBe(CALLED);
@@ -63,9 +72,8 @@ describe('Database Access', () => {
         const access: DatabaseAccess = createAccess({});
         return expect(access.withDatabase((dbdriver) => {
             return dbdriver.withSession((session => {
-                expect(session)
-                    .toHaveProperty('withReadTransaction');
-                return CALLED;
+                return checkCommon(session, Session, /^mock(?:\/\d+){3}$/,
+                    'withTransaction');
             }))
         }))
             .resolves
@@ -76,8 +84,9 @@ describe('Database Access', () => {
         const access: DatabaseAccess = createAccess({});
         return expect(access.withDatabase((dbdriver) => {
             return dbdriver.withSession((session => {
-                return session.withTransaction(() => {
-                   return CALLED;
+                return session.withTransaction(tx => {
+                   return checkCommon(tx, Transaction, /^mock(?:\/\d+){4}$/,
+                       "query", "queryStream", "queryIterator");
                 }, true);
             }))
         }))
