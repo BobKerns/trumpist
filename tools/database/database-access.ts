@@ -99,7 +99,7 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
 /**
  * A Driver wrapper for the underlying driver implementation that serves as a factory for connections.
  */
-class Database extends Base<DatabaseAccess, spi.Database> implements api.Database {
+export class Database extends Base<DatabaseAccess, spi.Database> implements api.Database {
     // Internal
     constructor(driver: spi.Database, parent: DatabaseAccess) {
         super(() => driver, parent);
@@ -145,7 +145,7 @@ class Database extends Base<DatabaseAccess, spi.Database> implements api.Databas
 /**
  * Session object exposed to the application code. Factory for transactions.
  */
-class Session extends Base<Database, spi.Session> implements api.Session {
+export class Session extends Base<Database, spi.Session> implements api.Session {
     constructor(session: spi.Session, parent: Database) {
         super(() => session, parent);
     }
@@ -219,7 +219,7 @@ class Session extends Base<Database, spi.Session> implements api.Session {
 /**
  * The transaction object presented to application code
  */
-class Transaction extends Base<Session, spi.Transaction> implements  api.Transaction {
+export class Transaction extends Base<Session, spi.Transaction> implements  api.Transaction {
     private readonly writeAccess: boolean;
     constructor(transaction: spi.Transaction, parent: Session, writeAccess= false) {
         super(() => transaction, parent);
@@ -277,3 +277,9 @@ class Transaction extends Base<Session, spi.Transaction> implements  api.Transac
     }
 }
 
+export {
+    Query, QueryParameters,
+    Record, ResultSummary,
+    RecordStream, RecordIterableIterator,
+    CollectedResults
+} from "./api";
