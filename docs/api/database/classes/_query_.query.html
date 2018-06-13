@@ -82,6 +82,13 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_api_.query.html" class="tsd-signature-type">Query</a></li>
+					<li><a href="../interfaces/_spi_.query.html" class="tsd-signature-type">Query</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -97,15 +104,20 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_query_.query.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_query_.query.html#parameters" class="tsd-kind-icon">parameters</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_query_.query.html#spec" class="tsd-kind-icon">spec</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_query_.query.html#statement" class="tsd-kind-icon">statement</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_query_.query.html#parse" class="tsd-kind-icon">parse</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_query_.query.html#statement" class="tsd-kind-icon">statement</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_query_.query.html#bindparams" class="tsd-kind-icon">bind<wbr>Params</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_query_.query.html#resolve" class="tsd-kind-icon">resolve</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_query_.query.html#curry" class="tsd-kind-icon">curry</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_query_.query.html#expand" class="tsd-kind-icon">expand</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,19 +129,25 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Query<span class="tsd-signature-symbol">(</span>spec<span class="tsd-signature-symbol">: </span><a href="../interfaces/_query_.queryspec.html" class="tsd-signature-type">QuerySpec</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_query_.query.html" class="tsd-signature-type">Query</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Query<span class="tsd-signature-symbol">(</span>parse<span class="tsd-signature-symbol">: </span><a href="_query_parser_.queryparser.html" class="tsd-signature-type">QueryParser</a>, parameters<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">AnyParams</span>, name<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Nullable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_query_.query.html" class="tsd-signature-type">Query</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L25">query.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L24">query.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>spec: <a href="../interfaces/_query_.queryspec.html" class="tsd-signature-type">QuerySpec</a></h5>
+									<h5>parse: <a href="_query_parser_.queryparser.html" class="tsd-signature-type">QueryParser</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> parameters: <span class="tsd-signature-type">AnyParams</span><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> name: <span class="tsd-signature-type">Nullable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_query_.query.html" class="tsd-signature-type">Query</a></h4>
@@ -144,61 +162,76 @@
 					<h3>name</h3>
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_spi_.query.html">Query</a>.<a href="../interfaces/_spi_.query.html#name">name</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L23">query.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L18">query.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="parameters" class="tsd-anchor"></a>
 					<h3>parameters</h3>
-					<div class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_api_.queryparameters.html" class="tsd-signature-type">QueryParameters</a></div>
+					<div class="tsd-signature tsd-kind-icon">parameters<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AnyParams</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L25">query.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L20">query.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="spec" class="tsd-anchor"></a>
-					<h3>spec</h3>
-					<div class="tsd-signature tsd-kind-icon">spec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="parse" class="tsd-anchor"></a>
+					<h3>parse</h3>
+					<div class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">:</span> <a href="_query_parser_.queryparser.html" class="tsd-signature-type">QueryParser</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L22">query.ts:22</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="statement" class="tsd-anchor"></a>
-					<h3>statement</h3>
-					<div class="tsd-signature tsd-kind-icon">statement<span class="tsd-signature-symbol">:</span> <a href="../modules/_query_.html#statementproto" class="tsd-signature-type">StatementProto</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L24">query.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L19">query.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="bindparams" class="tsd-anchor"></a>
-					<h3>bind<wbr>Params</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">bind<wbr>Params<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.queryparameters.html" class="tsd-signature-type">QueryParameters</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_query_.query.html" class="tsd-signature-type">Query</a></li>
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="statement" class="tsd-anchor"></a>
+					<h3>statement</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> statement<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L34">query.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L22">query.ts:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="curry" class="tsd-anchor"></a>
+					<h3>curry</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">curry<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Nullable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span>, params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AnyParams</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_query_.query.html" class="tsd-signature-type">Query</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_spi_.query.html">Query</a>.<a href="../interfaces/_spi_.query.html#curry">curry</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L44">query.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>params: <a href="../interfaces/_api_.queryparameters.html" class="tsd-signature-type">QueryParameters</a></h5>
+									<h5>name: <span class="tsd-signature-type">Nullable</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>params: <span class="tsd-signature-type">AnyParams</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_query_.query.html" class="tsd-signature-type">Query</a></h4>
@@ -206,16 +239,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="resolve" class="tsd-anchor"></a>
-					<h3>resolve</h3>
+					<a name="expand" class="tsd-anchor"></a>
+					<h3>expand</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">resolve<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></li>
+						<li class="tsd-signature tsd-kind-icon">expand<span class="tsd-signature-symbol">(</span>params<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AnyParams</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.expandresult.html" class="tsd-signature-type">ExpandResult</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/b856189/tools/database/query.ts#L48">query.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/81186f8/tools/database/query.ts#L35">query.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,10 +256,13 @@
 									<p>Return the statement as a string (if it&#39;s not already).</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">function</span>
-							</h4>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>params: <span class="tsd-signature-type">AnyParams</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_api_.expandresult.html" class="tsd-signature-type">ExpandResult</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -260,29 +296,35 @@
 								<a href="_query_.query.html#parameters" class="tsd-kind-icon">parameters</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_query_.query.html#spec" class="tsd-kind-icon">spec</a>
+								<a href="_query_.query.html#parse" class="tsd-kind-icon">parse</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_query_.query.html#statement" class="tsd-kind-icon">statement</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_query_.query.html#bindparams" class="tsd-kind-icon">bind<wbr>Params</a>
+								<a href="_query_.query.html#curry" class="tsd-kind-icon">curry</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_query_.query.html#resolve" class="tsd-kind-icon">resolve</a>
+								<a href="_query_.query.html#expand" class="tsd-kind-icon">expand</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_query_.queryspec.html" class="tsd-kind-icon">Query<wbr>Spec</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../modules/_query_.html#queryparsefn" class="tsd-kind-icon">Query<wbr>Parse<wbr>Fn</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="../modules/_query_.html#statementproto" class="tsd-kind-icon">Statement<wbr>Proto</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../modules/_query_.html#templatehandler" class="tsd-kind-icon">Template<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_query_.html#counter" class="tsd-kind-icon">COUNTER</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
+						<a href="../modules/_query_.html#backtick" class="tsd-kind-icon">backtick</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_query_.html#readqueryfactory" class="tsd-kind-icon">read<wbr>Query<wbr>Factory</a>
 					</li>
 				</ul>
 			</nav>
