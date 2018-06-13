@@ -203,8 +203,7 @@ export abstract class TransactionImpl<I> extends Base<api.Transaction, Session, 
  * An abstract query
  */
 export interface Query extends api.Query {
-    parameters: api.QueryParameters;
-    statement: api.Query | string;
+
 }
 
 /**

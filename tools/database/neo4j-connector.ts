@@ -122,7 +122,7 @@ class Neo4JTransaction extends spi.TransactionImpl<neo4j.Transaction> {
     /** @inheritDoc */
     public async run(query: spi.Query, params: QueryParameters) {
         const q = new Neo4JQuery(query, params);
-        const {statement, parameters} = query.resolve(params);
+        const {statement, parameters} = query.expand(params);
         if (typeof statement === 'string') {
             return await (await this.impl).run(statement, parameters);
         }
@@ -141,31 +141,5 @@ class Neo4JTransaction extends spi.TransactionImpl<neo4j.Transaction> {
 
 }
 
-/**
- * Internal Neo4J-specific query that captures supplied parameters, and reifies the
- * abstract query.
- */
-class Neo4JQuery implements spi.Query {
-    public readonly statement: api.Query | string;
-    public readonly parameters: QueryParameters;
-    /**
-     * Capture the supplied query and parameters, and reify the statement we will supply to the server.
-     * @param query
-     * @param params
-     */
-    constructor(query: api.Query, params: api.QueryParameters) {
-        const {query: nQuery, parameters: nParams} = this.bindParams(params);
-        this.parameters = nParams;
-    }
-
-    public resolve(params: object): api.Resolution<this> {
-        const result: api.Resolution<this> = {statement: this, parameters: this.parameters};
-        return result;
-    }
-
-    protected bindParams(params: QueryParameters): {query: api.Query, parameters: api.QueryParameters} {
-        throw new Error("Not Implemented");
-    }
-}
 
 spi.registerProviderFactory('neo4j', (parent, params) => new Neo4JConnector(parent, parent, params));

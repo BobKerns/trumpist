@@ -18,6 +18,7 @@ import {future, Future} from "../util/future";
 import {AnyParams} from "../util/types";
 import defineProperty = Reflect.defineProperty;
 import ownKeys = Reflect.ownKeys;
+import * as api from "./api";
 
 import * as R from "ramda";
 
@@ -28,22 +29,6 @@ interface ParseResult {
     name?: string;
     steps: ParseStep[];
     parameters: string[];
-}
-
-/**
- * Return result after expansion.
- */
-interface ExpandResult {
-    /** Optional name for this query. */
-    name?: string;
-    /** The expanded result. */
-    statement: string;
-    /** Unused supplied parameter values, to be supplied for substitution in running the query. */
-    parameters: AnyParams;
-    /** Parameters not supplied, but used in the template */
-    missing: string[];
-    /** Parameters supplied but not used, for error reporting */
-    unused: string[];
 }
 
 export class QueryParser {
@@ -122,7 +107,7 @@ export class QueryParser {
      * @param {AnyParams} params
      * @returns {ExpandResult}
      */
-    public expand(params: AnyParams) : ExpandResult {
+    public expand(params: AnyParams) : api.ExpandResult {
         const missing: string[] = [];
         const parameters = {...params};
         let process = (step: ParseStep): string => {
@@ -141,5 +126,16 @@ export class QueryParser {
         const statement = this.parsed.steps.map(process).join('');
         const unused = ownKeys(parameters) as string[];
         return {name: this.parsed.name, statement, parameters, unused, missing};
+    }
+
+    /**
+     * Make a new `QueryParser` of the same type as this one, with a new statement.
+     * @param {string} statement
+     * @returns {this}
+     */
+    public reparse(statement: string): this {
+        type t = new (statement: string) => this;
+        let t = this.constructor as t;
+        return new t(statement);
     }
 }

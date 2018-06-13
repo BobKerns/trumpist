@@ -4,6 +4,7 @@
 
 import {Readable} from "stream";
 import {Logger} from "../util/logging";
+import {AnyParams, Nullable} from "../util/types";
 
 export type Maybe<T> = T | Promise<T>;
 
@@ -83,28 +84,33 @@ export interface Transaction extends Marker, Parent {
     queryIterator(query: Query, params: object): Promise<ResultIterator>;
 }
 
-export interface Resolution<T extends Query> {
-    statement: string | T;
-    parameters: QueryParameters;
+/**
+ * Return result after expansion.
+ */
+export interface ExpandResult {
+    /** Optional name for this query. */
+    name?: string;
+    /** The expanded result. */
+    statement: string;
+    /** Unused supplied parameter values, to be supplied for substitution in running the query. */
+    parameters: AnyParams;
+    /** Parameters not supplied, but used in the template */
+    missing: string[];
+    /** Parameters supplied but not used, for error reporting */
+    unused: string[];
 }
+
 /**
  * An abstract query
  */
 export interface Query {
     name?: string;
     /**
-     * Returns a string if fully resolved, or a partially-resolved (curried) query if parameters remain to be supplied.
-     * This is necessary because some queries cannot be formed until some of the parameters are supplied; they act as
-     * templates.
+     * Return a detailed response partially-curried statement, and lists of used and unused parameters.
      */
-    resolve(params: object): Resolution<this>;
-}
+    expand(params: object): ExpandResult;
 
-/**
- * Map specifying query parameters.
- */
-export interface QueryParameters {
-    [k: string]: any;
+    curry(name: Nullable<string>, params: AnyParams): Query;
 }
 
 /**

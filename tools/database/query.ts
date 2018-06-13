@@ -5,38 +5,65 @@
 
 import {Future} from "../util/future";
 import {QueryParser} from "./query-parser";
+import * as api from "./api";
+import * as spi from "./spi";
+import {AnyParams, Nullable} from "../util/types";
 
 let COUNTER = 0;
 
 /**
  * Abstract query (standin/proxy)
  */
-export default class Query {
+export class Query implements api.Query, spi.Query {
     public readonly name: string;
     public readonly parse: QueryParser;
+    public readonly parameters: AnyParams;
 
-    constructor(parse: QueryParser) {
-        this.name = parse.name || `Query-${COUNTER++}`;
+    public get statement() {
+        return this.parse.statement;
     }
 
-    public bindParams(params: QueryParameters) {
-        return new Query({
-            name: this.name,
-            statement: this.resolve(),
-            parameters: {
-                ...params,
-                ...this.parameters,
-            },
-        });
+    constructor(parse: QueryParser, parameters: AnyParams = {}, name?: Nullable<string>) {
+        this.name = name || parse.parsed.name || `Query-${COUNTER++}`;
+        this.parse = parse;
+        this.parameters = parameters;
     }
 
     /**
      * Return the statement as a string (if it's not already).
      */
-    public resolve() {
-        if (typeof this.statement === 'string') {
-            return this.statement;
+    public expand(params: AnyParams): api.ExpandResult {
+        const merged = {...this.parameters, ...params};
+        const expanded = this.parse.expand(merged);
+        if (expanded.missing) {
+            throw new Error(`Query parameters not found: [${expanded.missing}`);
         }
-        return this.statement(this.parameters);
+        return expanded;
+    }
+
+    public curry(name: Nullable<string>, params: AnyParams): Query {
+        const merged = {...this.parameters, ...params};
+        const expanded = this.parse.expand(merged);
+        return new Query(this.parse.reparse(expanded.statement), expanded.parameters, name || `${this.name}-${COUNTER++}`);
     }
 }
+export type QueryParseFn<Q extends QueryParser> = (statement: string) => Q;
+
+export type TemplateHandler<T> = (strs: TemplateStringsArray, ...params: any[]) => T;
+
+/**
+ * Backtick template operator factory
+ */
+function readQueryFactory<Q extends QueryParser>(fn: QueryParseFn<Q>): TemplateHandler<Query> {
+    function readQuery(strs: TemplateStringsArray, ...params: any[]): Query {
+        let merged = strs.reduce((prev, s, i) => prev + s + (params[i] || ''), '');
+        let parse = fn(merged);
+        return new Query(parse);
+    }
+    (readQuery as any).withParser = readQueryFactory;
+    return readQuery;
+}
+
+export const backtick = readQueryFactory((statement) => new QueryParser(statement));
+
+export default backtick;

@@ -4,5 +4,6 @@
 
 import * as api from "./api";
 import * as spi from "./spi";
-export {api, spi};
 export {DbOptions, default} from "./database-access";
+import * as query from "./query";
+export {api, spi, query};
