@@ -25,6 +25,7 @@ type Pick = (params: AnyParams) => (string | undefined);
 type ParseStep = string | {param: string, pick: Pick};
 
 interface ParseResult {
+    name?: string;
     steps: ParseStep[];
     parameters: string[];
 }
@@ -33,6 +34,8 @@ interface ParseResult {
  * Return result after expansion.
  */
 interface ExpandResult {
+    /** Optional name for this query. */
+    name?: string;
     /** The expanded result. */
     statement: string;
     /** Unused supplied parameter values, to be supplied for substitution in running the query. */
@@ -70,6 +73,14 @@ export class QueryParser {
     }
 
     private parse(statement: string): ParseResult {
+        let name: string | undefined = undefined;
+        let nameMatch = /^\s*\[\s*([a-zA-Z0-9_]+)\s*]\s*:\s*/.exec(statement);
+        if (nameMatch && nameMatch[1]) {
+            name = nameMatch[1];
+        }
+        if (nameMatch) {
+            statement = statement.substring(nameMatch[0].length);
+        }
         let steps: ParseStep[] = [];
         let parameters: string[] = [];
         if (statement === '') {
@@ -91,6 +102,7 @@ export class QueryParser {
             }
         }
         return {
+            name: name,
             steps: steps,
             parameters: R.uniq(parameters),
         };
@@ -126,8 +138,8 @@ export class QueryParser {
                 return val;
             }
         };
-        const statement = this.parsed.steps.map(process).join();
+        const statement = this.parsed.steps.map(process).join('');
         const unused = ownKeys(parameters) as string[];
-        return {statement, parameters, unused, missing};
+        return {name: this.parsed.name, statement, parameters, unused, missing};
     }
 }

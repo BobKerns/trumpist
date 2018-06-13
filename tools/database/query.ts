@@ -2,33 +2,21 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import * as api from "./api";
-import {QueryParameters} from "./api";
+
+import {Future} from "../util/future";
+import {QueryParser} from "./query-parser";
 
 let COUNTER = 0;
-
-export type StatementProto = string | ((q: QueryParameters) => StatementProto);
-
-export interface QuerySpec {
-    name: string;
-    statement: StatementProto;
-    parameters: QueryParameters;
-}
 
 /**
  * Abstract query (standin/proxy)
  */
 export default class Query {
-    public readonly spec: any;
     public readonly name: string;
-    public readonly statement: StatementProto;
-    public readonly parameters: api.QueryParameters;
+    public readonly parse: QueryParser;
 
-    constructor(spec: QuerySpec) {
-        this.spec = spec;
-        this.name = spec.name || `Query-${COUNTER++}`;
-        this.statement = spec.statement || "";
-        this.parameters = spec.parameters || {};
+    constructor(parse: QueryParser) {
+        this.name = parse.name || `Query-${COUNTER++}`;
     }
 
     public bindParams(params: QueryParameters) {

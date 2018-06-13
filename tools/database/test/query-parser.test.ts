@@ -52,8 +52,20 @@ describe("Testing query parsing and parameter substitution", () => {
             });
     });
 
+    interface ExpansionTest {
+        label? : string;
+        input: string;
+        data?: {[key: string]: any};
+        expect: {
+            statement: string;
+            missing?: string[];
+            unused?: string[];
+            parameters?: {[key: string]: any}
+        }
+    }
+
     describe("Expansion", () => {
-        [
+        const tests: ExpansionTest[] = [
             {
                 label: 'simple',
                 input: '$[PARAM1]',
@@ -63,13 +75,59 @@ describe("Testing query parsing and parameter substitution", () => {
             {
                 input: 'trivial',
                 expect: {statement: 'trivial'}
+            },
+            {
+                label: "Full substitution",
+                input: "foo:$[CLASS]:$bar",
+                data: {CLASS: "yoga"},
+                expect: {statement: 'foo:yoga:$bar'}
+            },
+            {
+                label: "Unsatisfied substitution",
+                input: "foo:$[CLASS]:$bar",
+                data: {},
+                expect: {
+                    statement: 'foo:$[CLASS]:$bar',
+                    missing: ["CLASS"]
+                }
+            },
+            {
+                label: "Extra stuff",
+                input: "foo:$[CLASS]:$bar",
+                data: {extra: "stuff"},
+                expect: {
+                    statement: 'foo:$[CLASS]:$bar',
+                    missing: ["CLASS"],
+                    unused: ["extra"],
+                    parameters: {
+                        extra: "stuff"
+                    }
+                }
             }
-        ].forEach(({label, input, data, expect: result}) => {
+        ];
+        tests.forEach(({label, input, data, expect: result}: ExpansionTest) => {
             it(`expanding ${label || input}`, () => {
                 let expected = {statement: input, parameters: {}, missing: [], unused: [], ...result};
                 let query = new QueryParser(input);
                 let actual = query.expand(data || {});
                 expect(actual).toEqual(expected);
+            });
+        });
+    });
+    describe('name tests', () => {
+        [
+            {label: 'parseName', statement: "[Fred]:select winners"},
+            {label: 'leading whitespace', statement: " [Fred]:select winners"},
+            {label: 'more leading whitespace', statement: "    [Fred]:select winners"},
+            {label: 'post-colon whitespace', statement: "[Fred]:  select winners"},
+            {label: 'pre-colon whitespace', statement: "[Fred]  :select winners"},
+            {label: 'pre-name whitespace', statement: "[  Fred]:select winners"},
+            {label: 'post-name whitespace', statement: "[Fred  ]:select winners"},
+        ].forEach(({label, statement}) => {
+            it(label, () => {
+                const query = new QueryParser(statement);
+                expect(query.parsed.steps[0]).toBe("select winners");
+                expect(query.parsed.name).toBe('Fred');
             });
         });
     });
