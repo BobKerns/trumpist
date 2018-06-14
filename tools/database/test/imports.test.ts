@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {Record, Result, ResultSummary, Transaction, Session, Integer} from "../neo4j";
+import {Record, Result, ResultSummary, Transaction, Session, Integer} from "neo4j-driver/v1";
 
 describe('provides the proper imports', () => {
     it('provides Record value', () => expect(Record).toBeInstanceOf(Function));

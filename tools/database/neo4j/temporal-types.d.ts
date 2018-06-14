@@ -1,1 +1,0 @@
-../../node_modules/neo4j-driver/types/v1/temporal-types.d.ts

@@ -2,9 +2,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import * as neo4j from './neo4j';
-
-// const neo4j = require('neo4j-driver').v1;
+import * as neo4j from 'neo4j-driver/v1';
 
 export function convertDateTime(date: Date | string | number): neo4j.DateTime<number> {
     if (date instanceof Date) {

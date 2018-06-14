@@ -4,7 +4,7 @@
 "use Strict";
 
 import {Readable} from "stream";
-import * as neo4j from "./neo4j";
+import * as neo4j from "neo4j-driver/v1";
 
 
 interface ResultStreamOptions {
