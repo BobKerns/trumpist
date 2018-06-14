@@ -1,0 +1,26 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "allowJs": false,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "listFiles": true,
+    "listEmittedFiles": true,
+    "declaration": true,
+    "lib": ["ESNext"],
+    "types": ["ramda", "winston", "logform", "node", "neo4j-driver", "jest-test"]
+  },
+  "include": [
+    "./*.ts"
+  ],
+  "exclude": [
+  ],
+  "typeRoot": [
+    "../../@types",
+    "../../node_modules/neo4j-driver/types/index.d.ts"
+  ]
+}

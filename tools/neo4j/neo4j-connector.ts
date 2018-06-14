@@ -3,10 +3,10 @@
  */
 
 import {v1 as neo4j} from 'neo4j-driver';
-import * as spi from "./spi";
-import * as api from "./api";
+import * as spi from "../database/spi";
+import * as api from "../database/api";
 
-import DatabaseAccess from "./database-access";
+import DatabaseAccess from "../database/database-access";
 import {Logger} from "../util/logging";
 import {future, Future} from "../util/future";
 import {SessionMode} from "neo4j-driver/v1";

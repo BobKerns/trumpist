@@ -34,7 +34,7 @@ import {
 
 import {resultStream} from "../database/result-stream";
 
-import {convertDateTime} from '../database/neo4j-date';
+import {convertDateTime} from '../neo4j/neo4j-date';
 
 
 import {v1 as neo4j} from 'neo4j-driver';
