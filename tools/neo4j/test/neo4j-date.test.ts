@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+import "jest";
 
 import {convertDateTime} from "../neo4j-date";
 

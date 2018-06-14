@@ -13,9 +13,6 @@ import {match} from "minimatch";
 import {MockQuery, MockRecord, MockResultSummary} from "./mockdb";
 import {Parent, Mode} from "../api";
 
-
-jest.mock('../neo4j');
-
 const log: Logger = create("dbtest");
 /**
  * Returned from callbacks if we want to check a return value.

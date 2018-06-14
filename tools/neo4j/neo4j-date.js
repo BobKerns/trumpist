@@ -3,7 +3,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const neo4j = require("neo4j-driver/v1");
+const neo4j = require("./neo4j");
 function convertDateTime(date) {
     if (date instanceof Date) {
         // All set
