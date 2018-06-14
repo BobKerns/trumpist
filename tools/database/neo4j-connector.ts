@@ -8,10 +8,10 @@ import * as api from "./api";
 
 import DatabaseAccess from "./database-access";
 import {Logger} from "../util/logging";
-import {QueryParameters} from "./api";
 import {future, Future} from "../util/future";
 import {SessionMode} from "neo4j-driver/v1";
 import {READ, WRITE} from "neo4j-driver/v1/driver";
+import {AnyParams} from "../util/types";
 
 interface Neo4JParams extends spi.ConnectionParameters {
     url: string;
@@ -120,13 +120,9 @@ class Neo4JTransaction extends spi.TransactionImpl<neo4j.Transaction> {
     }
 
     /** @inheritDoc */
-    public async run(query: spi.Query, params: QueryParameters) {
-        const q = new Neo4JQuery(query, params);
+    public async run(query: spi.Query, params: AnyParams) {
         const {statement, parameters} = query.expand(params);
-        if (typeof statement === 'string') {
-            return await (await this.impl).run(statement, parameters);
-        }
-        throw new Error("Unresolved parameters in query: ${statement}.");
+        return (await this.impl).run(statement, parameters);
     }
 
     public query(query: spi.Query, params: object): Promise<api.CollectedResults> {

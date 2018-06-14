@@ -56,8 +56,8 @@ export type TemplateHandler<T> = (strs: TemplateStringsArray, ...params: any[]) 
  */
 function readQueryFactory<Q extends QueryParser>(fn: QueryParseFn<Q>): TemplateHandler<Query> {
     function readQuery(strs: TemplateStringsArray, ...params: any[]): Query {
-        let merged = strs.reduce((prev, s, i) => prev + s + (params[i] || ''), '');
-        let parse = fn(merged);
+        const merged = strs.reduce((prev, s, i) => prev + s + (params[i] || ''), '');
+        const parse = fn(merged);
         return new Query(parse);
     }
     (readQuery as any).withParser = readQueryFactory;

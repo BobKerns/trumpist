@@ -111,8 +111,7 @@
     "preview": "npm run doc",
     "view": "open ../docs/api/index.html",
     "build": "tsc --project tsconfig.json",
-    "api": "../bin/publish-api",
-    "test": "jest"
+    "api": "../bin/publish-api"
   },
   "version": "1.0.0"
 }

@@ -38,7 +38,7 @@ export interface Parent {
  */
 export enum Mode {
     READ,
-    WRITE
+    WRITE,
 }
 
 /**

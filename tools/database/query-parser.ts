@@ -32,22 +32,23 @@ interface ParseResult {
 }
 
 export class QueryParser {
-    readonly statement: string;
+    public readonly statement: string;
+    // noinspection TsLint
     private readonly _parsed: Future<ParseResult> = future(() => this.parse(this.statement));
-    public get parsed() { return this._parsed.value };
+    public get parsed() { return this._parsed.value; }
 
     constructor(statement: string) {
         this.statement = statement;
     }
 
     /**
-     * A function to obtain the string value to substiute for a given parameter.
+     * A function to obtain the string value to substitute for a given parameter.
      * @returns A formatted string, or undefined.
      */
-    pick(paramName: string): Pick {
+    private pick(paramName: string): Pick {
         return(params: AnyParams) => {
-            if (!params.hasOwnProperty(paramName)) return undefined;
-            let val: any = params[paramName];
+            if (!params.hasOwnProperty(paramName)) { return undefined; }
+            const val: any = params[paramName];
             if (val === undefined) {
                 return undefined;
             } else if (!this.validate(val)) {
@@ -57,24 +58,24 @@ export class QueryParser {
         };
     }
 
-    private parse(statement: string): ParseResult {
+    protected parse(statement: string): ParseResult {
         let name: string | undefined = undefined;
-        let nameMatch = /^\s*\[\s*([a-zA-Z0-9_]+)\s*]\s*:\s*/.exec(statement);
+        const nameMatch = /^\s*\[\s*([a-zA-Z0-9_]+)\s*]\s*:\s*/.exec(statement);
         if (nameMatch && nameMatch[1]) {
             name = nameMatch[1];
         }
         if (nameMatch) {
             statement = statement.substring(nameMatch[0].length);
         }
-        let steps: ParseStep[] = [];
-        let parameters: string[] = [];
+        const steps: ParseStep[] = [];
+        const parameters: string[] = [];
         if (statement === '') {
             return {steps: [''], parameters: []};
         }
         while (statement) {
-            let match = /\$\[([a-zA-Z0-9_]+)]/.exec(statement);
+            const match = /\$\[([a-zA-Z0-9_]+)]/.exec(statement);
             if (match) {
-                let param = match[1];
+                const param = match[1];
                 if (match.index > 0) {
                     steps.push(statement.substring(0, match.index));
                 }
@@ -97,7 +98,7 @@ export class QueryParser {
         return true;
     }
 
-    protected format(val: any) : string {
+    protected format(val: any): string {
         return '' + val;
     }
 
@@ -107,14 +108,14 @@ export class QueryParser {
      * @param {AnyParams} params
      * @returns {ExpandResult}
      */
-    public expand(params: AnyParams) : api.ExpandResult {
+    public expand(params: AnyParams): api.ExpandResult {
         const missing: string[] = [];
         const parameters = {...params};
-        let process = (step: ParseStep): string => {
+        const process = (step: ParseStep): string => {
             if (typeof step === "string") {
                 return step;
             }
-            let val = step.pick(params);
+            const val = step.pick(params);
             if (val === undefined) {
                 missing.push(step.param);
                 return `$[${step.param}]`;
@@ -135,7 +136,7 @@ export class QueryParser {
      */
     public reparse(statement: string): this {
         type t = new (statement: string) => this;
-        let t = this.constructor as t;
+        const t = this.constructor as t;
         return new t(statement);
     }
 }

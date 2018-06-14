@@ -1,4 +1,3 @@
-///<reference path="../node_modules/neo4j-driver/types/v1/index.d.ts"/>
 /*
  * Copyright (c) 2018 Bob Kerns.
  */

@@ -19,7 +19,9 @@
     "arrow-parens": false,
     "no-empty": false,
     "class-name": false,
+    "variable-name": false,
     "object-literal-sort-keys": false,
+    "no-unnecessary-initializer": false,
     "no-console": {
       "severity": "warning",
       "options": [

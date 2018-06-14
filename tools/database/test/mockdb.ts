@@ -11,7 +11,7 @@ import * as api from "../api";
 import {ConnectionParameters} from "../api";
 import DatabaseAccess from "../database-access";
 import {Future, future} from "../../util/future";
-import {AnyParams} from "../../util/types";
+import {AnyParams, Nullable} from "../../util/types";
 
 export class MockProvider extends spi.ProviderImpl {
     constructor(parent: DatabaseAccess, parameters: ConnectionParameters) {
@@ -146,18 +146,30 @@ export class MockRecordStream extends spi.RecordStream {
 
 export class MockQuery implements spi.Query {
     public name: string;
-    public parameters: api.QueryParameters;
-    public statement: spi.Query | string;
+    public parameters: AnyParams;
+    public statement: string;
     public result: AnyParams[] | Error;
     constructor(...result: (AnyParams|Error)[]) {
         this.result = result;
     }
 
-    public expand(params: object): api.Resolution<this> {
+    public expand(params: object): api.ExpandResult {
         return {
-            statement: this,
+            statement: this.statement,
             parameters: {},
+            missing: [],
+            unused: [],
         };
+    }
+
+    /**
+     * We don't really curry because we've specifid what results we want.
+     * @param {Nullable<string>} name
+     * @param {AnyParams} params
+     * @returns {MockQuery}
+     */
+    public curry(name: Nullable<string>, params: AnyParams): MockQuery {
+        return this;
     }
 }
 

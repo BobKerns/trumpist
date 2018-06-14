@@ -13,7 +13,6 @@ export function convertDateTime(date: Date | string | number): neo4j.DateTime<nu
         date = new Date(date);
     } else {
         throw new TypeError(`Incorrect type in convertDateTime(${date})`);
-    console.log(`Foo: ${typeof neo4j.DateTime}`);
     }
 
     const d = new neo4j.Date(2018, 10, 30);

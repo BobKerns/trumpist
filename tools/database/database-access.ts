@@ -12,6 +12,7 @@ import {Neo4JConnector, Neo4JConnector_3_4} from "./neo4j-connector";
 import {SessionCallback} from "./spi";
 import {CollectedResults, RecordStream, ResultIterator, Query, nextId} from "./api";
 import {Future, future} from "../util/future";
+import {AnyParams} from "../util/types";
 
 export interface DbOptions {
     /** The type of the database. Currently must be "neo4j" or "neo4j@3.4" */
@@ -33,7 +34,7 @@ class Base<P extends (api.Parent & api.Marker) | undefined, S extends spi.Marker
     protected readonly parent: P;
 
     /**
-     * Defer constructing our SPI instance until it's actually needed, to avoid circiular dependencies in constructo
+     * Defer constructing our SPI instance until it's actually needed, to avoid circular dependencies in constructor
      * execution.
      */
     protected get spiObject() {
@@ -86,7 +87,8 @@ export default class DatabaseAccess extends Base<undefined, spi.Provider> implem
         try {
             log.debug(`Using database ${this.database}.`);
             let outer: api.Database;
-            const val = await this.spiObject.withDatabase(() => outer, driver => fn(new Database(driver, this)));
+            const val = await this.spiObject.withDatabase(() => outer,
+                    driver => fn(outer = new Database(driver, this)));
             log.debug(`Finished with database ${this.database}.`);
             return val;
         } catch (e) {
@@ -130,7 +132,7 @@ export class Database extends Base<DatabaseAccess, spi.Database> implements api.
                 await nsession.close();
             }
         };
-        return await this.spiObject.withSession(mode,() => nsession, wrapped);
+        return await this.spiObject.withSession(mode, () => nsession, wrapped);
     }
 
     /**
@@ -181,7 +183,7 @@ export class Session extends Base<Database, spi.Session> implements api.Session 
         try {
             const id = this.id;
             log.debug(`TXBEG: ${name} ${id} READ transaction begin`);
-            const val = await this.spiObject.withTransaction(mode,() => outer, inner);
+            const val = await this.spiObject.withTransaction(mode, () => outer, inner);
             log.trace(`TXEND: ${name} ${id} READ transaction returned ${val}`);
             return val;
         } catch (e) {
@@ -213,7 +215,7 @@ export class Transaction extends Base<Session, spi.Transaction> implements  api.
      * @param query The query to execute. It must be fully resolvable with the supplied params
      * @param params Parameters to flesh out the query.
      */
-    public async run<T>(query: api.Query, params: api.QueryParameters, fn: (q: api.Query, p: api.QueryParameters) => T) {
+    public async run<T>(query: api.Query, params: AnyParams, fn: (q: api.Query, p: AnyParams) => T) {
         const name = `${query.name || 'anon'}:${this.id}:${nextId()}`;
         const log = this.log;
         try {
@@ -260,8 +262,8 @@ export class Transaction extends Base<Session, spi.Transaction> implements  api.
 }
 
 export {
-    Query, QueryParameters,
+    Query,
     Record, ResultSummary,
     RecordStream, RecordIterableIterator,
-    CollectedResults
+    CollectedResults,
 } from "./api";

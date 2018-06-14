@@ -68,7 +68,7 @@ export class ResultStream extends Readable {
         });
     }
 
-    _read() {
+    public _read() {
         this.continue(undefined);
     }
 }
