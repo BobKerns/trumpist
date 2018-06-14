@@ -38,6 +38,7 @@ subproject util
 subproject model
 subproject import
 subproject cmd
+subproject neo4j
 
 
 for f in `find "${ASSETS}" -name '*.md' -print`; do

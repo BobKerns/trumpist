@@ -9,4 +9,6 @@ Welcome to Trumpist Brain
 * [Data Import](import/index.html);
 * [Command Line Interface](cmd/index.html)
 * [Utilities](util/index.html);
+* [Neo4J Support](neo4j/index.html)
+
 

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;neo4j-date&quot; | database</title>
+	<title>&quot;neo4j&quot; | neo4j</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">database</a>
+					<a href="../index.html" class="title">neo4j</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,53 +54,97 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_neo4j_date_.html">&quot;neo4j-date&quot;</a>
+					<a href="_neo4j_.html">&quot;neo4j&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;neo4j-date&quot;</h1>
+			<h1>External module &quot;neo4j&quot;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Kludge to work around the Neo4J driver not co-locating their type and lib files.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Functions</h3>
+							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_neo4j_date_.html#convertdatetime" class="tsd-kind-icon">convert<wbr>Date<wbr>Time</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_neo4j_.html#result" class="tsd-kind-icon">Result</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_neo4j_.html#resultsummary" class="tsd-kind-icon">Result<wbr>Summary</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-not-exported">
+							<h3>Variables</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_neo4j_.html#header" class="tsd-kind-icon">header</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
-					<a name="convertdatetime" class="tsd-anchor"></a>
-					<h3>convert<wbr>Date<wbr>Time</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">convert<wbr>Date<wbr>Time<span class="tsd-signature-symbol">(</span>date<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">DateTime</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/8736c2f/tools/database/neo4j-date.ts#L7">neo4j-date.ts:7</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>date: <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DateTime</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="result" class="tsd-anchor"></a>
+					<h3>Result</h3>
+					<div class="tsd-signature tsd-kind-icon">Result<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Result</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/neo4j/neo4j.ts#L38">neo4j.ts:38</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Re-export the Result type.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+					<a name="resultsummary" class="tsd-anchor"></a>
+					<h3>Result<wbr>Summary</h3>
+					<div class="tsd-signature tsd-kind-icon">Result<wbr>Summary<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ResultSummary</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/neo4j/neo4j.ts#L32">neo4j.ts:32</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Re-export the ResultSummary type.</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+				<h2>Variables</h2>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="header" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> header</h3>
+					<div class="tsd-signature tsd-kind-icon">header<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/neo4j/neo4j.ts#L13">neo4j.ts:13</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Nothing...</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{null}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -111,59 +155,29 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_api_.html">"api"</a>
+						<a href="_model_queries_neo4j_.html">"model-<wbr>queries-<wbr>neo4j"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_database_access_.html">"database-<wbr>access"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">"index"</a>
+					<li class="current tsd-kind-external-module">
+						<a href="_neo4j_.html">"neo4j"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="_neo4j_connector_.html">"neo4j-<wbr>connector"</a>
 					</li>
-					<li class="current tsd-kind-external-module">
+					<li class=" tsd-kind-external-module">
 						<a href="_neo4j_date_.html">"neo4j-<wbr>date"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_query_.html">"query"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_query_parser_.html">"query-<wbr>parser"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_result_stream_.html">"result-<wbr>stream"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_spi_.html">"spi"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_database_test_.html">"test/database.test"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_imports_test_.html">"test/imports.test"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_neo4j_date_test_.html">"test/neo4j-<wbr>date.test"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_query_templates_test_.html">"test/query-<wbr>templates.test"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="_test_query_test_.html">"test/query.test"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module">
-						<a href="_neo4j_date_.html#convertdatetime" class="tsd-kind-icon">convert<wbr>Date<wbr>Time</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_neo4j_.html#result" class="tsd-kind-icon">Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_neo4j_.html#resultsummary" class="tsd-kind-icon">Result<wbr>Summary</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_neo4j_.html#header" class="tsd-kind-icon">header</a>
 					</li>
 				</ul>
 			</nav>
