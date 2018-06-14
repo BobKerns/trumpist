@@ -2,6 +2,10 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * Kludge to work around the Neo4J driver not co-locating their type and lib files.
+ */
+
 import Integer from "./neo4j/integer";
 import {NumberOrInteger} from "./neo4j/graph-types";
 
