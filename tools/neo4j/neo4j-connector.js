@@ -11,11 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const neo4j_driver_1 = require("neo4j-driver");
+const neo4j_driver_1 = require("./neo4j-driver");
 const spi = require("../database/spi");
 const api = require("../database/api");
 const future_1 = require("../util/future");
-const driver_1 = require("neo4j-driver/v1/driver");
 /**
  * Provider for Neo4J 3.4 database.
  */
@@ -56,8 +55,8 @@ class Neo4JConnector extends Neo4JConnector_3_4 {
 exports.Neo4JConnector = Neo4JConnector;
 function convertMode(mode) {
     switch (mode) {
-        case api.Mode.READ: return driver_1.READ;
-        case api.Mode.WRITE: return driver_1.WRITE;
+        case api.Mode.READ: return neo4j_driver_1.v1.session.READ;
+        case api.Mode.WRITE: return neo4j_driver_1.v1.session.WRITE;
     }
 }
 class Neo4JDriver extends spi.DatabaseImpl {

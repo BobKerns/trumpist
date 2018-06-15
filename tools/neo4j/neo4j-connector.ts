@@ -2,16 +2,15 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {v1 as neo4j} from 'neo4j-driver';
+import {v1 as neo4j} from './neo4j-driver';
 import * as spi from "../database/spi";
 import * as api from "../database/api";
 
 import DatabaseAccess from "../database/database-access";
 import {Logger} from "../util/logging";
 import {future, Future} from "../util/future";
-import {SessionMode} from "neo4j-driver/v1";
-import {READ, WRITE} from "neo4j-driver/v1/driver";
 import {AnyParams} from "../util/types";
+
 
 interface Neo4JParams extends spi.ConnectionParameters {
     url: string;
@@ -62,10 +61,10 @@ export class Neo4JConnector extends Neo4JConnector_3_4 {
     }
 }
 
-function convertMode(mode: api.Mode): SessionMode {
+function convertMode(mode: api.Mode): neo4j.SessionMode {
     switch (mode) {
-        case api.Mode.READ: return READ;
-        case api.Mode.WRITE: return WRITE;
+        case api.Mode.READ: return neo4j.session.READ;
+        case api.Mode.WRITE: return neo4j.session.WRITE;
     }
 }
 

@@ -21,6 +21,6 @@
   ],
   "typeRoot": [
     "../../@types",
-    "../../node_modules/neo4j-driver/types/index.d.ts"
+    "../../node_modules/neo4j-driver/types/"
   ]
 }

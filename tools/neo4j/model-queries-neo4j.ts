@@ -6,7 +6,7 @@ import Q from '../database/query';
 import {AnyParams} from "../util/types";
 import {ModelQueries} from "../model/model-queries";
 
-import {convertDateTime} from "../database/index";
+import {convertDateTime} from "./neo4j-date";
 
 export const ID_ROOT = "===THE-ROOT===";
 export const LBL_ROOT = "ROOT";

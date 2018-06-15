@@ -3,6 +3,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+require("jest");
 const neo4j_date_1 = require("../neo4j-date");
 const numericDate = 1528463144144;
 const stringDateLong = "Fri Jun 08 2018 06:05:57 GMT-0700 (PDT)";
