@@ -3,7 +3,7 @@
  */
 
 /**
- * Logging confguration and setup.
+ * Logging configuration and setup.
  */
 
 /**
@@ -15,6 +15,8 @@ export type LogMessage = string | (() => string);
 /**
  * Our logging, configured.
  */
+
+/* tslint:disable-next-line no-var-requires */
 const { createLogger, format, transports, addColors } = require('winston');
 
 const levelSpecs = {
@@ -33,33 +35,38 @@ const levelSpecs = {
         info: "black",
         debug: "blue",
         trace: "dim blue cyanBG",
-    }
-}
+    },
+};
 
 // Errors out
 addColors(levelSpecs.colors);
 
 export interface Logger {
-    trace(msg: LogMessage): void
-    debug(msg: LogMessage): void
-    info(msg: LogMessage): void
-    warn(msg: LogMessage): void
-    error(msg: LogMessage): void
-    severe(msg: LogMessage): void
+    trace(msg: LogMessage): void;
+    debug(msg: LogMessage): void;
+    info(msg: LogMessage): void;
+    warn(msg: LogMessage): void;
+    error(msg: LogMessage): void;
+    severe(msg: LogMessage): void;
 }
 
-const LOGGERS: {[k:string]: Logger} = {};
+const LOGGERS: {[k: string]: Logger} = {};
 
 /**
  * Create a named loggers
  * @param key the name for the logger
  * @returns the logger fo the specified key.
  */
-export function create(key: string) : Logger {
+export function create(key: string): Logger {
     return LOGGERS[key] || (LOGGERS[key] = createNew(key));
 }
 
-type LoggerInfo = {label: string, message: string, [k: string]: any};
+interface LoggerInfo {
+    label: string;
+    message: string;
+    [k: string]: any;
+}
+
 const myFormat = format.printf((info: LoggerInfo) => {
     return `[${info.label}] ${info.level}: ${info.message}`;
 });
@@ -69,14 +76,14 @@ const myFormat = format.printf((info: LoggerInfo) => {
  * @param key the name for the logger
  */
 function createNew(key: string): Logger {
-    let logger =createLogger({
+    const logger = createLogger({
         levels: levelSpecs.levels,
         format: format.combine(
             format.colorize(),
             format.label({label: key}),
-            myFormat
+            myFormat,
         ),
-        transports: [new transports.Console()]
+        transports: [new transports.Console()],
     });
     logger.toString = () => `[Logger ${key}]`;
     logger.key = key;

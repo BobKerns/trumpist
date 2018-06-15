@@ -65,21 +65,20 @@ function testType<T>(name: string, ns: AnyParams, ...examples: T[]) {
     return testTypeInternal('type', name, ns, ...examples);
 }
 
+type GenericConstructor = new<T extends neo4j.NumberOrInteger> (...args: any[]) => Generic<T>;
 /**
- * Test one of our generic class types. We only need this for classes, so we can properly check the declard type of
+ * Test one of our generic class types. We only need this for classes, so we can properly check the declared type of
  * the constructors.
  * @param {string} name
  * @param {<T1 extends v1.NumberOrInteger>(...args: any[]) => Generic<T1 extends v1.NumberOrInteger>} constr
  */
-function testGeneric<T extends Generic<neo4j.NumberOrInteger>>(
-    name: string,
-    constr: new<T1 extends neo4j.NumberOrInteger> (...args: any[]) => Generic<T1>) {
+function testGeneric<T extends Generic<neo4j.NumberOrInteger>>(name: string, constr: GenericConstructor) {
     return testClass(name, constr);
 }
 
 /**
  * A union type of our various generic classes. This won't detect swapped constructors, but at least that a function
- * is declard to be a constructor of one of these classes.
+ * is declared to be a constructor of one of these classes.
  */
 type Generic<T extends neo4j.NumberOrInteger> = neo4j.types.Node<T> | neo4j.types.Relationship<T>
     | neo4j.types.UnboundRelationship<T>

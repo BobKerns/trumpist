@@ -5,7 +5,7 @@
 import {Duplex, Readable, Transform, Writable} from "stream";
 
 /**
- * A utility type for when values maynot be suppiled, especiallly from Javascript
+ * A utility type for when values may not be supplied, especially from Javascript
  */
 
 export type Nullable<T> = T | undefined | null;
@@ -14,7 +14,7 @@ export type Nullable<T> = T | undefined | null;
 /**
  * A utility type for arbitrary parameters.
  */
-export interface AnyParams<T=any> {
+export interface AnyParams<T= any> {
     [k: string]: T;
 }
 
@@ -34,11 +34,11 @@ export type Template = XForm<AnyParams, string>;
 export type Stream = (Readable | Writable | Duplex | Transform);
 
 /**
- * A geneal Node callback
+ * A general Node callback
  */
 export type Callback = (val?: any, err?: Error) => void;
 
 /**
  * Give access to additional properties no declared. Useful when working with Javascript types with ad hoc extension.
  */
-export type Extensible<T,V=any> = T & AnyParams<V>;
+export type Extensible<T, V= any> = T & AnyParams<V>;

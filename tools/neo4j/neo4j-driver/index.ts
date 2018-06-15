@@ -59,7 +59,7 @@ export namespace v1 {
         export const Path = r_index.types.Path;
 
         /**
-         * These ar mis-declared as an inteface. This may be deliberate, so we'll leave just the types here,
+         * These ar mis-declared as an interface. This may be deliberate, so we'll leave just the types here,
          * and repeat this in the the impl namespace with the constructor.
          */
         export type ResultSummary<S extends NumberOrInteger = Integer> = t_ResultSummary<S>;

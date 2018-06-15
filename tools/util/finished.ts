@@ -10,14 +10,14 @@
  // Ported from https://github.com/mafintosh/end-of-stream with
  // permission from the author, Mathias Buus (@mafintosh).
 
- 'use strict';
+'use strict';
 
-// An approximation of the resul of what's in internal/errors.js
+// An approximation of the result of what's in internal/errors.js
 class ERR_STREAM_PREMATURE_CLOSE extends Error {
     constructor() {
-        super("Premature Close[ERR_STREAM_PREMATURE_CLOSE]")
+        super("Premature Close[ERR_STREAM_PREMATURE_CLOSE]");
     }
-};
+}
 
 import {Callback, Extensible, Nullable, Stream} from "./types";
 
@@ -30,26 +30,26 @@ function isRequest(stream: Extensible<Stream>) {
 function once(callback: Callback) {
     let called = false;
     return function(err: Error) {
-        if (called) return;
+        if (called) { return; }
         called = true;
         callback.call(this, err);
     };
 }
 
-export type StreamOptions = {
-    [k: string]: any
+export interface StreamOptions {
+    [k: string]: any;
 }
 
 export type CleanupFunction = () => void;
 
-export function finished(stream:Stream, opts: Nullable<StreamOptions|Callback>, callback?: Callback): CleanupFunction {
-    let call = (obj: any, ...args: any[]): void => {
-        let cb: Function = callback as Function;
+export function finished(stream: Stream, opts: Nullable<StreamOptions|Callback>, callback?: Callback): CleanupFunction {
+    const call = (obj: any, ...args: any[]): void => {
+        const cb = callback as (...args: any[]) => any;
         return cb.call(obj, ...args);
-    }
-    let istream = stream as Extensible<Stream>;
-    if (typeof opts === 'function') return finished(istream, null, opts);
-    if (!opts) opts = {};
+    };
+    const istream = stream as Extensible<Stream>;
+    if (typeof opts === 'function') { return finished(istream, null, opts); }
+    if (!opts) { opts = {}; }
 
     callback = once(callback || noop);
 
@@ -59,17 +59,17 @@ export function finished(stream:Stream, opts: Nullable<StreamOptions|Callback>, 
     let writable = opts.writable || (opts.writable !== false && istream.writable);
 
     const onlegacyfinish = () => {
-        if (!istream.writable) onfinish();
+        if (!istream.writable) { onfinish(); }
     };
 
     const onfinish = () => {
         writable = false;
-        if (!readable) call(istream);
+        if (!readable) { call(istream); }
     };
 
     const onend = () => {
         readable = false;
-        if (!writable) call(istream);
+        if (!writable) { call(istream); }
     };
 
     const onerror = (err: Error) => {
@@ -92,8 +92,7 @@ export function finished(stream:Stream, opts: Nullable<StreamOptions|Callback>, 
     if (isRequest(istream)) {
         istream.on('complete', onfinish);
         istream.on('abort', onclose);
-        if (istream.req) onrequest();
-        else istream.on('request', onrequest);
+        if (istream.req) { onrequest(); } else { istream.on('request', onrequest); }
     } else if (writable && !ws) { // legacy streams
         istream.on('end', onlegacyfinish);
         istream.on('close', onlegacyfinish);
@@ -101,14 +100,14 @@ export function finished(stream:Stream, opts: Nullable<StreamOptions|Callback>, 
 
     istream.on('end', onend);
     istream.on('finish', onfinish);
-    if (opts.error !== false) istream.on('error', onerror);
+    if (opts.error !== false) { istream.on('error', onerror); }
     istream.on('close', onclose);
 
-    return function() {
+    return () => {
         istream.removeListener('complete', onfinish);
         istream.removeListener('abort', onclose);
         istream.removeListener('request', onrequest);
-        if (istream.req) istream.req.removeListener('finish', onfinish);
+        if (istream.req) { istream.req.removeListener('finish', onfinish); }
         istream.removeListener('end', onlegacyfinish);
         istream.removeListener('close', onlegacyfinish);
         istream.removeListener('finish', onfinish);

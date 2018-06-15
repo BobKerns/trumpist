@@ -13,6 +13,7 @@ export interface Stringifyer extends Transform {
 
 }
 
+/* tslint:disable-next-line no-var-requires */
 const jsl: {[k: string]: any} = require("jsonlines");
 console.error(`Here: ${jsl.stringify}`);
 
