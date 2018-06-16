@@ -6,6 +6,7 @@ import * as yargs from "yargs";
 import {load} from "../import/load";
 import {dirname, join} from "path";
 import {FilesystemSource} from "../import/source";
+import {InitApp} from "./InitApp";
 
 // Compute the default location of the brain data.
 const basedir = dirname(dirname(dirname(module.filename)));
@@ -32,6 +33,7 @@ const argv = yargs
                     description: 'Preview the operations to be peformed.',
                     boolean: true,
                 }),
-        yargv => console.log('A fish'))
+        yargv => new InitApp(yargv)
+            .run())
     .demandCommand(1, "You must supply a command.")
     .argv;
