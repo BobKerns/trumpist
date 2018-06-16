@@ -41,6 +41,10 @@ const levelSpecs = {
 // Errors out
 addColors(levelSpecs.colors);
 
+export interface Transport {
+    level: string;
+}
+
 export interface Logger {
     trace(msg: LogMessage): void;
     debug(msg: LogMessage): void;
@@ -48,6 +52,7 @@ export interface Logger {
     warn(msg: LogMessage): void;
     error(msg: LogMessage): void;
     severe(msg: LogMessage): void;
+    transports: Transport[];
 }
 
 const LOGGERS: {[k: string]: Logger} = {};
