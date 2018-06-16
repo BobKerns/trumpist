@@ -49,19 +49,23 @@ export class Query implements api.Query, spi.Query {
 }
 export type QueryParseFn<Q extends QueryParser> = (statement: string) => Q;
 
-export type TemplateHandler<T> = (strs: TemplateStringsArray, ...params: any[]) => T;
+export type TemplateHandler<T> = ((strs: TemplateStringsArray, ...params: any[]) => T) & BackTickFactory;
 
 /**
  * Backtick template operator factory
  */
-function readQueryFactory<Q extends QueryParser>(fn: QueryParseFn<Q>): TemplateHandler<Query> {
+function readQueryFactory<Q extends QueryParser>(fn: QueryParseFn<Q>): TemplateHandler<Query>  {
     function readQuery(strs: TemplateStringsArray, ...params: any[]): Query {
         const merged = strs.reduce((prev, s, i) => prev + s + (params[i] || ''), '');
         const parse = fn(merged);
         return new Query(parse);
     }
     (readQuery as any).withParser = readQueryFactory;
-    return readQuery;
+    return readQuery as any as TemplateHandler<Query>;
+}
+
+interface BackTickFactory {
+    withParser<U extends QueryParser>(fn: QueryParseFn<U>): TemplateHandler<U>;
 }
 
 export const backtick = readQueryFactory((statement) => new QueryParser(statement));

@@ -26,5 +26,12 @@ const argv = yargs
                 default: braindir,
             }),
         (yargv) => load(new FilesystemSource(yargv.dir)))
+    .command('init', 'Initialize a database',
+            yyargs => yyargs
+                .option('preview', {
+                    description: 'Preview the operations to be peformed.',
+                    boolean: true,
+                }),
+        yargv => console.log('A fish'))
     .demandCommand(1, "You must supply a command.")
     .argv;

@@ -14,3 +14,14 @@ export interface ModelQueries {
      */
     init: Query;
 }
+
+export async function loadQueries(id: string): Promise<ModelQueries> {
+    if (id.startsWith('#')) {
+        const bareId = id.substring(1);
+        const fullId = `../dbs/${bareId}/model-queries-${bareId}`;
+        const queryClass = (await import(fullId)).queries;
+        return new queryClass();
+    }
+    return (await import(id)).queries;
+}
+

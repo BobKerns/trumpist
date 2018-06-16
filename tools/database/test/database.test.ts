@@ -10,7 +10,7 @@ import DatabaseAccess, {Database, Session, Transaction} from "../database-access
 import {Logger, create} from "../../util/logging";
 import {match} from "minimatch";
 
-import {MockQuery, MockRecord, MockResultSummary} from "./mockdb";
+import {MockQuery, MockRecord, MockResultSummary} from "../../dbs/mock/mockdb";
 import {Parent, Mode} from "../api";
 
 const log: Logger = create("dbtest");

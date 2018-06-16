@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Monitor All Tests" type="JavaScriptTestRunnerJest" factoryName="Jest">
+    <node-interpreter value="project" />
+    <node-options value="" />
+    <working-dir value="$PROJECT_DIR$/tools" />
+    <jest-options value="--watch" />
+    <envs />
+    <scope-kind value="ALL" />
+    <method>
+      <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tools/dbs/neo4j/test/tsconfig.json" />
+    </method>
+  </configuration>
+</component>

@@ -1,1 +1,0 @@
-/Users/rwk/trumpist/tools/node_modules/neo4j-driver/lib/v1/result.js

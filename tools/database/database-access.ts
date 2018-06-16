@@ -8,7 +8,7 @@ import {create as createLog, Logger} from "../util/logging";
 const defaultLog = createLog('databaseXXX');
 import * as spi from "./spi";
 import * as api from "./api";
-import {Neo4JConnector, Neo4JConnector_3_4} from "../neo4j/neo4j-connector";
+import {Neo4JConnector, Neo4JConnector_3_4} from "../dbs/neo4j/neo4j-connector";
 import {SessionCallback} from "./spi";
 import {CollectedResults, RecordStream, ResultIterator, Query, nextId} from "./api";
 import {Future, future} from "../util/future";

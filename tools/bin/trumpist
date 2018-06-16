@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+BASE="$(dirname "$(cd "$(dirname "${0}")"; echo "$PWD")")"
+
+cd "${BASE}"
+
+exec node - -- "$@" <<EOF
+require('./cmd/cmd');
+EOF

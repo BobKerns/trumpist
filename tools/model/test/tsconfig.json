@@ -12,9 +12,10 @@
     "listEmittedFiles": true,
     "declaration": true,
     "lib": ["ESNext"],
-    "types": ["ramda", "winston", "logform"]
+    "types": ["ramda", "winston", "logform", "node"]
   },
   "exclude": [
+    "node_modules",
     "../node_modules"
   ]
 }

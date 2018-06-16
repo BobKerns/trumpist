@@ -38,6 +38,10 @@ export type Stream = (Readable | Writable | Duplex | Transform);
  */
 export type Callback = (val?: any, err?: Error) => void;
 
+export type PromiseAccept<T> = (val: T) => void;
+export type PromiseReject = (err: Error) => void;
+export type PromiseCB<T> = (accept: PromiseAccept<T>, reject: PromiseReject) => void;
+
 /**
  * Give access to additional properties no declared. Useful when working with Javascript types with ad hoc extension.
  */

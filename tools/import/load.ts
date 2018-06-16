@@ -29,12 +29,12 @@ import {
     DIRECTION,
     KIND,
     INode, ILink, IBrainCommon,
-} from '../brain/src/index';
+} from '../brain/index';
 
 
 import {resultStream} from "../database/result-stream";
 
-import {convertDateTime} from '../neo4j/neo4j-date';
+import {convertDateTime} from '../dbs/neo4j/neo4j-date';
 
 
 import {v1 as neo4j} from 'neo4j-driver';
