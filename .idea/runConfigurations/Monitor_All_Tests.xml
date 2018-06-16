@@ -6,8 +6,6 @@
     <jest-options value="--watch" />
     <envs />
     <scope-kind value="ALL" />
-    <method>
-      <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tools/dbs/neo4j/test/tsconfig.json" />
-    </method>
+    <method />
   </configuration>
 </component>
