@@ -18,9 +18,5 @@
     "./*.ts"
   ],
   "exclude": [
-  ],
-  "typeRoot": [
-    "../../@types",
-    "../../node_modules/neo4j-driver/types/"
   ]
 }

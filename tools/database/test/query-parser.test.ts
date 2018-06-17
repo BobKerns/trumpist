@@ -6,7 +6,9 @@ import {QueryParser} from "../query-parser";
 import * as R from "ramda";
 import ownKeys = Reflect.ownKeys;
 
-type Accum = {[key: string]: true};
+interface Accum {
+    [key: string]: true
+};
 
 describe("Testing query parsing and parameter substitution", () => {
     describe('Query parsing', () => {

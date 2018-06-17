@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="cmd import" type="NodeJSConfigurationType" factoryName="Node.js" application-parameters="import" path-to-js-file="cmd/cmd.js" working-dir="$PROJECT_DIR$/tools">
+  <configuration default="false" name="cmd import" type="NodeJSConfigurationType" factoryName="Node.js" application-parameters="import" node-parameters="--harmony-array-flatten" path-to-js-file="cmd/cmd.js" working-dir="$PROJECT_DIR$/tools">
     <method>
       <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tools/tsconfig.json" />
     </method>
