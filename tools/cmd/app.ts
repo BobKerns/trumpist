@@ -2,15 +2,15 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {AnyParams} from "../util/types";
+import {AnyParams, classChain, Nullable} from "../util/types";
 import {SessionCallback} from "../database/api";
 import {future, Future} from "../util/future";
 import {promises as fs, constants as fsConstants, PathLike} from "fs";
 import * as path from 'path';
 import {env} from "shelljs";
+import * as R from "ramda";
 
 import {create, Logger} from "../util/logging";
-import {handle} from "../util/handle-promise";
 
 export abstract class App {
     protected readonly options: AnyParams;
@@ -47,7 +47,7 @@ export abstract class App {
         const dff = async () => {
             return load(defaultsFile);
         };
-        const defaults = (await exists(defaultsFile)) ? (await dff()) : {};
+        const defaults: AnyParams = (await exists(defaultsFile)) ? (await dff()) : {};
         let loaded = {};
         const homeConfig = path.join(env.HOME, ".trumpist");
         if (this.options.config) {
@@ -60,7 +60,10 @@ export abstract class App {
         if (this.configSource) {
             loaded = load(this.configSource);
         }
-        return {...defaults, ...loaded, ...this.options};
+        const classes = classChain(this.constructor).reverse();
+        const keys = classes.flatMap(cls => cls.name ? [cls.name] : []);
+        const opts = App.mergeContextOptions("appSettings", keys, defaults.app.appSettings, loaded).appSettings;
+        return {...opts, ...this.options};
     }
 
     protected async param(key: string, defaultVal?: any): Promise<any> {
@@ -76,7 +79,7 @@ export abstract class App {
         try {
             await this.config;
         } catch (e) {
-            console.error("ERROR", e);
+            (this.log || console).error(`Error running ${this.constructor.name}: ${e.message || e}`);
         }
     }
 
@@ -84,5 +87,24 @@ export abstract class App {
 
     protected async runInSession(cb: SessionCallback<void>): Promise<void> {
 
+    }
+
+    /**
+     * Merge options specific to a hierarchy of contexts (e.g. class hierarchy).
+     * @param {string[]} keys
+     * @returns {AnyParams}
+     */
+    public static mergeContextOptions(contextName: string,
+                                      keys: Array<Nullable<string>>,
+                                      ...params: Array<Nullable<AnyParams>>): AnyParams {
+        return params
+            .flatMap(c =>
+                [
+                    R.omit([contextName], c || {}),
+                    ...keys.flatMap(k => !k
+                        ? []
+                        : [((c || {})[contextName] || {})[k] || {}]),
+                ])
+            .reduce((left: AnyParams, opts: AnyParams) => ({...left, ...opts}), {});
     }
 }

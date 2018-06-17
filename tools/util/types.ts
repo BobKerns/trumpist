@@ -43,6 +43,18 @@ export type PromiseReject = (err: Error) => void;
 export type PromiseCB<T> = (accept: PromiseAccept<T>, reject: PromiseReject) => void;
 
 /**
- * Give access to additional properties no declared. Useful when working with Javascript types with ad hoc extension.
+ * Give access to additional properties not declared. Useful when working with Javascript types with ad hoc extension.
  */
 export type Extensible<T, V= any> = T & AnyParams<V>;
+
+// tslint:disable-next-line ban-types
+export type AnyFunction = Function;
+
+export function classChain(cls: AnyFunction) {
+    const result = [];
+    while (cls && (cls !== Object) && (cls !== Function)) {
+        result.push(cls);
+        cls = Object.getPrototypeOf(cls);
+    }
+    return result;
+}

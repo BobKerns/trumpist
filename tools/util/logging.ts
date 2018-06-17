@@ -46,12 +46,12 @@ export interface Transport {
 }
 
 export interface Logger {
-    trace(msg: LogMessage): void;
-    debug(msg: LogMessage): void;
-    info(msg: LogMessage): void;
-    warn(msg: LogMessage): void;
-    error(msg: LogMessage): void;
-    severe(msg: LogMessage): void;
+    trace(msg: LogMessage, e?: Error): void;
+    debug(msg: LogMessage, e?: Error): void;
+    info(msg: LogMessage, e?: Error): void;
+    warn(msg: LogMessage, e?: Error): void;
+    error(msg: LogMessage, e?: Error): void;
+    severe(msg: LogMessage, e?: Error): void;
     transports: Transport[];
 }
 
