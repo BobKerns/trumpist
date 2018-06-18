@@ -21,6 +21,7 @@ import ownKeys = Reflect.ownKeys;
 import * as api from "./api";
 
 import * as R from "ramda";
+import * as util from "util";
 
 type Pick = (params: AnyParams) => (string | undefined);
 type ParseStep = string | {param: string, pick: Pick};
@@ -73,7 +74,7 @@ export class QueryParser {
             return {steps: [''], parameters: []};
         }
         while (statement) {
-            const match = /\$\[([a-zA-Z0-9_]+)]/.exec(statement);
+            const match = /\$\[([a-zA-Z0-9_]+)]/m.exec(statement);
             if (match) {
                 const param = match[1];
                 if (match.index > 0) {
@@ -95,11 +96,35 @@ export class QueryParser {
     }
 
     protected validate(val: any): boolean {
-        return true;
+        const isPrimitive = (v: any) => (typeof v === 'string') || (typeof v === 'number') || (typeof v === 'boolean');
+        if (isPrimitive(val)) {
+            return true;
+        }
+        if (typeof val === 'object') {
+            return true;
+        }
+        return false;
     }
 
     protected format(val: any): string {
-        return '' + val;
+        switch (typeof val) {
+            case 'string':
+                // Should quote
+                return `"${val}"`;
+            case 'number':
+            case 'boolean':
+                return val;
+            case 'object':
+                if (val instanceof Date) {
+                    // For prototyping.
+                    return `"date:${val.valueOf()}"`;
+                } else if (Array.isArray(val)) {
+                    return `[${val.map(v => this.format(v)).join(',')}]`;
+                } else {
+                    return `{${Object.keys(val).sort().map(k => `${k}:${ this.format(val[k])}`).join(', ') }}`;
+                }
+        }
+        throw new Error(`Unknown data in query parameter value: ${val}`);
     }
 
     /**

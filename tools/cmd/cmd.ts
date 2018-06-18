@@ -1,7 +1,13 @@
 /*
  * Copyright (c) 2018 Bob Kerns.
  */
-
+/*
+require("leaked-handles").set({
+    fullStack: true,
+    timout: 3000,
+    debugSockets: true
+});
+ */
 import 'source-map-support/register';
 import * as yargs from "yargs";
 import {load} from "../import/load";
@@ -45,4 +51,5 @@ const argv = yargs
         yargv => new InitApp(yargv)
             .run())
     .demandCommand(1, "You must supply a command.")
+    .exitProcess(true)
     .argv;

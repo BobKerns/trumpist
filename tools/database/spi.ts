@@ -153,9 +153,15 @@ export abstract class ProviderImpl<X>
     }
 
     /** Access a database, disposing of any resources when done. */
-    public withDatabase<T>(outer: () => api.Database, fn: DatabaseCallback<T>): Promise<T> {
-        return this.invokeInner(
-            'DRV', 'DB Driver', api.Mode.WRITE, outer, fn);
+    public async withDatabase<T>(outer: () => api.Database, fn: DatabaseCallback<T>): Promise<T> {
+        const wrapClose = async (db: Database) => {
+            try {
+                return await fn(db);
+            } finally {
+                await db.close();
+            }
+        };
+        return this.invokeInner('DRV', 'DB Driver', api.Mode.WRITE, outer, wrapClose);
     }
 
     /**

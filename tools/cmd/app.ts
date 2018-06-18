@@ -81,7 +81,7 @@ export abstract class App {
      * Public entry point
      * @returns {Promise<void>}
      */
-    public async run(): Promise<void> {
+    public async run(): Promise<any> {
         try {
             await this.config;
             return this.doRun();
@@ -97,7 +97,7 @@ export abstract class App {
      * @param {SessionCallback<void>} cb
      * @returns {Promise<void>}
      */
-    protected async runInSession(cb: api.SessionCallback<void>): Promise<void> {
+    protected async runInSession(cb: api.SessionCallback<any>): Promise<any> {
         const dbConfigs = await this.param('dbConfigs');
         const dbConfig = dbConfigs[await this.param('database', 'default')];
         const dbAccess = new DatabaseAccess({
@@ -110,7 +110,7 @@ export abstract class App {
                 return (await db.withSession(api.Mode.WRITE, async session =>
                     (await cb(session))))
             } finally {
-                this.log.error("runInSession session ended");
+                this.log.debug("runInSession session ended");
             }
         });
     }

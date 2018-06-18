@@ -32,13 +32,13 @@ DELETE _OLD
 
 export class Neo4jQueries implements ModelQueries {
     public init = Q`
-    MERGE (root:${LBL_ROOT} $rootProps)-[branch:_BRANCH {name: 'MASTER'}]->(commit:_COMMIT)
+    MERGE (root:${LBL_ROOT} $[rootProps])-[branch:_BRANCH {name: 'MASTER'}]->(commit:_COMMIT)
     ON CREATE SET branch += $branchProps,
                   commit += $commitProps,
                   root.commitTime = datetime.transaction(),
                   branch.commitTime = datetime.transaction(),
                   commit.commitTime = datetime.transaction()
-    RETURN root, banch, commit
+    RETURN root, branch, commit
     `
         .curry('INIT', {
             rootProps: ROOT_PROPS,

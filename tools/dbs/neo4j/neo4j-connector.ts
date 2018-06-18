@@ -79,7 +79,7 @@ class Neo4JDriver extends spi.DatabaseImpl<neo4j.Driver, neo4j.Session> {
 
     /** @inheritDoc */
     public async withSession<T, I>(mode: api.Mode, outer: (inner: spi.Session) => api.Session, fn: spi.SessionCallback<T>): Promise<T> {
-        const impl = (await this.impl).session(convertMode(mode));
+        const impl: neo4j.Session = (await this.impl).session(convertMode(mode));
         const session: spi.Session = new Neo4JSession(() => impl, future(() => outer(session)), this);
         try {
             this.log.trace(`NEO4J SSBEG ${this.id}/??`);
@@ -89,6 +89,8 @@ class Neo4JDriver extends spi.DatabaseImpl<neo4j.Driver, neo4j.Session> {
         } catch (e) {
             this.log.trace(`NEO4J SSERR ${session.id}`);
             throw e;
+        } finally {
+            await new Promise((accept, reject) => impl.close(accept));
         }
     }
 

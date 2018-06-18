@@ -36,6 +36,7 @@
     "jest": "^23.1.0",
     "jest-config": "^23.1.0",
     "jsdoc": "^3.5.5",
+    "leaked-handles": "^5.2.0",
     "marked": "^0.4.0",
     "npm": "^6.1.0",
     "ts-jest": "^22.4.6",
