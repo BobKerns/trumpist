@@ -13,7 +13,7 @@ export class Promissory<T> extends Promise<T> {
      */
     public accept: PromiseAccept<T>;
     /**
-     * Call this instead of [Promissory.accept] to indicate an error has occured
+     * Call this instead of [Promissory.accept] to indicate an error has occurred
      */
     public reject: PromiseReject;
 

@@ -47,14 +47,33 @@ export type PromiseCB<T> = (accept: PromiseAccept<T>, reject: PromiseReject) => 
  */
 export type Extensible<T, V= any> = T & AnyParams<V>;
 
-// tslint:disable-next-line ban-types
-export type AnyFunction = Function;
+/**
+ * A type for constructors. But `object.constructor` is typed as function, so a cast is needed, e.g.
+ * `proto.constructor as Constructor<any>`.
+ *
+ * @param <T> The type constructed.
+ */
+export type Constructor<T extends object> = new (...args: any[]) => T;
 
-export function classChain(cls: AnyFunction) {
-    const result = [];
+export function constructorOf<T extends object>(obj: T): Constructor<T> {
+    return obj.constructor as Constructor<T>;
+}
+
+
+/**
+ * Obtain the class/inheritance hierarchy via prototype chain. Note that some entries may be anonymous functions
+ * with no names.
+ *
+ * @param {Constructor<any>} cls
+ * @returns {Array<Constructor<any>>}
+ */
+export function classChain(cls: Constructor<any>) {
+    const result: Array<Constructor<any>> = [];
     while (cls && (cls !== Object) && (cls !== Function)) {
         result.push(cls);
         cls = Object.getPrototypeOf(cls);
     }
     return result;
 }
+
+export type AnyFunction = (...args: any[]) => any;
