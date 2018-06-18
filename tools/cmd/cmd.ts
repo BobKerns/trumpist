@@ -17,6 +17,14 @@ const argv = yargs
     .strict()
     .help()
     .version()
+    .option('debug', {
+        description: "Enable debug logging",
+        boolean: true,
+    })
+    .option('trace', {
+        description: "Enable trace logging",
+        boolean: true,
+    })
     .command('import', "Import a brain",
         (yyargs) => yyargs
             .option('brz', {
