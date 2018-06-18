@@ -2,6 +2,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+import 'source-map-support/register';
 import * as yargs from "yargs";
 import {load} from "../import/load";
 import {dirname, join} from "path";
