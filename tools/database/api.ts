@@ -32,6 +32,8 @@ export interface Parent {
     readonly id: string;
 }
 
+export type PMarker = Marker & Parent;
+
 /**
  * A session or transaction can be in read or write mode. Specifying them correctly isn't just a matter of safety;
  * a read-mode request can be routed to a read-only replica.
@@ -156,7 +158,7 @@ export interface CollectedResults extends ResultSummaryProvider {
     /**
      * Get an array of results from the summary.
      */
-    getResults(): Record[];
+    getResults(): Promise<Record[]>;
 }
 
 /**

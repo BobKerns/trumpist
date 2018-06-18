@@ -35,7 +35,7 @@ export class Query implements api.Query, spi.Query {
     public expand(params: AnyParams): api.ExpandResult {
         const merged = {...this.parameters, ...params};
         const expanded = this.parse.expand(merged);
-        if (expanded.missing) {
+        if (expanded.missing.length) {
             throw new Error(`Query parameters not found: [${expanded.missing}`);
         }
         return expanded;

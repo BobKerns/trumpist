@@ -37,7 +37,7 @@ afterAll(async () => {
 describe('tests the model setup', () => {
     it('loads the queries', async () => {
         const model = new Model(await session);
-        const queries = await model.setup();
+        const queries = await model.queries;
         expect(queries).toBeInstanceOf(MockQueries);
         expect(queries.init).toBeInstanceOf(MockQuery);
     });

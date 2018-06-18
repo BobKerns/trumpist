@@ -10,13 +10,20 @@ import {loadQueries, ModelQueries} from "./model-queries";
 const log = create("model");
 
 export class Model {
-    private session: api.Session;
+    private readonly session: api.Session;
+    public readonly queries: Promise<ModelQueries>;
 
     constructor(session: api.Session) {
         this.session = session;
+        this.queries = loadQueries(`#${this.session.database}`);
     }
 
-    public async setup(): Promise<ModelQueries> {
-        return loadQueries(`#${this.session.database}`);
+    public async init(): Promise<any> {
+        return this.session.withTransaction(api.Mode.WRITE, async tx => {
+            const queries = await this.queries;
+            const result = await tx.query(queries.init, {});
+            log.debug(`Result: ${result}`);
+            return result;
+        });
     }
 }

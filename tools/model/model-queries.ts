@@ -19,9 +19,10 @@ export async function loadQueries(id: string): Promise<ModelQueries> {
     if (id.startsWith('#')) {
         const bareId = id.substring(1);
         const fullId = `../dbs/${bareId}/model-queries-${bareId}`;
-        const queryClass = (await import(fullId)).queries;
+        const imported = (await (import(fullId)));
+        const queryClass = imported.queries;
         return new queryClass();
     }
-    return (await import(id)).queries;
+    return (await (import(id))).queries;
 }
 

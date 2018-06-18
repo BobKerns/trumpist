@@ -2,8 +2,8 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {AnyParams, classChain, Nullable} from "../util/types";
-import {SessionCallback} from "../database/api";
+import {AnyParams, classChain, Constructor, constructorOf, Nullable} from "../util/types";
+import * as api from "../database/api";
 import {future, Future} from "../util/future";
 import {promises as fs, constants as fsConstants, PathLike} from "fs";
 import * as path from 'path';
@@ -11,6 +11,7 @@ import {env} from "shelljs";
 import * as R from "ramda";
 
 import {create, Logger} from "../util/logging";
+import DatabaseAccess, {DbOptions} from "../database/database-access";
 
 export abstract class App {
     protected readonly options: AnyParams;
@@ -28,7 +29,8 @@ export abstract class App {
         } else if (!log) {
             log = create(this.constructor.name || 'App');
         }
-        log.transports.map(t => t.level = "debug");
+        const level = options.trace ? 'trace' : (options.debug ? 'debug' : 'info');
+        log.level = level;
         this.log = log;
     }
 
@@ -36,19 +38,21 @@ export abstract class App {
         const load = (f: string) => {
             return (import(f));
         };
-        const exists = (f: PathLike) => fs.access(f, fsConstants.R_OK)
+        const exists = async (f: PathLike) => fs.access(f, fsConstants.R_OK)
+            .then(() => true)
             .catch(e => false);
         let m = module;
         while (m.parent) {
             m = m.parent;
         }
-        const appdir = path.dirname(m.filename);
+        const appdir = path.dirname(path.dirname(m.filename));
         const defaultsFile = path.join(appdir, "trumpist-defaults.config");
         const dff = async () => {
             return load(defaultsFile);
         };
-        const defaults: AnyParams = (await exists(defaultsFile)) ? (await dff()) : {};
-        let loaded = {};
+        const dfe = await exists(defaultsFile);
+        const defaults: AnyParams = (dfe) ? (await dff()) : {};
+        let loaded: AnyParams = {};
         const homeConfig = path.join(env.HOME, ".trumpist");
         if (this.options.config) {
             this.configSource = this.options.config;
@@ -60,9 +64,11 @@ export abstract class App {
         if (this.configSource) {
             loaded = load(this.configSource);
         }
-        const classes = classChain(this.constructor).reverse();
+        const classes = classChain(constructorOf(this)).reverse();
         const keys = classes.flatMap(cls => cls.name ? [cls.name] : []);
-        const opts = App.mergeContextOptions("appSettings", keys, defaults.app.appSettings, loaded).appSettings;
+        const opts = App.mergeContextOptions("appSettings", keys,
+            defaults || {},
+            loaded || {});
         return {...opts, ...this.options};
     }
 
@@ -78,6 +84,7 @@ export abstract class App {
     public async run(): Promise<void> {
         try {
             await this.config;
+            return this.doRun();
         } catch (e) {
             (this.log || console).error(`Error running ${this.constructor.name}: ${e.message || e}`);
         }
@@ -85,8 +92,27 @@ export abstract class App {
 
     protected abstract async doRun(): Promise<void>;
 
-    protected async runInSession(cb: SessionCallback<void>): Promise<void> {
-
+    /**
+     * To be called from {@link App.doRun} methods that want access to a database.
+     * @param {SessionCallback<void>} cb
+     * @returns {Promise<void>}
+     */
+    protected async runInSession(cb: api.SessionCallback<void>): Promise<void> {
+        const dbConfigs = await this.param('dbConfigs');
+        const dbConfig = dbConfigs[await this.param('database', 'default')];
+        const dbAccess = new DatabaseAccess({
+            database: dbConfig.database,
+            log: this.log,
+            parameters: dbConfig,
+        });
+        return dbAccess.withDatabase(async db => {
+            try {
+                return (await db.withSession(api.Mode.WRITE, async session =>
+                    (await cb(session))))
+            } finally {
+                this.log.error("runInSession session ended");
+            }
+        });
     }
 
     /**

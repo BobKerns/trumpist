@@ -6,47 +6,119 @@ import {Readable} from "stream";
 import {Logger} from "../util/logging";
 
 import * as api from "./api";
-import {seconds, Maybe, ConnectionParameters, nextId, Parent} from "./api";
+import {ConnectionParameters, Maybe, Parent, Record, seconds} from "./api";
+import DatabaseAccess from "./database-access";
+import {captureValue, Future} from "../util/future";
+import advanceTimersByTime = jest.advanceTimersByTime;
 
 export {seconds, Maybe, ConnectionParameters} from "./api";
 export {Logger} from "../util/logging";
-
-import DatabaseAccess from "./database-access";
-import {Record} from "./api";
-import {Future, future} from "../util/future";
 
 // A marker for api vs spi classes
 export interface Marker {
 
 }
 
+export type PMarker = Marker & Parent;
+
 type BaseFutureKeys = "log" | "database" | "id" | "outer";
 
-export abstract class Base<O extends api.Marker & api.Parent, P extends Parent & Marker, I> {
+type Wrapper<O, T> = (outer: O) => Maybe<T>;
+type Wrapped<I, T> = (i: (i: I) => Promise<T>) => Promise<T>;
+
+interface SpiParent<A extends api.PMarker, S extends PMarker, X> {
+
+    /**
+     * Instantiate the appropriate SPI implementation class to wrap this implementation object.
+     * @param <X> impl
+     * @returns <S> the appropriate DB-specific SPI wrapper.
+     */
+    newSPI(mode: api.Mode, outer: () => A, impl: X): S;
+
+    /**
+     * This method should be implemented by the SPI class to create the implementation object. Once it is created and
+     * valid for use, it should call the callback, returning the value from the callback.
+     *
+     * The callback is responsible for calling {@link Base.newSPI} to allocate the SPI wrapper, and supplying it to the
+     * API callback.
+     *
+     * All async operations should be awaited. When the callback is done, any resources should be finalized.
+     * @param {(impl: X) => Promise<T>} cb
+     * @returns {Promise<T>}
+     */
+    invoke<T>(mode: api.Mode, cb: (impl: X) => Promise<T>): Promise<T>;
+}
+
+export abstract class Base<O extends api.Marker & api.Parent, P extends PMarker, I> {
     private readonly _outer: Future<O>;
-    get log() { return this.outer.log; }
+    get log() {
+        const parent = this.outer.log.parent || this.outer.log;
+        return parent.getChild(this.database);
+    }
     get database() { return this.outer.database; }
     get id() { return `[${this.outer.id}]`; }
     get outer() { return this._outer.value; }
-    get impl(): Maybe<I> { return this._impl.value; }
 
-    protected readonly _impl: Future<Maybe<I>>;
+    protected readonly impl: I;
     protected readonly parent?: P;
 
-    protected constructor(impl: (otter: O) => I, outer: Future<O>, parent: P, parentDb?: string) {
+    protected constructor(impl: I, outer: Future<O>, parent: P, parentDb?: string) {
         this._outer = outer;
-        this._impl = future(() => impl(this.outer));
+        this.impl = impl;
         this.parent = parent;
     }
 }
 
+export abstract class BaseWithSpi<O extends api.Marker & api.Parent, P extends PMarker, I,
+    A extends api.PMarker = api.PMarker, S extends PMarker = PMarker, X = any>
+    extends Base<O, P, I>
+    implements SpiParent<A, S, X> {
+
+    public abstract invoke<T>(mode: api.Mode, cb: (impl: X) => Promise<T>): Promise<T>;
+
+    public abstract newSPI(mode: api.Mode, outer: () => api.PMarker, impl: any): S;
+
+
+    /**
+     *
+     * @param {(impl: X) => S} spiFn       Creates SPI-level object, implemented by {@link Base.newSPI}
+     * @param {C} cb
+     * @returns {(impl: X) => Promise<T>}
+     */
+    protected callbackWrapper<T>(
+        spiFn: (impl: X) => S,
+        cb: Wrapper<S, T>): (impl: X) => Promise<T> {
+        return async (impl: X): Promise<T> => Promise.resolve(cb(spiFn(impl)));
+    }
+
+    protected async invokeInner<C, T>(
+        key: string, description: string, mode: api.Mode, apiObjFn: () => A, fn: Wrapper<S, T>) {
+
+        const log = this.log;
+        try {
+            log.trace(`${key}BEGX beginning ${description}.`);
+            const newSPI = (impl: X) => this.newSPI(mode, apiObjFn, impl);
+            const exfn: Wrapped<X, T> =
+                (cb): Promise<T> => this.invoke<T>(mode, cb);
+            const val: T = await exfn(this.callbackWrapper<T>(newSPI, fn));
+            log.trace(`${key}ENDX ${description} returns ${val}`);
+            return val;
+        } catch (e) {
+            log.trace(`${key}ERRX ${description} throws ${e.message}`, e);
+            throw e;
+        }
+    }
+}
+
+
+export type SPICallback<S, T> = (spiObj: S) => Maybe<T>;
 
 /**  Callback for receiving a [[Database]] at the internal SPI level. */
-export type DatabaseCallback<T> = (db: Database) => Maybe<T>;
+export type DatabaseCallback<T> = SPICallback<Database, T>;
 /**  Callback for receiving a [[Session]] at the internal SPI level. */
-export type SessionCallback<T> = (session: Session) => Maybe<T>;
+export type SessionCallback<T> = SPICallback<Session, T>;
 /**  Callback for receiving a [[Transaction]] at the internal SPI level. */
-export type TransactionCallback<T> = (tx: Transaction) => Maybe<T>;
+export type TransactionCallback<T> = SPICallback<Transaction, T>;
 
 /**
  * This is what to implement to provide a different database connection
@@ -59,7 +131,7 @@ export type TransactionCallback<T> = (tx: Transaction) => Maybe<T>;
  * * [[RecordStream]]
  */
 
-export interface Provider extends Parent, Marker {
+export interface Provider extends PMarker {
     /** Access a database, disposing of any resources when done. */
     withDatabase<T>(outer: () => api.Database, cb: DatabaseCallback<T>): Promise<T>;
 
@@ -69,13 +141,22 @@ export interface Provider extends Parent, Marker {
     close(): Promise<void>;
 }
 
-export abstract class ProviderImpl extends Base<DatabaseAccess, DatabaseAccess, ConnectionParameters> implements Provider {
+/**
+ * Base class for a provider implementation.
+ * @param <S> The type of the SPI class to be created
+ */
+export abstract class ProviderImpl<X>
+    extends BaseWithSpi<DatabaseAccess, DatabaseAccess, ConnectionParameters, api.Database, Database, X>
+    implements PMarker {
     protected constructor(outer: Future<DatabaseAccess>, parent: DatabaseAccess, parameters: ConnectionParameters) {
-        super(() => parameters, outer, parent);
+        super(parameters, outer, parent);
     }
 
     /** Access a database, disposing of any resources when done. */
-    public abstract withDatabase<T>(outer: () => api.Database, cb: DatabaseCallback<T>): Promise<T>;
+    public withDatabase<T>(outer: () => api.Database, fn: DatabaseCallback<T>): Promise<T> {
+        return this.invokeInner(
+            'DRV', 'DB Driver', api.Mode.WRITE, outer, fn);
+    }
 
     /**
      * Override this with any needed cleanup
@@ -84,7 +165,7 @@ export abstract class ProviderImpl extends Base<DatabaseAccess, DatabaseAccess, 
     }
 }
 
-export interface Database extends Parent, Marker {
+export interface Database extends PMarker {
     /** Obtain a session to begin a series of transactions. */
     withSession<T>(mode: api.Mode, outer: () => api.Session, cb: SessionCallback<T>): Promise<T>;
 
@@ -95,18 +176,23 @@ export interface Database extends Parent, Marker {
  * This represents a particularized access, e.g. a configured driver ready to
  * provide sessions/connections. Shared between "threads" of execution.
  */
-export abstract class DatabaseImpl<I> extends Base<api.Database, Provider, I> implements Database {
-    protected constructor(impl: (otter: api.Database) => I, outer: Future<api.Database>, parent: Provider) {
+export abstract class DatabaseImpl<I, X>
+    extends BaseWithSpi<api.Database, Provider, I, api.Session, Session, X>
+    implements Database {
+    protected constructor(impl: I, outer: Future<api.Database>, parent: Provider) {
         super(impl, outer, parent);
     }
     /** Obtain a session to begin a series of transactions. */
-    public abstract withSession<T>(mode: api.Mode, outer: () => api.Session, cb: SessionCallback<T>): Promise<T>;
+    public withSession<T>(mode: api.Mode, outer: () => api.Session, cb: SessionCallback<T>): Promise<T> {
+        return this.invokeInner(
+            'SES', 'DB Session', mode, outer, cb);
+    }
 
     public async close(): Promise<void> {
     }
 }
 
-export interface Session extends Parent, Marker {
+export interface Session extends PMarker {
     /** Use a transaction to perform a series of queries. */
     withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: TransactionCallback<T>): Promise<T>;
     /** Optional close implementation. */
@@ -116,14 +202,22 @@ export interface Session extends Parent, Marker {
  * One interaction with the database. Must be used as "single-threaded" and not
  * be interleaved.
  */
-export abstract class SessionImpl<I> extends Base<api.Session, Database, I> implements Session {
-    protected constructor(impl: () => I,
+export abstract class SessionImpl<I, X>
+    extends BaseWithSpi<api.Session, Database, I,
+        api.Transaction, Transaction, X>
+    implements Session {
+    protected constructor(impl: I,
                           outer: Future<api.Session>,
                           parent: Database) {
         super(impl, outer, parent);
     }
     /** Use a transaction to perform a series of queries. */
-    public abstract withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: TransactionCallback<T>): Promise<T>;
+    public withTransaction<T>(mode: api.Mode,
+                              outer: () => api.Transaction,
+                              cb: TransactionCallback<T>): Promise<T> {
+        return this.invokeInner(
+            'TX.', 'DB Transaction', mode, outer, cb);
+    }
     /** Optional close implementation. */
     public async close(): Promise<void> {
     }
@@ -146,7 +240,7 @@ export interface ResultIterableIterator extends AsyncIterableIterator<api.Record
 /**
  * An abstract transaction, within which we can perform multiple queries.
  */
-export interface Transaction extends Parent, Marker {
+export interface Transaction extends PMarker {
     /** Perform a query and obtain the collected results all at once. */
     query(query: api.Query, params: object): Promise<api.CollectedResults>;
     /** Perform a query, and obtain the results as a stream. */
@@ -170,7 +264,7 @@ export interface Transaction extends Parent, Marker {
 }
 
 export abstract class TransactionImpl<I> extends Base<api.Transaction, Session, I> {
-    protected constructor(impl: (otter: api.Transaction) => I,
+    protected constructor(impl: I,
                           outer: Future<api.Transaction>,
                           parent: Session) {
         super(impl, outer, parent);
@@ -241,7 +335,7 @@ export abstract class CollectedResults implements api.CollectedResults {
     /**
      * Get an array of results from the summary.
      */
-    public abstract getResults(): api.Record[];
+    public abstract getResults(): Promise<api.Record[]>;
     public abstract getResultSummary(): Promise<ResultSummary>;
 }
 

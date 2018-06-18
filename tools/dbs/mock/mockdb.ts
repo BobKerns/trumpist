@@ -13,35 +13,59 @@ import DatabaseAccess from "../../database/database-access";
 import {Future, future} from "../../util/future";
 import {AnyParams, Nullable} from "../../util/types";
 
-export class MockProvider extends spi.ProviderImpl {
+export class MockProvider extends spi.ProviderImpl<null> {
+    public newSPI(mode: api.Mode, outer: () => api.PMarker, impl: any): spi.Database {
+        throw new Error("Method not implemented.");
+    }
+    public invoke<T>(mode: api.Mode, cb: (impl: null) => Promise<T>): Promise<T> {
+        return cb(null);
+    }
     constructor(parent: DatabaseAccess, parameters: ConnectionParameters) {
         super(future(() => parent), parent, parameters);
     }
 
-    public async withDatabase<T>(outer: () => api.Database, cb: spi.DatabaseCallback<T>): Promise<T> {
-        return cb(new MockDatabase(future(outer), this));
+    public async withDatabase<T>(outer: (inner: spi.Database) => api.Database, cb: spi.DatabaseCallback<T>): Promise<T> {
+        const db: MockDatabase = new MockDatabase(future(() => outer(db)), this);
+        return cb(db);
     }
 }
 
-export class MockDatabase extends spi.DatabaseImpl<void> {
+export class MockDatabase extends spi.DatabaseImpl<null, null> {
+    public newSPI(mode: api.Mode, outer: () => api.Session, impl: any): spi.Session {
+        return new MockSession(future(outer), this, mode);
+    }
+    public invoke<T>(mode: api.Mode, cb: (impl: null) => Promise<T>): Promise<T> {
+        return cb(null);
+    }
     constructor(outer: Future<api.Database>, parent: MockProvider) {
-        super(() => {}, outer, parent);
+        super(null, outer, parent);
     }
 
-    public async withSession<T>(mode: api.Mode, outer: () => api.Session, cb: spi.SessionCallback<T>): Promise<T> {
-        return cb(new MockSession(future(outer), this, mode));
+    public async withSession<T>(mode: api.Mode, outer: (inner: spi.Session) => api.Session, cb: spi.SessionCallback<T>): Promise<T> {
+        const session: MockSession = new MockSession(future(() => outer(session)), this, mode);
+        return cb(session);
     }
 }
 
-export class MockSession extends spi.SessionImpl<void> {
+export class MockSession extends spi.SessionImpl<null, null> {
+    public newSPI(mode: api.Mode, outer: () => api.Transaction, impl: any): spi.Transaction {
+        return new MockTransaction(future(outer), this, mode);
+    }
+    public invoke<T>(mode: api.Mode, cb: (impl: null) => Promise<T>): Promise<T> {
+        return cb(null);
+    }
+
     public readonly mode: api.Mode;
     constructor(outer: Future<api.Session>, parent: MockDatabase, mode: api.Mode) {
-        super(() => {}, outer, parent);
+        super(null, outer, parent);
         this.mode = mode;
     }
 
-    public async withTransaction<T>(mode: api.Mode, outer: () => api.Transaction, cb: spi.TransactionCallback<T>): Promise<T> {
-        return cb(new MockTransaction(future(outer), this, mode));
+    public async withTransaction<T>(mode: api.Mode,
+                                    outer: (inner: spi.Transaction) => api.Transaction,
+                                    cb: spi.TransactionCallback<T>): Promise<T> {
+        const tx: MockTransaction = new MockTransaction(future(() => outer(tx)), this, mode);
+        return cb(tx);
     }
 }
 
@@ -68,7 +92,7 @@ export class MockCollectedResults extends spi.CollectedResults {
         return new MockResultSummary(this.query);
     }
 
-    public getResults(): MockRecord[] {
+    public async getResults(): Promise<MockRecord[]> {
         return this.results;
     }
 }
@@ -81,7 +105,7 @@ export class MockRecord implements api.Record {
 
     public get(key: string): any {
         if (! this.data.hasOwnProperty(key)) {
-            throw new Error(`Key ${key} is not present in the result, even as a null.`)
+            throw new Error(`Key ${key} is not present in the result, even as a null.`);
         }
         return this.data[key];
     }
@@ -97,12 +121,13 @@ export class MockIteratorResult implements IteratorResult<MockRecord> {
 
 export class MockResultIterator extends spi.ResultIterator {
     private results: MockCollectedResults;
-    private iterator: Iterator<MockRecord>;
+    private iterator: Promise<Iterator<MockRecord>>;
     constructor(query: MockQuery) {
-        let results = new MockCollectedResults(query);
+        const results = new MockCollectedResults(query);
         super();
         this.results = results;
-        this.iterator = results.getResults().values();
+        this.iterator = results.getResults()
+            .then(r => r.values());
     }
     public [Symbol.asyncIterator](): AsyncIterableIterator<MockRecord> {
         return this;
@@ -113,7 +138,7 @@ export class MockResultIterator extends spi.ResultIterator {
     }
 
     public async next(value?: any): Promise<IteratorResult<MockRecord>> {
-        return this.iterator.next();
+        return (await this.iterator).next();
     }
 }
 
@@ -127,7 +152,7 @@ export class MockRecordStream extends spi.RecordStream {
     public _read() {
         const result = this.query.result;
         if (result instanceof Error) {
-            let e = new Error(result.message);
+            const e = new Error(result.message);
             Object.assign(e, result);
             (e as any).prototype = (result as any).prototype;
             this.emit('error', e);
@@ -138,7 +163,7 @@ export class MockRecordStream extends spi.RecordStream {
         this.emit('end');
     }
 
-    public getResultSummary() : Promise<MockResultSummary> {
+    public getResultSummary(): Promise<MockResultSummary> {
         return super.getResultSummary() as Promise<MockResultSummary>;
     }
 }
@@ -149,7 +174,7 @@ export class MockQuery implements spi.Query {
     public parameters: AnyParams;
     public statement: string;
     public result: AnyParams[] | Error;
-    constructor(...result: (AnyParams|Error)[]) {
+    constructor(...result: Array<(AnyParams|Error)>) {
         this.result = result;
     }
 
@@ -163,7 +188,7 @@ export class MockQuery implements spi.Query {
     }
 
     /**
-     * We don't really curry because we've specifid what results we want.
+     * We don't really curry because we've specified what results we want.
      * @param {Nullable<string>} name
      * @param {AnyParams} params
      * @returns {MockQuery}
@@ -173,10 +198,10 @@ export class MockQuery implements spi.Query {
     }
 }
 
-export class MockTransaction extends spi.TransactionImpl<void> {
+export class MockTransaction extends spi.TransactionImpl<null> {
     public readonly mode: api.Mode;
     constructor(outer: Future<api.Transaction>, parent: spi.Session, mode: api.Mode) {
-        super(() => {}, outer, parent);
+        super(null, outer, parent);
         this.mode = mode;
     }
     public async query(query: MockQuery, params: object): Promise<spi.CollectedResults> {
