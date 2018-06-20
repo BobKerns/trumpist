@@ -239,7 +239,7 @@ type DbVal1 = string | number | boolean | null;
 /**
  * Types we can store in the Database.
  */
-type DbVal = DbVal1 | DbVal1[];
+type DbVal = DbVal1 | DbVal1[] | {[k: string]: DbVal1};
 
 function nodeOpts(node: INode|ILink): INodeResult {
     const t = node as Extensible<INode, DbVal>;
@@ -348,45 +348,7 @@ async function loadTypeLabels(session: neo4j.Session) {
         });
 }
 
-function linkOpts(t: ILink): ILinkResult {
-    const nodeReusult: any = nodeOpts(t);
-    const result = nodeReusult as ILinkResult;
-    const flags = t.Direction < 0 ? 0 : t.Direction;
-    const hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL));
-    const reversed = result.props.dir_reversed = (flags & DIRECTION.REVERSED) > 0 || MEANING_DESCRIPTORS[t.Meaning].reverse || false;
-    result.props.dir_shown = (flags & DIRECTION.DIRECTIONAL) > 0;
-    result.props.dir_one_way = (flags & DIRECTION.ONE_WAY) > 0;
-    result.props.dir_specified = (flags & DIRECTION.SPECIFIED) > 0;
-    if (reversed && ((t.Meaning !== 1) || !hierarchy)) {
-        result.from_id = t.ThoughtIdB;
-        result.to_id = t.ThoughtIdA;
-    } else {
-        result.from_id = t.ThoughtIdA;
-        result.to_id = t.ThoughtIdB;
-    }
-    return result;
-}
 
-function linkLabel(t: ILink): string {
-    return linkMeaningLabel(t) || linkProtoLabel(t);
-}
-
-function linkProtoLabel(t: ILink) {
-    const tid = t.TypeId;
-    const proto = tid && LINKS[tid];
-    if (proto) {
-        return proto.Name;
-    }
-    return 'Link';
-}
-
-function linkMeaningLabel(t: ILink) {
-    const info = MEANING_DESCRIPTORS[t.Meaning];
-    if (!info) {
-        throw new Error(`Unknown Brain link Meaning: ${t.Meaning}`);
-    }
-    return info.label;
-}
 
 async function loadLinkMetadata(session: neo4j.Session, source: Source) {
     await loadLinkTypes(session, source);

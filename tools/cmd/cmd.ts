@@ -4,7 +4,7 @@
 /*
 require("leaked-handles").set({
     fullStack: true,
-    timout: 3000,
+    timeout: 3000,
     debugSockets: true
 });
  */
@@ -14,6 +14,7 @@ import {load} from "../import/load";
 import {dirname, join} from "path";
 import {FilesystemSource} from "../import/source";
 import {InitApp} from "./InitApp";
+import {Loader} from "../import/loader";
 
 // Compute the default location of the brain data.
 const basedir = dirname(dirname(dirname(module.filename)));
@@ -33,6 +34,17 @@ const argv = yargs
         boolean: true,
     })
     .command('import', "Import a brain",
+        (yyargs) => yyargs
+            .option('brz', {
+                description: 'Location of a .brz file to import',
+            })
+            .option('dir', {
+                description: 'location of a directory to import',
+                default: braindir,
+            }),
+        (yargv) => new Loader({source: new FilesystemSource(yargv.dir)})
+            .run())
+    .command('old-import', "Import a brain",
         (yyargs) => yyargs
             .option('brz', {
                 description: 'Location of a .brz file to import',

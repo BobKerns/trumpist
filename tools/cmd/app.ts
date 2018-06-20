@@ -108,7 +108,7 @@ export abstract class App {
         return dbAccess.withDatabase(async db => {
             try {
                 return (await db.withSession(api.Mode.WRITE, async session =>
-                    (await cb(session))))
+                    (await cb(session))));
             } finally {
                 this.log.debug("runInSession session ended");
             }
