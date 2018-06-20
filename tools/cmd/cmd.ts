@@ -11,7 +11,6 @@ require("leaked-handles").set({
 import 'source-map-support/register';
 import * as yargs from "yargs";
 import * as brain from "../brain";
-import {load} from "../import/load";
 import {dirname, join} from "path";
 import {FilesystemSource} from "../import/source";
 import {InitApp} from "./InitApp";
@@ -45,16 +44,6 @@ const argv = yargs
             }),
         (yargv) => new Loader({...yargv, source: new FilesystemSource(yargv.dir)})
             .run())
-    .command('old-import', "Import a brain",
-        (yyargs) => yyargs
-            .option('brz', {
-                description: 'Location of a .brz file to import',
-            })
-            .option('dir', {
-                description: 'location of a directory to import',
-                default: braindir,
-            }),
-        (yargv) => load(new FilesystemSource(yargv.dir)))
     .command('init', 'Initialize a database',
             yyargs => yyargs
                 .option('preview', {
