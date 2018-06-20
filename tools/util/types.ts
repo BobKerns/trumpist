@@ -77,3 +77,7 @@ export function classChain(cls: Constructor<any>) {
 }
 
 export type AnyFunction = (...args: any[]) => any;
+
+export function never(msg: string= 'This should not have been called'): never {
+    throw new Error(msg);
+}
