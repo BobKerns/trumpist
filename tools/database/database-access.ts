@@ -212,6 +212,19 @@ export class Session extends Base<Database, spi.Session> implements api.Session 
             apiCreate, fn, exfn);
     }
 
+    public query(q: api.Query, params?: object | undefined): Promise<api.CollectedResults> {
+        return this.withTransaction(api.Mode.WRITE, tx => tx.query(q, params));
+    }
+
+    /** Perform a shortcut query, and obtain the results as a stream. */
+    public queryStream(query: Query, params?: object): Promise<RecordStream> {
+        return this.withTransaction(api.Mode.WRITE, tx => tx.queryStream(query, params));
+    }
+
+    /** Perform a shortcut query, and obtain the results via async iteration. */
+    public queryIterator(query: Query, params?: object): Promise<ResultIterator> {
+        return this.withTransaction(api.Mode.WRITE, tx => tx.queryIterator(query, params));
+    }
     /**
      * Close the session, freeing any resources
      */
@@ -267,16 +280,16 @@ export class Transaction extends Base<Session, spi.Transaction> implements  api.
     }
 
     /** Perform a query and obtain the collected results all at once. */
-    public async query(query: Query, params: object): Promise<CollectedResults> {
+    public async query(query: Query, params: object= {}): Promise<CollectedResults> {
         return this.run(query, params, () => this.spiObject.query(query, params));
     }
 
     /** Perform a query, and obtain the results as a stream. */
-    public async queryStream(query: Query, params: object): Promise<RecordStream> {
+    public async queryStream(query: Query, params: object= {}): Promise<RecordStream> {
         return this.run(query, params, () => this.spiObject.queryStream(query, params));
     }
     /** Perform a query, and obtain the results via async iteration. */
-    public async queryIterator(query: Query, params: object): Promise<ResultIterator> {
+    public async queryIterator(query: Query, params: object= {}): Promise<ResultIterator> {
         return this.run(query, params, () => this.spiObject.queryIterator(query, params));
     }
 }

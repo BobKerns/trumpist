@@ -8,8 +8,7 @@ import {Logger} from "../util/logging";
 import * as api from "./api";
 import {ConnectionParameters, Maybe, Parent, Record, seconds} from "./api";
 import DatabaseAccess from "./database-access";
-import {captureValue, Future} from "../util/future";
-import advanceTimersByTime = jest.advanceTimersByTime;
+import {captureValue, Future, ManualPromise} from "../util/future";
 
 export {seconds, Maybe, ConnectionParameters} from "./api";
 export {Logger} from "../util/logging";
@@ -310,6 +309,10 @@ export interface Query extends api.Query {
  * Helpful, possibly implementation-dependent information from a query.
  */
 export class ResultSummary implements api.ResultSummary {
+    constructor(props: api.ResultSummary) {
+        Object.assign(this, props);
+    }
+
     /**
      * The elapsed time to execute the query.
      */
@@ -326,10 +329,6 @@ export class ResultSummary implements api.ResultSummary {
      * The number of items modified.
      */
     public modifiedCount: number;
-    /**
-     * On unsuccessful queries, an error.
-     */
-    public error?: Error;
 }
 
 /**
@@ -350,19 +349,29 @@ export abstract class CollectedResults implements api.CollectedResults {
  * ResultSummary can be obtained with helpful, possibly implementation-dependent information, through
  * listening for the ```"result"``` event.
  */
-export abstract class RecordStream extends Readable implements api.RecordStream {
+export class RecordStream extends Readable implements api.RecordStream {
     protected readonly summary: Promise<ResultSummary>;
-    protected constructor() {
+    protected readonly _done = new ManualPromise<null>();
+    constructor() {
         super({objectMode: true});
         this.summary = new Promise<ResultSummary>((success, failure) => {
             this
                 .on('result', summary => success(summary))
                 .on('error', e => failure(e));
         });
+        this
+            .on('error', e => this._done.reject(e))
+            .on('end', () => this._done.resolve(null))
+            .on('close', () => this._done.resolve(null));
+
     }
 
-    public getResultSummary() {
+    public getResultSummary(): Promise<ResultSummary> {
         return this.summary;
+    }
+
+    public done(): Promise<ResultSummary> {
+        return this._done.then(() => this.summary);
     }
 }
 

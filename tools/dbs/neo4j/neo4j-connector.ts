@@ -12,7 +12,9 @@ import {future, Future} from "../../util/future";
 import {AnyParams} from "../../util/types";
 import Transaction from "neo4j-driver/types/v1/transaction";
 import {tryCatch} from "ramda";
-import {ConnectionParameters} from "../../database/spi";
+import {ConnectionParameters, RecordStream} from "../../database/spi";
+import {ResultStream} from "../../database/result-stream";
+import {Neo4jRecordStream} from "./neo4j-record-stream";
 
 
 interface Neo4JParams extends spi.ConnectionParameters {
@@ -192,7 +194,13 @@ class Neo4JTransaction extends spi.TransactionImpl<neo4j.Transaction> {
         return new Neo4JCollectedResults(result);
     }
     public async queryStream(query: spi.Query, params: object): Promise<spi.RecordStream> {
-        throw new Error("Not Implemented");
+        try {
+            this.log.trace(`NEO4J QSTREAM ${this.id}: ${query.name || 'anon'}`);
+            return new Neo4jRecordStream(this.impl, query.expand(params));
+        } catch (e) {
+            this.log.trace(`NEO4J QERR ${this.id}: ${query.name} ${e.message}`);
+            throw e;
+        }
     }
     public async queryIterator(query: spi.Query, params: object): Promise<spi.ResultIterator> {
         throw new Error("Not Implemented");
@@ -206,7 +214,9 @@ class Neo4JCollectedResults extends spi.CollectedResults {
         this.result = result;
     }
     public async getResultSummary(): Promise<api.ResultSummary> {
-        return new Neo4JResultSummary((await this.result).summary);
+        const records = await this.getResults();
+        const readCount = (records && records.length) || 0;
+        return new Neo4JResultSummary((await this.result).summary, readCount);
     }
 
     public async getResults(): Promise<api.Record[]> {
@@ -216,8 +226,14 @@ class Neo4JCollectedResults extends spi.CollectedResults {
 
 class Neo4JResultSummary extends spi.ResultSummary {
     private readonly summary: neo4j.ResultSummary;
-    constructor(summary: neo4j.ResultSummary) {
-        super();
+    constructor(summary: neo4j.ResultSummary, readCount: number) {
+        super({
+            ...summary,
+            readCount: readCount,
+            createCount: summary.counters.nodesCreated() + summary.counters.relationshipsCreated(),
+            modifiedCount: summary.counters.containsUpdates() ? 1 : 0,
+            elapsedTime: neo4j.integer.toNumber(summary.resultConsumedAfter),
+        });
         this.summary = summary;
     }
 }

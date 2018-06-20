@@ -178,7 +178,7 @@ export class MockQuery implements spi.Query {
         this.result = result;
     }
 
-    public expand(params: object): api.ExpandResult {
+    public expand(params: object): api.QueryExpansion {
         return {
             statement: this.statement,
             parameters: {},
