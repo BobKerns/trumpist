@@ -13,6 +13,8 @@
 'use strict';
 
 // An approximation of the result of what's in internal/errors.js
+import {once} from "./future";
+
 class ERR_STREAM_PREMATURE_CLOSE extends Error {
     constructor() {
         super("Premature Close[ERR_STREAM_PREMATURE_CLOSE]");
@@ -27,28 +29,21 @@ function isRequest(stream: Extensible<Stream>) {
     return stream.setHeader && typeof stream.abort === 'function';
 }
 
-function once(callback: Callback) {
-    let called = false;
-    return function(err: Error) {
-        if (called) { return; }
-        called = true;
-        callback.call(this, err);
-    };
-}
-
 export interface StreamOptions {
     [k: string]: any;
 }
 
 export type CleanupFunction = () => void;
 
+export function finished(stream: Stream, opts: Nullable<StreamOptions>, callback?: Callback): CleanupFunction;
+export function finished(stream: Stream, callback?: Callback): CleanupFunction;
 export function finished(stream: Stream, opts: Nullable<StreamOptions|Callback>, callback?: Callback): CleanupFunction {
     const call = (obj: any, ...args: any[]): void => {
         const cb = callback as (...args: any[]) => any;
         return cb.call(obj, ...args);
     };
     const istream = stream as Extensible<Stream>;
-    if (typeof opts === 'function') { return finished(istream, null, opts); }
+    if (typeof opts === 'function') { return finished(stream, null, opts); }
     if (!opts) { opts = {}; }
 
     callback = once(callback || noop);
