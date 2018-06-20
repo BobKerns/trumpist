@@ -114,9 +114,13 @@ RETURN p.id AS id, REDUCE(s=p.name, x IN TAIL(NODES(path)) | s + ':' + x.name) A
     WITH COALESCE(f1, f2) AS f, COALESCE(t1, t2) AS t
     WHERE f IS NOT NULL AND t IS NOT NULL
 //WHERE NOT (f)-[:_SUPER]-(t)
-    MERGE (f)-[l:\`$[label]\` {id: $id}]->(t)
+    MERGE (f)-[l:$[label:id] {id: $id}]->(t)
 SET l += $props
 RETURN l;`;
+
+    public readonly NODE_STATEMENT = Q`
+MERGE (n:$[labels:id] {id: $id})
+SET n += $props;`;
 }
 
 export const queries = ImportNeo4JQueries;

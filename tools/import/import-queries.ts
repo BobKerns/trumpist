@@ -25,4 +25,5 @@ export interface ImportQueries {
     readonly INDEX_SPECIAL_LABEL: api.Query;
     readonly LOAD_TYPE_LABELS: api.Query;
     readonly LINK_STATEMENT: api.Query;
+    readonly NODE_STATEMENT: api.Query;
 }

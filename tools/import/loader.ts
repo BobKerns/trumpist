@@ -6,7 +6,7 @@ import {FilesystemSource, Source} from "./source";
 import {AnyParams, Extensible, Nullable, XForm} from "../util/types";
 import {App} from "../cmd/app";
 import {DbOptions, api} from "../database";
-import {ID_NULL_NODE, ILink, INode, KIND, DIRECTION, MEANING, MEANING_DESCRIPTORS} from "../brain";
+import * as brain from "../brain";
 import {done, filter, logstream, pipeline, sink, thru} from "../util/streams";
 import {v1 as neo4j} from "../dbs/neo4j/neo4j-driver";
 import {queries} from "./import-neo4j-queries";
@@ -15,6 +15,8 @@ import * as R from "ramda";
 import {ILinkResult, INodeResult} from "./defs";
 import {Duplex, Writable} from "stream";
 import {resultStream} from "../database/result-stream";
+import {attachLog} from "../util/future";
+import {Level} from "../util/logging";
 const Q = new queries();
 
 // ID of node representing root of the node _Type hierarchy
@@ -37,7 +39,7 @@ const L_SPECIAL = "_Special:_Meta";
 // (Brain does not support this, and Neo4J doesn't quite really, either, but we can fake it.)
 const L_LINK = "_Link:_Meta";
 
-interface AnnoatedLink extends ILink {
+interface AnnoatedLink extends brain.ILink {
     link_label: string;
 }
 
@@ -45,9 +47,9 @@ interface AnnoatedLink extends ILink {
  * Table of node types.
  */
 const TYPES: AnyParams = {
-    [ID_NULL_NODE]: {
-        Id: ID_NULL_NODE,
-        link_label: 'Node:_Node',
+    [brain.ID_NULL_NODE]: {
+        Id: brain.ID_NULL_NODE,
+        labels: 'Node:_Node',
     },
 };
 /**
@@ -63,7 +65,7 @@ const SPECIALS: AnyParams = {};
  */
 const LINKS: AnyParams = {};
 
-LINKS[ID_NULL_NODE] = {};
+LINKS[brain.ID_NULL_NODE] = {};
 
 const OMIT_PROPS = ['Name', 'Label', 'CreationDateTime', 'ModificationDateTime', 'ThoughtIdA', 'ThoughtIdB', 'Id'];
 
@@ -75,8 +77,8 @@ type DbVal = DbVal1 | DbVal1[] | {[k: string]: DbVal1};
 
 const RE_LABEL = /[^a-zA-Z0-9:]/g;
 
-function nodeOpts(node: INode|ILink): INodeResult {
-    const t = node as Extensible<INode, DbVal>;
+function nodeOpts(node: brain.INode|brain.ILink): INodeResult {
+    const t = node as Extensible<brain.INode, DbVal>;
     const brainKeys = R.difference(R.keys(t), OMIT_PROPS);
     const brainProps: AnyParams = {};
     const fix = (val: DbVal) => (typeof val === 'number' ? neo4j.int(val) : val);
@@ -94,15 +96,15 @@ function nodeOpts(node: INode|ILink): INodeResult {
     return v as any as INodeResult;
 }
 
-function linkOpts(t: ILink): ILinkResult {
+function linkOpts(t: brain.ILink): ILinkResult {
     const nodeReusult: any = nodeOpts(t);
     const result = nodeReusult as ILinkResult;
     const flags = t.Direction < 0 ? 0 : t.Direction;
-    const hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === MEANING.NORMAL));
-    const reversed = result.props.dir_reversed = (flags & DIRECTION.REVERSED) > 0 || MEANING_DESCRIPTORS[t.Meaning].reverse || false;
-    result.props.dir_shown = (flags & DIRECTION.DIRECTIONAL) > 0;
-    result.props.dir_one_way = (flags & DIRECTION.ONE_WAY) > 0;
-    result.props.dir_specified = (flags & DIRECTION.SPECIFIED) > 0;
+    const hierarchy = result.props.hierarchy = ((t.Relation === 1) && (t.Meaning === brain.MEANING.NORMAL));
+    const reversed = result.props.dir_reversed = (flags & brain.DIRECTION.REVERSED) > 0 || brain.MEANING_DESCRIPTORS[t.Meaning].reverse || false;
+    result.props.dir_shown = (flags & brain.DIRECTION.DIRECTIONAL) > 0;
+    result.props.dir_one_way = (flags & brain.DIRECTION.ONE_WAY) > 0;
+    result.props.dir_specified = (flags & brain.DIRECTION.SPECIFIED) > 0;
     if (reversed && ((t.Meaning !== 1) || !hierarchy)) {
         result.from_id = t.ThoughtIdB;
         result.to_id = t.ThoughtIdA;
@@ -113,11 +115,11 @@ function linkOpts(t: ILink): ILinkResult {
     return result;
 }
 
-function linkLabel(t: ILink): string {
+function linkLabel(t: brain.ILink): string {
     return linkMeaningLabel(t) || linkProtoLabel(t);
 }
 
-function linkProtoLabel(t: ILink) {
+function linkProtoLabel(t: brain.ILink) {
     const tid = t.TypeId;
     const proto = tid && LINKS[tid];
     if (proto) {
@@ -126,8 +128,8 @@ function linkProtoLabel(t: ILink) {
     return 'Link';
 }
 
-function linkMeaningLabel(t: ILink) {
-    const info = MEANING_DESCRIPTORS[t.Meaning];
+function linkMeaningLabel(t: brain.ILink) {
+    const info = brain.MEANING_DESCRIPTORS[t.Meaning];
     if (!info) {
         throw new Error(`Unknown Brain link Meaning: ${t.Meaning}`);
     }
@@ -173,6 +175,8 @@ export class Loader extends App {
     protected async doRun(): Promise<void> {
         this.runInSession(async session => {
             await this.loadMetadata(session);
+            this.log.severe('Metadata Loaded');
+            await this.loadNodes(session);
         });
     }
 
@@ -180,8 +184,12 @@ export class Loader extends App {
         await this.loadNodeMetadata(session);
         await this.loadLinkMetadata(session);
         this.log.info('Linking to root types');
-        await session.withTransaction(api.Mode.WRITE, tx => tx.query(Q.LINK_ROOTS, {}));
-        await this.loadTypeLabels(session);
+        await attachLog(session.withTransaction(api.Mode.WRITE, tx => tx.query(Q.LINK_ROOTS, {})),
+            this.log, Level.severe);
+        this.log.info('Loading...');
+        await attachLog(this.loadTypeLabels(session),
+            this.log, Level.severe);
+        this.log.info('loaded!');
         return session;
     }
 
@@ -209,26 +217,26 @@ export class Loader extends App {
                     input.destroy(e);
                 }
             };
-            async function doMetadata(data: INode) {
+            async function doMetadata(data: brain.INode) {
                 if (dead) {
                     this.log.info(`Skipping ${data.Id} due to prior error`);
                     return false;
                 }
                 try {
                     switch (data.Kind) {
-                        case KIND.TYPE:
+                        case brain.KIND.TYPE:
                             TYPES[data.Id] = data;
                             await tx.query(Q.ADD_TYPE, nodeOpts(data));
                             return true;
-                        case KIND.TAG:
+                        case brain.KIND.TAG:
                             TAGS[data.Id] = data;
                             await tx.query(Q.ADD_TAG, nodeOpts(data));
                             return true;
-                        case KIND.SPECIAL:
+                        case brain.KIND.SPECIAL:
                             SPECIALS[data.Id] = data;
                             await tx.query(Q.ADD_SPECIAL, nodeOpts(data));
                             return true;
-                        case KIND.NODE:
+                        case brain.KIND.NODE:
                             return false;
                         default:
                             throw new Error(`Unknown Kind: ${data.Kind}`);
@@ -256,19 +264,22 @@ export class Loader extends App {
                 throw e;
             }
         };
-        const thru2 = checkStep(() => tail, thru);
         const recordTemplate = (data: api.Record) => `${data.get('id')}: ${TYPES[data.get('id')].labels}`;
         const log2 = this.countingLogger('Label', 'L', recordTemplate);
-        const rs = await session.queryStream(Q.LOAD_TYPE_LABELS);
-        const tail: Writable = rs.pipe(thru2(processData))
-            .pipe(log2);
-        return await done(tail)
-            .then(v => {
-                if (failure) {
-                    throw failure;
-                }
-                return v;
-            });
+        const rs = await session.withTransaction(api.Mode.WRITE, async tx => {
+            const qs = await tx.queryStream(Q.LOAD_TYPE_LABELS);
+            let tail: Writable;
+            const thru2 = checkStep(() => tail, thru);
+            tail = qs.pipe(thru2(processData))
+                .pipe(log2);
+            await done(tail)
+                .then(v => {
+                    if (failure) {
+                        throw failure;
+                    }
+                });
+            return qs.getResultSummary();
+        });
     }
 
     protected async loadLinkTypes(session: api.Session) {
@@ -282,14 +293,14 @@ export class Loader extends App {
         this.log.info(`Scanning ${input.path} for link metadata.`);
         await session.withTransaction(api.Mode.WRITE, tx => tx.query(Q.ID_CONSTRAINT_META));
         await session.withTransaction(api.Mode.WRITE, async tx => {
-            const proc = (t: ILink) => {
+            const proc = (t: brain.ILink) => {
                 return tx.query(Q.ADD_LINK, linkOpts(t));
             };
             return pipeline(
                 input,
-                filter(t => t.Meaning === MEANING.PROTO),
-                thru((t: Extensible<ILink>) => t.link_label = linkLabel(t)),
-                thru((t: Extensible<ILink>) => LINKS[t.Id] = t),
+                filter(t => t.Meaning === brain.MEANING.PROTO),
+                thru((t: Extensible<brain.ILink>) => t.link_label = linkLabel(t)),
+                thru((t: Extensible<brain.ILink>) => LINKS[t.Id] = t),
                 thru(proc),
                 logstr,
             );
@@ -307,7 +318,7 @@ export class Loader extends App {
             let tail: Writable;
             const thru2 = checkStep(() => tail, thru);
             const filter2 = checkStep(() => tail, filter);
-            const proc = (t: Extensible<ILink>) => {
+            const proc = (t: Extensible<brain.ILink>) => {
                 t.link_options = linkOpts(t);
                 t.link_label = '_SUPER';
                 return tx.query(this.getLinkStmt(t), t.link_options)
@@ -318,8 +329,8 @@ export class Loader extends App {
             };
             // noinspection JSUnresolvedFunction
             tail = input
-                .pipe(filter2(t => t.Meaning === MEANING.SUBTYPE))
-                .pipe(thru2((t: ILink) => LINKS[t.Id] = t))
+                .pipe(filter2(t => t.Meaning === brain.MEANING.SUBTYPE))
+                .pipe(thru2((t: brain.ILink) => LINKS[t.Id] = t))
                 .pipe(thru2(proc))
                 .pipe(logstr)
                 .on('error', (e) => {
@@ -340,7 +351,7 @@ export class Loader extends App {
         return session;
     }
 
-    protected getLinkStmt(t: Extensible<ILink>) {
+    protected getLinkStmt(t: Extensible<brain.ILink>) {
         const id = t.TypeId;
         if (id && !LINKS[id]) {
             throw new Error(`Missing type definition: ${id}`);
@@ -363,11 +374,42 @@ export class Loader extends App {
         return stmt;
     }
 
+    protected async loadNodes(session: api.Session) {
+        const input = this.source.open("thoughts.json");
+        this.log.info(`Loading nodes from ${input.path}.`);
+        await session.withTransaction(api.Mode.WRITE, async tx => {
+            const logstr = this.nodeLogger('Nodes', 'N');
+            await attachLog(pipeline(
+                input,
+                filter((t: brain.INode) => t.Kind === brain.KIND.NODE),
+                thru((t: brain.INode) => tx.query(this.getNodeStmt(t), nodeOpts(t))),
+                logstr,
+            ), this.log, 'loadNodes', Level.severe, Level.severe);
+        });
+        return session;
+    }
+
+    protected getNodeStmt(t: brain.INode) {
+        const id = t.TypeId || brain.ID_NULL_NODE;
+        const existing = TYPES[id].statement;
+        if (existing) {
+            return existing;
+        }
+        const labels = TYPES[id].labels;
+        const stmt = Q.NODE_STATEMENT
+            .curry(`NODE_${labels}`, {
+                labels,
+                brain_typeId: id,
+            });
+        TYPES[id].statement = stmt;
+        return stmt;
+    }
+
     /**
      * Get a data logging function
      */
     protected nodeLogger(tName: string, tag: string): Writable {
-        const f = (data: INode): string => {
+        const f = (data: brain.INode): string => {
             if (!data.Id) {
                 throw data;
             }
