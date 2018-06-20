@@ -32,6 +32,8 @@ export interface Parent {
     readonly id: string;
 }
 
+export type PMarker = Marker & Parent;
+
 /**
  * A session or transaction can be in read or write mode. Specifying them correctly isn't just a matter of safety;
  * a read-mode request can be routed to a read-only replica.
@@ -58,6 +60,8 @@ export interface Session extends Marker, Parent {
     readonly mode: Mode;
     /** Use a transaction to perform a series of queries. */
     withTransaction<T>(mode: Mode, cb: TransactionCallback<T>): Promise<T>;
+    /** Shortcut to run one query in one transaction. */
+    query(q: Query, params?: object): Promise<CollectedResults>;
 }
 
 /**
@@ -77,17 +81,17 @@ export interface RecordIterableIterator extends AsyncIterableIterator<Record> {
 export interface Transaction extends Marker, Parent {
     readonly mode: Mode;
     /** Perform a query and obtain the collected results all at once. */
-    query(query: Query, params: object): Promise<CollectedResults>;
+    query(query: Query, params?: object): Promise<CollectedResults>;
     /** Perform a query, and obtain the results as a stream. */
-    queryStream(query: Query, params: object): Promise<RecordStream>;
+    queryStream(query: Query, params?: object): Promise<RecordStream>;
     /** Perform a query, and obtain the results via async iteration. */
-    queryIterator(query: Query, params: object): Promise<ResultIterator>;
+    queryIterator(query: Query, params?: object): Promise<ResultIterator>;
 }
 
 /**
  * Return result after expansion.
  */
-export interface ExpandResult {
+export interface QueryExpansion {
     /** Optional name for this query. */
     name?: string;
     /** The expanded result. */
@@ -108,7 +112,7 @@ export interface Query {
     /**
      * Return a detailed response partially-curried statement, and lists of used and unused parameters.
      */
-    expand(params: object): ExpandResult;
+    expand(params: object): QueryExpansion;
 
     curry(name: Nullable<string>, params: AnyParams): Query;
 }
@@ -120,30 +124,31 @@ export interface ResultSummary {
     /**
      * The elapsed time to execute the query.
      */
-    elapsedTime: seconds;
+    readonly elapsedTime: seconds;
     /**
      * The number of items read. Zero if none, e.g. a statement
      */
-    readCount: number;
+    readonly readCount: number;
     /**
      * The number of items created.
      */
-    createCount: number;
+    readonly　createCount: number;
     /**
      * The number of items modified.
      */
-    modifiedCount: number;
+    readonly　modifiedCount: number;
+
     /**
-     * On unsuccessful queries, an error.
+     * There can be additional properties defined by the driver
      */
-    error?: Error;
+    [key: string]: any;
 }
 
 /**
  * The various ways to access result, provide additional information in a [[ResultSummary]] when complete.
  * As it returns a `Promise`, it can be requested at any time.
  */
-interface ResultSummaryProvider {
+export interface ResultSummaryProvider {
     getResultSummary(): Promise<ResultSummary>;
 }
 
@@ -156,7 +161,7 @@ export interface CollectedResults extends ResultSummaryProvider {
     /**
      * Get an array of results from the summary.
      */
-    getResults(): Record[];
+    getResults(): Promise<Record[]>;
 }
 
 /**
@@ -168,7 +173,7 @@ export interface Record {
      * Return one value from the result.
      * @param key
      */
-    get(key: string): any;
+    get(key: string|number): any;
 }
 
 /**
@@ -177,7 +182,12 @@ export interface Record {
  * listening for the `"result"` event.
  */
 export interface RecordStream extends Readable, ResultSummaryProvider {
-
+    /**
+     * Resolves when the stream is done executing. Unlike {@link RecordStream.getResultSummary}, this guarantees
+     * to wait until all data has been read.
+     * @returns {Promise<ResultSummary>}
+     */
+    done(): Promise<ResultSummary>;
 }
 
 export interface ResultIterator extends AsyncIterableIterator<Record>, ResultSummaryProvider {

@@ -15,12 +15,13 @@
  *   are the ones not used in the expansion, and should be sent for substitution by the database.
  */
 import {future, Future} from "../util/future";
-import {AnyParams} from "../util/types";
+import {AnyParams, never} from "../util/types";
 import defineProperty = Reflect.defineProperty;
 import ownKeys = Reflect.ownKeys;
 import * as api from "./api";
 
 import * as R from "ramda";
+import * as util from "util";
 
 type Pick = (params: AnyParams) => (string | undefined);
 type ParseStep = string | {param: string, pick: Pick};
@@ -45,16 +46,16 @@ export class QueryParser {
      * A function to obtain the string value to substitute for a given parameter.
      * @returns A formatted string, or undefined.
      */
-    private pick(paramName: string): Pick {
+    private pick(paramName: string, fmt: string): Pick {
         return(params: AnyParams) => {
             if (!params.hasOwnProperty(paramName)) { return undefined; }
             const val: any = params[paramName];
             if (val === undefined) {
                 return undefined;
-            } else if (!this.validate(val)) {
+            } else if (!this.validate(val, fmt)) {
                 throw new Error(`Invalid value for ${paramName}: ${val}`);
             }
-            return this.format(val);
+            return this.format(val, fmt);
         };
     }
 
@@ -73,14 +74,15 @@ export class QueryParser {
             return {steps: [''], parameters: []};
         }
         while (statement) {
-            const match = /\$\[([a-zA-Z0-9_]+)]/.exec(statement);
+            const match = /\$\[([a-zA-Z0-9_]+)(?:[:](id|val|lit|key))?]/m.exec(statement);
             if (match) {
                 const param = match[1];
+                const fmt = match[2] || 'val';
                 if (match.index > 0) {
                     steps.push(statement.substring(0, match.index));
                 }
                 parameters.push(param);
-                steps.push({param: param, pick: this.pick(param)});
+                steps.push({param: param, pick: this.pick(param, fmt)});
                 statement = statement.substring(match.index + match[0].length);
             } else {
                 steps.push(statement);
@@ -94,21 +96,80 @@ export class QueryParser {
         };
     }
 
-    protected validate(val: any): boolean {
-        return true;
+    protected validate(val: any, fmt: string): boolean {
+        switch (fmt) {
+            case 'id':
+                return typeof val === 'string';
+            case 'lit':
+                return (typeof val === 'string')
+                    && !!val.match(/^[a-zA-Z][a-zA-Z0-9_$]*$/);
+            case 'key':
+                return (typeof val === 'string')
+                    && !!val.match(/^[a-zA-Z][a-zA-Z0-9_$]*$/);
+            case 'val':
+                const isPrimitive = (v: any) => (typeof v === 'string')
+                    || (typeof v === 'number')
+                    || (typeof v === 'boolean');
+                if (isPrimitive(val)) {
+                    return true;
+                }
+                if (Array.isArray(val)) {
+                    return R.all(v => this.validate(v, fmt))(val);
+                }
+                if (typeof val === 'object') {
+                    return R.all(v => this.validate(v, 'key'))(R.keys(val))
+                        && R.all(v => this.validate(v, fmt))(R.values(val));
+                }
+                return false;
+            default:
+                return never(`Unknown format: "${fmt}"`);
+        }
     }
 
-    protected format(val: any): string {
-        return '' + val;
+    protected format(val: any, fmt: string): string {
+        const escape = (v: string) => v.replace(/['"\\]/mg, "\\$&");
+        const quoteStr = (v: string) => {
+            switch (fmt) {
+                case 'id': return `\`${escape(v)}\``;
+                case 'key':
+                    if (v.match(/^[a-zA-Z][a-zA-Z0-9]+$/)) {
+                        return v;
+                    } else {
+                        return `\"${escape(v)}"`;
+                    }
+                case 'val': return `"${escape(v)}"`;
+                case 'lit': return escape(v);
+                default: return never(`Unknown format: "${fmt}"`);
+            }
+        };
+
+        switch (typeof val) {
+            case 'string':
+                return quoteStr(val);
+            case 'number':
+            case 'boolean':
+                return val;
+            case 'object':
+                if (val instanceof Date) {
+                    // For prototyping.
+                    return quoteStr(`date:${val.valueOf()}`);
+                } else if (Array.isArray(val)) {
+                    return `[${val.map(v => this.format(v, fmt)).join(',')}]`;
+                } else {
+                    const fn = (k: string) => `${this.format(k, 'id')}:${ this.format(val[k], fmt)}`;
+                    return `{${Object.keys(val).sort().map(fn).join(', ') }}`;
+                }
+        }
+        throw new Error(`Unknown data in query parameter value: ${val}`);
     }
 
     /**
      * Expand  the query with the supplied parameters. Return the expanded statement, plus information about used and
      * unused parameters.
      * @param {AnyParams} params
-     * @returns {ExpandResult}
+     * @returns {QueryExpansion}
      */
-    public expand(params: AnyParams): api.ExpandResult {
+    public expand(params: AnyParams): api.QueryExpansion {
         const missing: string[] = [];
         const parameters = {...params};
         const process = (step: ParseStep): string => {

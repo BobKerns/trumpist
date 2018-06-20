@@ -3,7 +3,7 @@
  */
 
 
-import {DIRECTION, KIND, MEANING, RELATION, THICKNESS, UUID} from "../brain/src/defs";
+import {DIRECTION, KIND, MEANING, RELATION, THICKNESS, UUID} from "../brain/defs";
 
 export type DateTime = number;
 

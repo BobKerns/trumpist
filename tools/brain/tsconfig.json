@@ -15,7 +15,6 @@
     "types": ["ramda", "winston", "logform"]
   },
   "exclude": [
-    "node_modules",
     "../node_modules"
   ]
 }

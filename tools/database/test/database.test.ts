@@ -10,11 +10,8 @@ import DatabaseAccess, {Database, Session, Transaction} from "../database-access
 import {Logger, create} from "../../util/logging";
 import {match} from "minimatch";
 
-import {MockQuery, MockRecord, MockResultSummary} from "./mockdb";
+import {MockQuery, MockRecord, MockResultSummary} from "../../dbs/mock";
 import {Parent, Mode} from "../api";
-
-
-jest.mock('../neo4j');
 
 const log: Logger = create("dbtest");
 /**
@@ -34,13 +31,14 @@ function createAccess({database}: {database?: string}) {
 
 const commonProps = ["parent", "database", "id", "log"];
 
+// tslint:disable-next-line ban-types
 function checkCommon(dbobj: Parent, cls: Function, idpattern: RegExp, ...props: string[]) {
     expect(dbobj).toBeInstanceOf(cls);
     [...commonProps, ...props].forEach(prop => expect(dbobj)
         .toHaveProperty(prop));
     expect(dbobj.database).toBe("mock");
     expect(dbobj.id).toMatch(idpattern);
-    expect(dbobj.log.toString()).toBe(log.toString());
+    expect(dbobj.log.toString()).toBe('[Logger dbtest.DBA:info]');
     return CALLED;
 }
 
@@ -52,10 +50,10 @@ describe('Database Access', () => {
     });
 
     it("Instantiates a DB driver", () => {
-        const access: DatabaseAccess =createAccess({});
+        const access: DatabaseAccess = createAccess({});
         return expect(access.withDatabase((dbdriver) => {
             return checkCommon(dbdriver, Database, /^mock(?:\/\d+){2}$/,
-                "withSession")
+                "withSession");
         }))
             .resolves
             .toBe(CALLED);
@@ -74,7 +72,7 @@ describe('Database Access', () => {
             return dbdriver.withSession(Mode.READ, (session => {
                 return checkCommon(session, Session, /^mock(?:\/\d+){3}$/,
                     'withTransaction');
-            }))
+            }));
         }))
             .resolves
             .toBe(CALLED);
@@ -88,7 +86,7 @@ describe('Database Access', () => {
                    return checkCommon(tx, Transaction, /^mock(?:\/\d+){4}$/,
                        "query", "queryStream", "queryIterator");
                 });
-            })
+            });
         }))
             .resolves
             .toBe(CALLED);
@@ -98,10 +96,10 @@ describe('Database Access', () => {
         it("performs a collected query", () => {
             const access: DatabaseAccess = createAccess({});
             return expect(access.withDatabase((dbdriver) => {
-                return dbdriver.withSession(Mode.READ,session => {
+                return dbdriver.withSession(Mode.READ, session => {
                     return session.withTransaction(Mode.READ, async tx => {
-                        let x = await tx.query(new MockQuery({testData: "collected"}), {});
-                        let results = x.getResults();
+                        const x = await tx.query(new MockQuery({testData: "collected"}), {});
+                        const results = await x.getResults();
                         expect(results).toBeTruthy();
                         expect(Array.isArray(results)).toBeTruthy();
                         expect(results.length).toBe(1);
@@ -109,7 +107,7 @@ describe('Database Access', () => {
                         expect(results[0].get('testData')).toEqual("collected");
                         return CALLED;
                     });
-                })
+                });
             }))
                 .resolves
                 .toBe(CALLED);
@@ -120,10 +118,10 @@ describe('Database Access', () => {
             return expect(access.withDatabase((dbdriver) => {
                 return dbdriver.withSession(Mode.READ, session => {
                     return session.withTransaction(Mode.READ, async tx => {
-                        let stream = await tx.queryStream(new MockQuery({streamData: "stream"}), {});
+                        const stream = await tx.queryStream(new MockQuery({streamData: "stream"}), {});
                         return new Promise((accept, reject) => {
                             stream
-                                .on('data', (data: MockRecord) =>{
+                                .on('data', (data: MockRecord) => {
                                     expect(data).toBeTruthy();
                                     expect(data).toBeInstanceOf(MockRecord);
                                     expect(data.get("streamData")).toEqual("stream");
@@ -137,7 +135,7 @@ describe('Database Access', () => {
                         });
 
                     });
-                })
+                });
             }))
                 .resolves
                 .toBe(CALLED);

@@ -9,9 +9,10 @@
     "jsonlines": "^0.1.1",
     "lodash": "^4.17.10",
     "logform": "^1.7.0",
-    "neo4j-driver": "^1.6.0-rc1",
+    "neo4j-driver": "^1.7.0-alpha01",
     "npm-watch": "^0.3.0",
     "ramda": "^0.25.0",
+    "source-map-support": "^0.5.6",
     "through2-filter": "^2.0.0",
     "through2-spy": "^2.0.0",
     "uuid": "^3.2.1",
@@ -25,15 +26,17 @@
     "@types/jsdom": "^11.0.4",
     "@types/logform": "^1.2.0",
     "@types/parse5": "^3.0.0",
-    "@types/ramda": "^0.25.32",
+    "@types/ramda": "github:types/npm-ramda#dist",
     "@types/winston": "^2.3.9",
     "ajv": "^6.5.0",
+    "dts-jest": "^22.0.3",
     "eslint": "^5.0.0-alpha.3",
     "hs-marked-extra": "^1.0.2",
     "install": "^0.11.0",
     "jest": "^23.1.0",
     "jest-config": "^23.1.0",
     "jsdoc": "^3.5.5",
+    "leaked-handles": "^5.2.0",
     "marked": "^0.4.0",
     "npm": "^6.1.0",
     "ts-jest": "^22.4.6",
@@ -44,7 +47,8 @@
     "typescript": "^2.9.1"
   },
   "directories": {
-    "doc": "doc"
+    "doc": "doc",
+    "bin": "bin"
   },
   "homepage": "https://github.com/bobkerns/trumpist#readme",
   "keywords": [
@@ -80,7 +84,8 @@
   "watch": {
     "build": {
       "patterns": [
-        "brain/src",
+        "dbs/*/*.tsx?",
+        "dbs/*/test/*.tsx?",
         "*/*.tsx?"
       ],
       "extensions": [
@@ -105,8 +110,8 @@
     "@types/"
   ],
   "scripts": {
-    "test": "jest",
-    "jsdoc": "./node_modules/jsdoc/jsdoc.js -c conf.jsdoc.js .",
+    "test": "bin/jest",
+    "path": "echo PATH=$PATH",
     "doc": "bin/build-doc",
     "preview": "npm run doc",
     "view": "open ../docs/api/index.html",

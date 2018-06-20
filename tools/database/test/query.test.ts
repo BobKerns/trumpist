@@ -6,18 +6,18 @@ import Q from "../query";
 
 describe("hot curried queries", () => {
     it("Simple", () => {
-        const query = Q`select * from $[TABLE] where x = $tasty`;
+        const query = Q`select * from $[TABLE:id] where x = $tasty`;
         const curried = query.curry("hot", {TABLE: "dinner", tasty: "fish"});
-        expect(curried.statement).toBe('select * from dinner where x = $tasty');
+        expect(curried.statement).toBe('select * from `dinner` where x = $tasty');
         expect(curried.parameters).toEqual({tasty: "fish"});
         expect(curried.parse.parsed.parameters).toEqual([]);
         expect(curried.name).toBe("hot");
     });
 
     it("Partial", () => {
-        const query = Q`select * from $[TABLE] where $[DISH] = $tasty`;
+        const query = Q`select * from $[TABLE:id] where $[DISH] = $tasty`;
         const curried = query.curry("hot",{TABLE: "dinner", tasty: "fish"});
-        expect(curried.statement).toBe('select * from dinner where $[DISH] = $tasty');
+        expect(curried.statement).toBe('select * from `dinner` where $[DISH] = $tasty');
         expect(curried.parameters).toEqual({tasty: "fish"});
         expect(curried.parse.parsed.parameters).toEqual(["DISH"]);
         expect(curried.name).toBe("hot");

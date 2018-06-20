@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="cmd init" type="NodeJSConfigurationType" factoryName="Node.js" application-parameters="init --trace" node-parameters="--harmony-array-flatten --experimental-modules" path-to-js-file="cmd/cmd.js" working-dir="$PROJECT_DIR$/tools">
+    <method>
+      <option name="TypeScript.Before.Run" enabled="true" FAIL_ON_ERROR="true" CONFIG_PATH="$PROJECT_DIR$/tools/tsconfig.json" />
+    </method>
+  </configuration>
+</component>

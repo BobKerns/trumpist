@@ -4,7 +4,8 @@
 "use Strict";
 
 import {Readable} from "stream";
-import * as neo4j from "neo4j-driver/v1";
+import {v1 as neo4j} from "../dbs/neo4j/neo4j-driver";
+import {CollectedResults} from "./database-access";
 
 
 interface ResultStreamOptions {
@@ -74,5 +75,5 @@ export class ResultStream extends Readable {
 }
 
 export function resultStream(result: neo4j.Result): ResultStream {
-    return new ResultStream({result});
+    return new ResultStream( {result});
 }
