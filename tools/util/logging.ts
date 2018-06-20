@@ -22,27 +22,55 @@ export type LogMessage = string | (() => string);
 /* tslint:disable-next-line no-var-requires */
 const { createLogger, format, transports, addColors } = require('winston');
 
-type Level = "severe" | "error" | "warn" | "info" | "debug" | "trace";
-type LevelOrInherit = Level | "INHERIT";
-
-interface LevelSpecs {
-    levels: {
-        [K in Level]: number;
-    };
-    colors: {
-        [K in Level]: string;
-    };
+export enum Level {
+    severe = "severe",
+    error = "error",
+    warn = "warn",
+    info = "info",
+    debug = "debug",
+    trace = "trace",
+    never = "never",
 }
 
-const levelSpecs: LevelSpecs = {
-    levels: {
+type Map<K extends (string | number | symbol), T> = {
+    [key in K]: T;
+};
+
+export namespace Level {
+    import Priority = Level.Priority;
+    export type Name = "severe" | "error" | "warn" | "info" | "debug" | "trace" | "never";
+    export type Priority = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+    type PriorityValues = Map<Name, Priority> & { [k: string]: Priority; };
+    type PriorityNames = Map<Priority, Name>  & { [k: number]: Level; };
+    type PriorityMap = PriorityValues & PriorityNames;
+
+    export const priority: PriorityValues = {
         severe: 0,
         error: 1,
         warn: 2,
         info: 3,
         debug: 4,
         trace: 5,
-    },
+        never: 6,
+    };
+
+    export const name: PriorityNames = [
+        Level.severe, Level.error, Level.warn, Level.info, Level.debug, Level.trace, Level.never,
+    ];
+
+    export const INHERIT: "INHERIT" = "INHERIT";
+    export type INHERIT = "INHERIT";
+}
+
+export type LevelOrInherit = Level | Level.INHERIT;
+
+interface LevelSpecs {
+    levels: Map<Level, Level.Priority>;
+    colors: Map<Level, string>;
+}
+
+const levelSpecs: LevelSpecs = {
+    levels: Level.priority,
     colors: {
         severe: "bold red yellowBG",
         error: "bold red",
@@ -50,13 +78,9 @@ const levelSpecs: LevelSpecs = {
         info: "black",
         debug: "blue",
         trace: "dim blue cyanBG",
+        never: "dim white white",
     },
 };
-
-const LEVELS = levelSpecs.levels;
-const maxLevel = Object.keys(LEVELS).reduce((l, k: Level) => Math.max(l, (LEVELS[k])), 0);
-const levelNames = Array<Level>(maxLevel + 1);
-Object.keys(LEVELS).forEach((k: Level) => levelNames[LEVELS[k]] = k);
 
 // Errors out
 addColors(levelSpecs.colors);
@@ -79,6 +103,7 @@ export interface Logger {
     level: LevelOrInherit;
     readonly parent: Nullable<Logger>;
     getChild(subkey: string, lvl?: Level): Logger;
+    log(level: Level, msg: LogMessage, e?: Error): void;
 }
 
 const LOGGERS: {[k: string]: Logger} = {};
@@ -88,7 +113,7 @@ const LOGGERS: {[k: string]: Logger} = {};
  * @param key the name for the logger
  * @returns the logger fo the specified key.
  */
-export function create(key: string, lvl: LevelOrInherit= "INHERIT", parent?: Logger): Logger {
+export function create(key: string, lvl: LevelOrInherit= Level.INHERIT, parent?: Logger): Logger {
     return LOGGERS[key] || (LOGGERS[key] = createNew(key, lvl, parent as TLogger));
 }
 
@@ -144,9 +169,9 @@ let queue: Promise<any> = Promise.resolve();
 /**
  * Strictly serialize all logging.
  */
-class TLogger implements Logger {
+export class TLogger implements Logger {
     private readonly logger: Logger;
-    private _levelNo: number;
+    private _priority: Level.Priority;
     private _level: Level | undefined;
     public readonly parent: Nullable<TLogger>;
 
@@ -176,25 +201,25 @@ class TLogger implements Logger {
     }
 
     public get level(): Level | "INHERIT" {
-        return this._level || (this.parent && this.parent.level) || "info";
+        return this._level || (this.parent && this.parent.level) || Level.info;
     }
     public set level(l: Level | "INHERIT") {
         if (l === "INHERIT") {
             this._level = undefined;
-            this._levelNo = 10000;
+            this._priority = Level.priority.never;
         } else {
-            if (LEVELS[l] !== undefined) {
-                const levelNo = LEVELS[l];
+            if (Level[l] !== undefined) {
+                const priority = Level.priority[l];
                 this._level = l;
-                this._levelNo = levelNo;
+                this._priority = priority;
             } else {
-                throw new Error(`The level ${l} is not valid. It must be one of ${Object.keys(LEVELS)}`);
+                throw new Error(`The level ${l} is not valid. It must be one of ${Level.name}`);
             }
         }
     }
 
-    protected doLog(levelNo: number, op: (log: Logger) => void) {
-        if (levelNo <= this._levelNo) {
+    protected doLog(levelNo: number, op: (log: Logger) => void): this {
+        if (levelNo <= this._priority) {
             if (!this._level && this.parent) {
                 this.parent.doLog(levelNo, op);
             } else {
@@ -204,6 +229,7 @@ class TLogger implements Logger {
                     10));
             }
         }
+        return this;
     }
 
     private fmt(lvl: Level, msg: LogMessage, e?: Error) {
@@ -212,23 +238,27 @@ class TLogger implements Logger {
             ...((e && [e.stack]) || []));
     }
 
-    public trace(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.trace, this.fmt("trace", msg, e));
+    public log(level: Level, msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority[level], this.fmt(level, msg, e));
     }
-    public debug(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.debug, this.fmt("debug", msg, e));
+
+    public trace(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.trace, this.fmt(Level.trace, msg, e));
     }
-    public info(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.info, this.fmt("info", msg, e));
+    public debug(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.debug, this.fmt(Level.debug, msg, e));
     }
-    public warn(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.warn, this.fmt("warn", msg, e));
+    public info(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.info, this.fmt(Level.info, msg, e));
     }
-    public error(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.error, this.fmt("error", msg, e));
+    public warn(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.warn, this.fmt(Level.warn, msg, e));
     }
-    public severe(msg: LogMessage, e?: Error): void {
-        this.doLog(LEVELS.severe, this.fmt("severe", msg, e));
+    public error(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.error, this.fmt(Level.error, msg, e));
+    }
+    public severe(msg: LogMessage, e?: Error): this {
+        return this.doLog(Level.priority.severe, this.fmt(Level.severe, msg, e));
     }
 
     public toString() {
