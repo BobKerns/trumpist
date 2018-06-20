@@ -43,7 +43,7 @@ const argv = yargs
                 description: 'location of a directory to import',
                 default: braindir,
             }),
-        (yargv) => new Loader({source: new FilesystemSource(yargv.dir)})
+        (yargv) => new Loader({...yargv, source: new FilesystemSource(yargv.dir)})
             .run())
     .command('old-import', "Import a brain",
         (yyargs) => yyargs

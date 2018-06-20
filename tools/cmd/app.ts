@@ -10,7 +10,7 @@ import * as path from 'path';
 import {env} from "shelljs";
 import * as R from "ramda";
 
-import {create, Logger} from "../util/logging";
+import {create, Level, Logger} from "../util/logging";
 import DatabaseAccess, {DbOptions} from "../database/database-access";
 
 export abstract class App {
@@ -29,7 +29,7 @@ export abstract class App {
         } else if (!log) {
             log = create(this.constructor.name || 'App');
         }
-        const level = options.trace ? 'trace' : (options.debug ? 'debug' : 'info');
+        const level = options.trace ? Level.trace : (options.debug ? Level.debug : Level.info);
         log.level = level;
         this.log = log;
     }
