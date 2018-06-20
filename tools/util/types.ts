@@ -36,11 +36,12 @@ export type Stream = (Readable | Writable | Duplex | Transform);
 /**
  * A general Node callback
  */
-export type Callback = (val?: any, err?: Error) => void;
+export type Callback<T= any> = (err?: any, val?: T) => void;
 
-export type PromiseAccept<T> = (val: T) => void;
-export type PromiseReject = (err: Error) => void;
-export type PromiseCB<T> = (accept: PromiseAccept<T>, reject: PromiseReject) => void;
+export type PromiseAccept<T, R= any, RR= R | PromiseLike<R>> = (val?: T | PromiseLike<T>) => RR;
+export type PromiseReject<R= never | undefined | null, RR= R | PromiseLike<R>> = (err?: any) => RR;
+export type PromiseFinally = () => never;
+export type PromiseCB<T> = (accept: PromiseAccept<T>, reject: PromiseReject) => never;
 
 /**
  * Give access to additional properties not declared. Useful when working with Javascript types with ad hoc extension.
