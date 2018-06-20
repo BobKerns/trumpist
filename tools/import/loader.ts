@@ -17,6 +17,7 @@ import {Duplex, Writable} from "stream";
 import {resultStream} from "../database/result-stream";
 import {attachLog} from "../util/future";
 import {Level} from "../util/logging";
+import * as util from "util";
 const Q = new queries();
 
 // ID of node representing root of the node _Type hierarchy
@@ -186,10 +187,9 @@ export class Loader extends App {
         this.log.info('Linking to root types');
         await attachLog(session.withTransaction(api.Mode.WRITE, tx => tx.query(Q.LINK_ROOTS, {})),
             this.log, Level.severe);
-        this.log.info('Loading...');
         await attachLog(this.loadTypeLabels(session),
             this.log, Level.severe);
-        this.log.info('loaded!');
+        await this.loadLinks(session);
         return session;
     }
 
@@ -403,6 +403,29 @@ export class Loader extends App {
             });
         TYPES[id].statement = stmt;
         return stmt;
+    }
+
+    /**
+     * Load the actual link data.
+     */
+    public async loadLinks(session: api.Session) {
+        const input = this.source.open('links.json');
+        this.log.info(`Loading links from ${input.path}.`);
+        await session.withTransaction(api.Mode.WRITE, async tx => {
+            const logstr = this.linkLogger('Links', '-');
+            const typeidLabel = (t: brain.ILink) => (t.TypeId && LINKS[t.TypeId] && LINKS[t.TypeId].Name);
+            const v = await pipeline(
+                input,
+                filter(t => t.Meaning !== brain.MEANING.PROTO && t.Meaning !== brain.MEANING.SUBTYPE),
+                thru((t: Extensible<brain.ILink>) => t.link_options = linkOpts(t)),
+                thru((t: Extensible<brain.ILink>) =>
+                    t.link_label = (typeidLabel(t) || linkMeaningLabel(t) || LINKS[ID_ROOT_LINK].link_label)),
+                thru((t: Extensible<brain.ILink>) => tx.query(this.getLinkStmt(t), t.link_options)),
+                logstr,
+            );
+            this.log.info(`Foo: ${util.inspect(v)}`);
+            return v;
+        });
     }
 
     /**
