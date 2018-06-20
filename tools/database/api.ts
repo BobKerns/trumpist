@@ -62,10 +62,6 @@ export interface Session extends Marker, Parent {
     withTransaction<T>(mode: Mode, cb: TransactionCallback<T>): Promise<T>;
     /** Shortcut to run one query in one transaction. */
     query(q: Query, params?: object): Promise<CollectedResults>;
-    /** Perform a query, and obtain the results as a stream. */
-    queryStream(query: Query, params?: object): Promise<RecordStream>;
-    /** Perform a query, and obtain the results via async iteration. */
-    queryIterator(query: Query, params?: object): Promise<ResultIterator>;
 }
 
 /**

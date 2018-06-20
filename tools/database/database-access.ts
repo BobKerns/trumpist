@@ -216,15 +216,6 @@ export class Session extends Base<Database, spi.Session> implements api.Session 
         return this.withTransaction(api.Mode.WRITE, tx => tx.query(q, params));
     }
 
-    /** Perform a shortcut query, and obtain the results as a stream. */
-    public queryStream(query: Query, params?: object): Promise<RecordStream> {
-        return this.withTransaction(api.Mode.WRITE, tx => tx.queryStream(query, params));
-    }
-
-    /** Perform a shortcut query, and obtain the results via async iteration. */
-    public queryIterator(query: Query, params?: object): Promise<ResultIterator> {
-        return this.withTransaction(api.Mode.WRITE, tx => tx.queryIterator(query, params));
-    }
     /**
      * Close the session, freeing any resources
      */
