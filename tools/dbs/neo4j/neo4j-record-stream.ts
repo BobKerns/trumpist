@@ -9,7 +9,7 @@ import {api, spi} from "../../database";
 import CollectedResults = api.CollectedResults;
 import {Query} from "../../database/spi";
 import {QueryExpansion} from "../../database/api";
-import {ManualPromise} from "../../util/future";
+import {ManualPromise, once} from "../../util/future";
 import {PromiseFinally, PromiseReject} from "../../util/types";
 
 /**
@@ -45,7 +45,7 @@ export class Neo4jRecordStream extends spi.RecordStream
         });
     }
 
-    public _read() {
+    private _doRead = once(() => {
         const result = this.transaction.run(this.query.statement, this.query.parameters);
         const stream = this;
         result.subscribe({
@@ -54,12 +54,16 @@ export class Neo4jRecordStream extends spi.RecordStream
                 stream.push(r);
             },
             onCompleted(summary: neo4j.ResultSummary) {
-                this.summary.resolve(summary);
+                stream._summary.resolve(summary);
             },
             onError(err: Error) {
-                this.summary.reject(err);
+                stream._summary.reject(err);
             },
         });
+    });
+
+    public _read() {
+        this._doRead();
     }
 
     public async getResultSummary(): Promise<api.ResultSummary> {
