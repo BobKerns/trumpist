@@ -7,8 +7,8 @@ import * as R from "ramda";
 import ownKeys = Reflect.ownKeys;
 
 interface Accum {
-    [key: string]: true
-};
+    [key: string]: true;
+}
 
 describe("Testing query parsing and parameter substitution", () => {
     describe('Query parsing', () => {
@@ -26,19 +26,19 @@ describe("Testing query parsing and parameter substitution", () => {
         ]
             .forEach(({input, steps}) => {
                 it(`parsing ${input}`, () => {
-                    const findParams = (accum: Accum, val: string|string[]): Accum => {
+                    const findParams = (acc: Accum, val: string|string[]): Accum => {
                         if (Array.isArray(val)) {
-                            return {[val[0]]: true, ...accum};
+                            return {[val[0]]: true, ...acc};
                         }
-                        return accum;
+                        return acc;
                     };
                     const accum: Accum = steps.reduce(findParams,  {});
                     const params = ownKeys(accum);
                     const parser = new QueryParser(input);
-                    let result = parser.parsed;
+                    const result = parser.parsed;
                     steps.forEach((str: (string|[string]), i: number) => {
                         if (Array.isArray(str)) {
-                            let step = result.steps[i];
+                            const step = result.steps[i];
                             if (typeof step === 'object') {
                                 expect(step.param).toEqual(str[0]);
                             } else {
@@ -48,14 +48,13 @@ describe("Testing query parsing and parameter substitution", () => {
                             expect(result.steps[i]).toBe(str);
                         }
                     });
-                    //expect(result.parameters).toEqual(params);
                     expect(result.parameters.sort()).toEqual(params.sort());
                 });
             });
     });
 
     interface ExpansionTest {
-        label? : string;
+        label?: string;
         input: string;
         data?: {[key: string]: any};
         expect: {
@@ -63,7 +62,7 @@ describe("Testing query parsing and parameter substitution", () => {
             missing?: string[];
             unused?: string[];
             parameters?: {[key: string]: any}
-        }
+        };
     }
 
     describe("Expansion", () => {
@@ -72,17 +71,17 @@ describe("Testing query parsing and parameter substitution", () => {
                 label: 'simple',
                 input: '$[PARAM1]',
                 data: {PARAM1: 'VAL1'},
-                expect: {statement: 'VAL1'}
+                expect: {statement: '\"VAL1\"'},
             },
             {
                 input: 'trivial',
-                expect: {statement: 'trivial'}
+                expect: {statement: 'trivial'},
             },
             {
                 label: "Full substitution",
-                input: "foo:$[CLASS]:$bar",
+                input: "foo:$[CLASS:id]:$bar",
                 data: {CLASS: "yoga"},
-                expect: {statement: 'foo:yoga:$bar'}
+                expect: {statement: 'foo:`yoga`:$bar'},
             },
             {
                 label: "Unsatisfied substitution",
@@ -90,8 +89,8 @@ describe("Testing query parsing and parameter substitution", () => {
                 data: {},
                 expect: {
                     statement: 'foo:$[CLASS]:$bar',
-                    missing: ["CLASS"]
-                }
+                    missing: ["CLASS"],
+                },
             },
             {
                 label: "Extra stuff",
@@ -102,16 +101,16 @@ describe("Testing query parsing and parameter substitution", () => {
                     missing: ["CLASS"],
                     unused: ["extra"],
                     parameters: {
-                        extra: "stuff"
-                    }
-                }
-            }
+                        extra: "stuff",
+                    },
+                },
+            },
         ];
         tests.forEach(({label, input, data, expect: result}: ExpansionTest) => {
             it(`expanding ${label || input}`, () => {
-                let expected = {statement: input, parameters: {}, missing: [], unused: [], ...result};
-                let query = new QueryParser(input);
-                let actual = query.expand(data || {});
+                const expected = {statement: input, parameters: {}, missing: [], unused: [], ...result};
+                const query = new QueryParser(input);
+                const actual = query.expand(data || {});
                 expect(actual).toEqual(expected);
             });
         });
@@ -133,4 +132,4 @@ describe("Testing query parsing and parameter substitution", () => {
             });
         });
     });
-})
+});
