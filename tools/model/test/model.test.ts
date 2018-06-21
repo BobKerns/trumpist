@@ -7,13 +7,13 @@ import {Model} from "../model";
 import * as api from "../../database/api";
 import DatabaseAccess from "../../database/database-access";
 import {PromiseReject} from "../../util/types";
-import {Promissory} from "../../util/promissory";
+import {ManualPromise} from "../../util/future";
 // import "../../dbs/mock";
 import {MockQuery} from "../../dbs/mock";
 import {MockQueries} from "../../dbs/mock/model-queries-mock";
 
 let session: Promise<api.Session>;
-const done = new Promissory<null>();
+const done = new ManualPromise<undefined>();
 let finished: Promise<void>;
 
 beforeAll(async () => {
@@ -29,7 +29,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     // Let the DB close
-    done.accept(null);
+    done.resolve(undefined);
     // And wait for it to close.
     await finished;
 });
