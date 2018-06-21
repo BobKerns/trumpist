@@ -26,6 +26,21 @@ import * as util from "util";
 type Pick = (params: AnyParams) => (string | undefined);
 type ParseStep = string | {param: string, pick: Pick};
 
+/**
+ * Keys that can annotate paramater substitutions indicating the syntactic context.
+ * E. g. `... {$[myKey:key]: $[myVal:val]}  ...`
+ *
+ * | `id`  | An identifier. The defaul is to surround it with backticks, and quote unusual characters with a backslash.
+ * | `val` | A literal value, such as a number or a string. Strings are surounded with double quotes.
+ * | `lit` | A string tha should be substituted as-is. An example might be the inclusion or not of a language keyword\
+ *          modifier, such as 'UNIQUE'. The character set is limited to /^[a-zA-Z][a-zA-Z0-9_]+$/
+ * | `key` | A value which is the identifier in a javascript-style object. It can remain unquoted if it fits the `lit`
+ *           description above.
+ *
+ * The formatting and quoting can be overridden by subclasses as needed.
+ */
+type ParamFormat = 'id' | 'val' | 'lit' | 'key';
+
 interface ParseResult {
     name?: string;
     steps: ParseStep[];
@@ -46,7 +61,7 @@ export class QueryParser {
      * A function to obtain the string value to substitute for a given parameter.
      * @returns A formatted string, or undefined.
      */
-    private pick(paramName: string, fmt: string): Pick {
+    private pick(paramName: string, fmt: ParamFormat): Pick {
         return(params: AnyParams) => {
             if (!params.hasOwnProperty(paramName)) { return undefined; }
             const val: any = params[paramName];
@@ -77,7 +92,7 @@ export class QueryParser {
             const match = /\$\[([a-zA-Z0-9_]+)(?:[:](id|val|lit|key))?]/m.exec(statement);
             if (match) {
                 const param = match[1];
-                const fmt = match[2] || 'val';
+                const fmt: ParamFormat = (match[2] || 'val') as ParamFormat;
                 if (match.index > 0) {
                     steps.push(statement.substring(0, match.index));
                 }
@@ -96,7 +111,7 @@ export class QueryParser {
         };
     }
 
-    protected validate(val: any, fmt: string): boolean {
+    protected validate(val: any, fmt: ParamFormat): boolean {
         switch (fmt) {
             case 'id':
                 return typeof val === 'string';
@@ -122,11 +137,11 @@ export class QueryParser {
                 }
                 return false;
             default:
-                return never(`Unknown format: "${fmt}"`);
+                return never(fmt, `Unknown format: "${fmt}"`);
         }
     }
 
-    protected format(val: any, fmt: string): string {
+    protected format(val: any, fmt: ParamFormat): string {
         const escape = (v: string) => v.replace(/['"\\]/mg, "\\$&");
         const quoteStr = (v: string) => {
             switch (fmt) {
@@ -139,11 +154,11 @@ export class QueryParser {
                     }
                 case 'val': return `"${escape(v)}"`;
                 case 'lit': return escape(v);
-                default: return never(`Unknown format: "${fmt}"`);
+                default: return never(fmt, `Unknown format: "${fmt}"`);
             }
         };
-
-        switch (typeof val) {
+        const tVal = typeof val;
+        switch (tVal) {
             case 'string':
                 return quoteStr(val);
             case 'number':
@@ -160,7 +175,7 @@ export class QueryParser {
                     return `{${Object.keys(val).sort().map(fn).join(', ') }}`;
                 }
         }
-        throw new Error(`Unknown data in query parameter value: ${val}`);
+        return never(`Unknown data in query parameter value: ${val}`);
     }
 
     /**

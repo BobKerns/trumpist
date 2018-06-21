@@ -38,7 +38,9 @@ subproject util
 subproject model
 subproject import
 subproject cmd
-subproject neo4j
+subproject dbs/neo4j
+subproject dbs/mock
+subproject store
 
 
 for f in `find "${ASSETS}" -name '*.md' -print`; do
