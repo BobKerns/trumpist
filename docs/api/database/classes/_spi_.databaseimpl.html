@@ -60,7 +60,7 @@
 					<a href="_spi_.databaseimpl.html">DatabaseImpl</a>
 				</li>
 			</ul>
-			<h1>Class DatabaseImpl&lt;I&gt;</h1>
+			<h1>Class DatabaseImpl&lt;I, X&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -81,21 +81,19 @@
 					<li>
 						<h4>I</h4>
 					</li>
+					<li>
+						<h4>X</h4>
+					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_spi_.base.html" class="tsd-signature-type">Base</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_spi_.provider.html" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_spi_.basewithspi.html" class="tsd-signature-type">BaseWithSpi</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_spi_.provider.html" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">, </span><a href="../interfaces/_api_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">X</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">DatabaseImpl</span>
-								<ul class="tsd-hierarchy">
-									<li>
-										<a href="_test_mockdb_.mockdatabase.html" class="tsd-signature-type">MockDatabase</a>
-									</li>
-								</ul>
 							</li>
 						</ul>
 					</li>
@@ -104,6 +102,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_spi_.spiparent.html" class="tsd-signature-type">SpiParent</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">X</span><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><a href="../interfaces/_spi_.database.html" class="tsd-signature-type">Database</a></li>
 				</ul>
 			</section>
@@ -120,7 +119,7 @@
 						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.databaseimpl.html#_impl" class="tsd-kind-icon">_impl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.databaseimpl.html#impl" class="tsd-kind-icon">impl</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.databaseimpl.html#parent" class="tsd-kind-icon">parent</a></li>
 							</ul>
 						</section>
@@ -129,7 +128,6 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#database" class="tsd-kind-icon">database</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#impl" class="tsd-kind-icon">impl</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#log" class="tsd-kind-icon">log</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#outer" class="tsd-kind-icon">outer</a></li>
 							</ul>
@@ -137,7 +135,11 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="_spi_.databaseimpl.html#callbackwrapper" class="tsd-kind-icon">callback<wbr>Wrapper</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_spi_.databaseimpl.html#close" class="tsd-kind-icon">close</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_spi_.databaseimpl.html#invoke" class="tsd-kind-icon">invoke</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="_spi_.databaseimpl.html#invokeinner" class="tsd-kind-icon">invoke<wbr>Inner</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.databaseimpl.html#newspi" class="tsd-kind-icon">newSPI</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_spi_.databaseimpl.html#withsession" class="tsd-kind-icon">with<wbr>Session</a></li>
 							</ul>
 						</section>
@@ -150,38 +152,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Database<wbr>Impl<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.provider.html" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.databaseimpl.html" class="tsd-signature-type">DatabaseImpl</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Database<wbr>Impl<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.provider.html" class="tsd-signature-type">Provider</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.databaseimpl.html" class="tsd-signature-type">DatabaseImpl</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L98">spi.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L186">spi.ts:186</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>impl: <span class="tsd-signature-type">function</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>otter<span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>otter: <a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">I</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>impl: <span class="tsd-signature-type">I</span></h5>
 								</li>
 								<li>
 									<h5>outer: <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.database.html" class="tsd-signature-type">Database</a><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -198,13 +182,13 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-					<a name="_impl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _impl</h3>
-					<div class="tsd-signature tsd-kind-icon">_impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="impl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> impl</h3>
+					<div class="tsd-signature tsd-kind-icon">impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">I</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#_impl">_impl</a></p>
+						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L33">spi.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L61">spi.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -215,7 +199,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#parent">parent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L34">spi.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L62">spi.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -233,7 +217,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#database">database</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L28">spi.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L57">spi.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -251,28 +235,10 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#id">id</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L29">spi.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L58">spi.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-					<a name="impl" class="tsd-anchor"></a>
-					<h3>impl</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> impl<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L31">spi.ts:31</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -287,7 +253,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#log">log</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L27">spi.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L53">spi.ts:53</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Logger</span></h4>
@@ -305,7 +271,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#outer">outer</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L30">spi.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L59">spi.ts:59</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">O</span></h4>
@@ -315,6 +281,80 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+					<a name="callbackwrapper" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> callback<wbr>Wrapper</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">callback<wbr>Wrapper&lt;T&gt;<span class="tsd-signature-symbol">(</span>spiFn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, cb<span class="tsd-signature-symbol">: </span><a href="../modules/_spi_.html#wrapper" class="tsd-signature-type">Wrapper</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.basewithspi.html">BaseWithSpi</a>.<a href="_spi_.basewithspi.html#callbackwrapper">callbackWrapper</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L87">spi.ts:87</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>spiFn: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Creates SPI-level object, implemented by {@link Base.newSPI}</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">X</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>impl: <span class="tsd-signature-type">X</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>cb: <a href="../modules/_spi_.html#wrapper" class="tsd-signature-type">Wrapper</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">function</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-siganture">
+									<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">X</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5>impl: <span class="tsd-signature-type">X</span></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="close" class="tsd-anchor"></a>
 					<h3>close</h3>
@@ -326,16 +366,166 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_spi_.database.html">Database</a>.<a href="../interfaces/_spi_.database.html#close">close</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L105">spi.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L196">spi.ts:196</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="invoke" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> invoke</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">invoke&lt;T&gt;<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">: </span><a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a>, cb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.basewithspi.html">BaseWithSpi</a>.<a href="_spi_.basewithspi.html#invoke">invoke</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L76">spi.ts:76</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>mode: <a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a></h5>
+								</li>
+								<li>
+									<h5>cb: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">X</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>impl: <span class="tsd-signature-type">X</span></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+					<a name="invokeinner" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> invoke<wbr>Inner</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">invoke<wbr>Inner&lt;C, T&gt;<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, description<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, mode<span class="tsd-signature-symbol">: </span><a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a>, apiObjFn<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, fn<span class="tsd-signature-symbol">: </span><a href="../modules/_spi_.html#wrapper" class="tsd-signature-type">Wrapper</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.basewithspi.html">BaseWithSpi</a>.<a href="_spi_.basewithspi.html#invokeinner">invokeInner</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L93">spi.ts:93</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C</h4>
+								</li>
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>description: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>mode: <a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a></h5>
+								</li>
+								<li>
+									<h5>apiObjFn: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.session.html" class="tsd-signature-type">Session</a></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <a href="../interfaces/_api_.session.html" class="tsd-signature-type">Session</a></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>fn: <a href="../modules/_spi_.html#wrapper" class="tsd-signature-type">Wrapper</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="newspi" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> newSPI</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">newSPI<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">: </span><a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_spi_.basewithspi.html">BaseWithSpi</a>.<a href="_spi_.basewithspi.html#newspi">newSPI</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L78">spi.ts:78</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>mode: <a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a></h5>
+								</li>
+								<li>
+									<h5>outer: <span class="tsd-signature-type">function</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">api.PMarker</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">api.PMarker</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<h5>impl: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 					<a name="withsession" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> with<wbr>Session</h3>
+					<h3>with<wbr>Session</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 						<li class="tsd-signature tsd-kind-icon">with<wbr>Session&lt;T&gt;<span class="tsd-signature-symbol">(</span>mode<span class="tsd-signature-symbol">: </span><a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, cb<span class="tsd-signature-symbol">: </span><a href="../modules/_spi_.html#sessioncallback" class="tsd-signature-type">SessionCallback</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
@@ -343,7 +533,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L103">spi.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L191">spi.ts:191</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,9 +608,6 @@
 						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -436,6 +623,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.base.html" class="tsd-kind-icon">Base</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_spi_.basewithspi.html" class="tsd-kind-icon">Base<wbr>With<wbr>Spi</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_spi_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a>
 					</li>
@@ -448,7 +638,7 @@
 								<a href="_spi_.databaseimpl.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_spi_.databaseimpl.html#_impl" class="tsd-kind-icon">_impl</a>
+								<a href="_spi_.databaseimpl.html#impl" class="tsd-kind-icon">impl</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="_spi_.databaseimpl.html#parent" class="tsd-kind-icon">parent</a>
@@ -460,16 +650,25 @@
 								<a href="_spi_.databaseimpl.html#id" class="tsd-kind-icon">id</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_spi_.databaseimpl.html#impl" class="tsd-kind-icon">impl</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="_spi_.databaseimpl.html#log" class="tsd-kind-icon">log</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="_spi_.databaseimpl.html#outer" class="tsd-kind-icon">outer</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+								<a href="_spi_.databaseimpl.html#callbackwrapper" class="tsd-kind-icon">callback<wbr>Wrapper</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_spi_.databaseimpl.html#close" class="tsd-kind-icon">close</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="_spi_.databaseimpl.html#invoke" class="tsd-kind-icon">invoke</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+								<a href="_spi_.databaseimpl.html#invokeinner" class="tsd-kind-icon">invoke<wbr>Inner</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_spi_.databaseimpl.html#newspi" class="tsd-kind-icon">newSPI</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_spi_.databaseimpl.html#withsession" class="tsd-kind-icon">with<wbr>Session</a>
@@ -478,7 +677,7 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.providerimpl.html" class="tsd-kind-icon">Provider<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
@@ -514,6 +713,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.session.html" class="tsd-kind-icon">Session</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../interfaces/_spi_.spiparent.html" class="tsd-kind-icon">Spi<wbr>Parent</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
 					</li>
@@ -524,13 +726,25 @@
 						<a href="../modules/_spi_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#pmarker" class="tsd-kind-icon">PMarker</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_spi_.html#providerfactory" class="tsd-kind-icon">Provider<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../modules/_spi_.html#spicallback" class="tsd-kind-icon">SPICallback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_spi_.html#wrapped" class="tsd-kind-icon">Wrapped</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_spi_.html#wrapper" class="tsd-kind-icon">Wrapper</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_spi_.html#providers" class="tsd-kind-icon">PROVIDERS</a>

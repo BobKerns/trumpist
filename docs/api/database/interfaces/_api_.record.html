@@ -83,12 +83,6 @@
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel">
-				<h3>Implemented by</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="../classes/_test_mockdb_.mockrecord.html" class="tsd-signature-type">MockRecord</a></li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -108,13 +102,13 @@
 					<a name="get" class="tsd-anchor"></a>
 					<h3>get</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L171">api.ts:171</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L176">api.ts:176</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -125,7 +119,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>key: <span class="tsd-signature-type">string</span></h5>
+									<h5>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -167,9 +161,6 @@
 						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -195,9 +186,6 @@
 						<a href="_api_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_api_.expandresult.html" class="tsd-kind-icon">Expand<wbr>Result</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.marker.html" class="tsd-kind-icon">Marker</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -205,6 +193,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_api_.queryexpansion.html" class="tsd-kind-icon">Query<wbr>Expansion</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -230,7 +221,7 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.resultsummaryprovider.html" class="tsd-kind-icon">Result<wbr>Summary<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -244,6 +235,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_api_.html#maybe" class="tsd-kind-icon">Maybe</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_api_.html#pmarker" class="tsd-kind-icon">PMarker</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_api_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>

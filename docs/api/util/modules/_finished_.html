@@ -75,10 +75,15 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_finished_.streamoptions.html" class="tsd-kind-icon">Stream<wbr>Options</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_finished_.html#cleanupfunction" class="tsd-kind-icon">Cleanup<wbr>Function</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_finished_.html#streamoptions" class="tsd-kind-icon">Stream<wbr>Options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -87,7 +92,6 @@
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_finished_.html#finished" class="tsd-kind-icon">finished</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_finished_.html#isrequest" class="tsd-kind-icon">is<wbr>Request</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_finished_.html#noop" class="tsd-kind-icon">noop</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_finished_.html#once" class="tsd-kind-icon">once</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,7 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">Cleanup<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L43">finished.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/finished.ts#L36">finished.ts:36</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -120,24 +124,6 @@
 						</ul>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
-					<a name="streamoptions" class="tsd-anchor"></a>
-					<h3>Stream<wbr>Options</h3>
-					<div class="tsd-signature tsd-kind-icon">Stream<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L39">finished.ts:39</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>k: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
-							</li>
-						</ul>
-					</div>
-				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
@@ -145,13 +131,14 @@
 					<a name="finished" class="tsd-anchor"></a>
 					<h3>finished</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">finished<span class="tsd-signature-symbol">(</span>stream<span class="tsd-signature-symbol">: </span><a href="_types_.html#stream" class="tsd-signature-type">Stream</a>, opts<span class="tsd-signature-symbol">: </span><a href="_types_.html#nullable" class="tsd-signature-type">Nullable</a><span class="tsd-signature-symbol">&lt;</span><a href="_finished_.html#streamoptions" class="tsd-signature-type">StreamOptions</a><span class="tsd-signature-symbol"> | </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">&gt;</span>, callback<span class="tsd-signature-symbol">?: </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_finished_.html#cleanupfunction" class="tsd-signature-type">CleanupFunction</a></li>
+						<li class="tsd-signature tsd-kind-icon">finished<span class="tsd-signature-symbol">(</span>stream<span class="tsd-signature-symbol">: </span><a href="_types_.html#stream" class="tsd-signature-type">Stream</a>, opts<span class="tsd-signature-symbol">: </span><a href="_types_.html#nullable" class="tsd-signature-type">Nullable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_finished_.streamoptions.html" class="tsd-signature-type">StreamOptions</a><span class="tsd-signature-symbol">&gt;</span>, callback<span class="tsd-signature-symbol">?: </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_finished_.html#cleanupfunction" class="tsd-signature-type">CleanupFunction</a></li>
+						<li class="tsd-signature tsd-kind-icon">finished<span class="tsd-signature-symbol">(</span>stream<span class="tsd-signature-symbol">: </span><a href="_types_.html#stream" class="tsd-signature-type">Stream</a>, callback<span class="tsd-signature-symbol">?: </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_finished_.html#cleanupfunction" class="tsd-signature-type">CleanupFunction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L45">finished.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/finished.ts#L38">finished.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -160,7 +147,24 @@
 									<h5>stream: <a href="_types_.html#stream" class="tsd-signature-type">Stream</a></h5>
 								</li>
 								<li>
-									<h5>opts: <a href="_types_.html#nullable" class="tsd-signature-type">Nullable</a><span class="tsd-signature-symbol">&lt;</span><a href="_finished_.html#streamoptions" class="tsd-signature-type">StreamOptions</a><span class="tsd-signature-symbol"> | </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>opts: <a href="_types_.html#nullable" class="tsd-signature-type">Nullable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_finished_.streamoptions.html" class="tsd-signature-type">StreamOptions</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <a href="_types_.html#callback" class="tsd-signature-type">Callback</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_finished_.html#cleanupfunction" class="tsd-signature-type">CleanupFunction</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/finished.ts#L39">finished.ts:39</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>stream: <a href="_types_.html#stream" class="tsd-signature-type">Stream</a></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <a href="_types_.html#callback" class="tsd-signature-type">Callback</a></h5>
@@ -180,7 +184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L26">finished.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/finished.ts#L28">finished.ts:28</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -203,33 +207,10 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L24">finished.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/finished.ts#L26">finished.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="once" class="tsd-anchor"></a>
-					<h3>once</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">once<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="_types_.html#callback" class="tsd-signature-type">Callback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/finished.ts#L30">finished.ts:30</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>callback: <a href="_types_.html#callback" class="tsd-signature-type">Callback</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -254,6 +235,9 @@
 						<a href="_logging_.html">"logging"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_promissory_.html">"promissory"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_streams_.html">"streams"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -269,11 +253,11 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../classes/_finished_.err_stream_premature_close.html" class="tsd-kind-icon">ERR_<wbr>STREAM_<wbr>PREMATURE_<wbr>CLOSE</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="_finished_.html#cleanupfunction" class="tsd-kind-icon">Cleanup<wbr>Function</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_finished_.streamoptions.html" class="tsd-kind-icon">Stream<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="_finished_.html#streamoptions" class="tsd-kind-icon">Stream<wbr>Options</a>
+						<a href="_finished_.html#cleanupfunction" class="tsd-kind-icon">Cleanup<wbr>Function</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_finished_.html#finished" class="tsd-kind-icon">finished</a>
@@ -283,9 +267,6 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_finished_.html#noop" class="tsd-kind-icon">noop</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_finished_.html#once" class="tsd-kind-icon">once</a>
 					</li>
 				</ul>
 			</nav>

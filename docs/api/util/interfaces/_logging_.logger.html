@@ -75,16 +75,33 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/_logging_.tlogger.html" class="tsd-signature-type">TLogger</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_logging_.logger.html#level" class="tsd-kind-icon">level</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_logging_.logger.html#parent" class="tsd-kind-icon">parent</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_logging_.logger.html#transports" class="tsd-kind-icon">transports</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_logging_.logger.html#transportsbykey" class="tsd-kind-icon">transports<wbr>ByKey</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#debug" class="tsd-kind-icon">debug</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#error" class="tsd-kind-icon">error</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#getchild" class="tsd-kind-icon">get<wbr>Child</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#info" class="tsd-kind-icon">info</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#log" class="tsd-kind-icon">log</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#severe" class="tsd-kind-icon">severe</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#trace" class="tsd-kind-icon">trace</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_logging_.logger.html#warn" class="tsd-kind-icon">warn</a></li>
@@ -94,24 +111,78 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="level" class="tsd-anchor"></a>
+					<h3>level</h3>
+					<div class="tsd-signature tsd-kind-icon">level<span class="tsd-signature-symbol">:</span> <a href="../modules/_logging_.html#levelorinherit" class="tsd-signature-type">LevelOrInherit</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L103">logging.ts:103</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="parent" class="tsd-anchor"></a>
+					<h3>parent</h3>
+					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="../modules/_types_.html#nullable" class="tsd-signature-type">Nullable</a><span class="tsd-signature-symbol">&lt;</span><a href="_logging_.logger.html" class="tsd-signature-type">Logger</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L104">logging.ts:104</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="transports" class="tsd-anchor"></a>
+					<h3>transports</h3>
+					<div class="tsd-signature tsd-kind-icon">transports<span class="tsd-signature-symbol">:</span> <a href="_logging_.transport.html" class="tsd-signature-type">Transport</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L99">logging.ts:99</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="transportsbykey" class="tsd-anchor"></a>
+					<h3>transports<wbr>ByKey</h3>
+					<div class="tsd-signature tsd-kind-icon">transports<wbr>ByKey<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L100">logging.ts:100</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="_logging_.transport.html" class="tsd-signature-type">Transport</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
 					<a name="debug" class="tsd-anchor"></a>
 					<h3>debug</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L44">logging.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L94">logging.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -122,13 +193,13 @@
 					<a name="error" class="tsd-anchor"></a>
 					<h3>error</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L47">logging.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L97">logging.ts:97</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -136,8 +207,37 @@
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getchild" class="tsd-anchor"></a>
+					<h3>get<wbr>Child</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Child<span class="tsd-signature-symbol">(</span>subkey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, lvl<span class="tsd-signature-symbol">?: </span><a href="../enums/_logging_.level.html" class="tsd-signature-type">Level</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_logging_.logger.html" class="tsd-signature-type">Logger</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L105">logging.ts:105</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>subkey: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> lvl: <a href="../enums/_logging_.level.html" class="tsd-signature-type">Level</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_logging_.logger.html" class="tsd-signature-type">Logger</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -145,19 +245,51 @@
 					<a name="info" class="tsd-anchor"></a>
 					<h3>info</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">info<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">info<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L45">logging.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L95">logging.ts:95</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="log" class="tsd-anchor"></a>
+					<h3>log</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">log<span class="tsd-signature-symbol">(</span>level<span class="tsd-signature-symbol">: </span><a href="../enums/_logging_.level.html" class="tsd-signature-type">Level</a>, msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L106">logging.ts:106</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>level: <a href="../enums/_logging_.level.html" class="tsd-signature-type">Level</a></h5>
+								</li>
+								<li>
+									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -168,19 +300,22 @@
 					<a name="severe" class="tsd-anchor"></a>
 					<h3>severe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">severe<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">severe<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L48">logging.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L98">logging.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -191,19 +326,22 @@
 					<a name="trace" class="tsd-anchor"></a>
 					<h3>trace</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">trace<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">trace<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L43">logging.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L93">logging.ts:93</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -214,19 +352,22 @@
 					<a name="warn" class="tsd-anchor"></a>
 					<h3>warn</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-						<li class="tsd-signature tsd-kind-icon">warn<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">warn<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a>, e<span class="tsd-signature-symbol">?: </span><a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L46">logging.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L96">logging.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>msg: <a href="../modules/_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> e: <a href="../classes/_finished_.err_stream_premature_close.html#error" class="tsd-signature-type">Error</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -254,6 +395,9 @@
 						<a href="../modules/_logging_.html">"logging"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="../modules/_promissory_.html">"promissory"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="../modules/_streams_.html">"streams"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -266,11 +410,32 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_logging_.level.html" class="tsd-kind-icon">Level</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_logging_.tlogger.html" class="tsd-kind-icon">TLogger</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_logging_.levelspecs.html" class="tsd-kind-icon">Level<wbr>Specs</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_logging_.logger.html" class="tsd-kind-icon">Logger</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#level" class="tsd-kind-icon">level</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#parent" class="tsd-kind-icon">parent</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#transports" class="tsd-kind-icon">transports</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#transportsbykey" class="tsd-kind-icon">transports<wbr>ByKey</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_logging_.logger.html#debug" class="tsd-kind-icon">debug</a>
 							</li>
@@ -278,7 +443,13 @@
 								<a href="_logging_.logger.html#error" class="tsd-kind-icon">error</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#getchild" class="tsd-kind-icon">get<wbr>Child</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_logging_.logger.html#info" class="tsd-kind-icon">info</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_logging_.logger.html#log" class="tsd-kind-icon">log</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface">
 								<a href="_logging_.logger.html#severe" class="tsd-kind-icon">severe</a>
@@ -293,11 +464,20 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_logging_.loggerinfo.html" class="tsd-kind-icon">Logger<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_logging_.transport.html" class="tsd-kind-icon">Transport</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_logging_.html#levelorinherit" class="tsd-kind-icon">Level<wbr>OrInherit</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_logging_.html#logmessage" class="tsd-kind-icon">Log<wbr>Message</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_logging_.html#loggerinfo" class="tsd-kind-icon">Logger<wbr>Info</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_logging_.html#map" class="tsd-kind-icon">Map</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_logging_.html#loggers" class="tsd-kind-icon">LOGGERS</a>
@@ -315,6 +495,9 @@
 						<a href="../modules/_logging_.html#myformat" class="tsd-kind-icon">my<wbr>Format</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_logging_.html#queue" class="tsd-kind-icon">queue</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_logging_.html#transports" class="tsd-kind-icon">transports</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
@@ -323,8 +506,11 @@
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_logging_.html#createnew" class="tsd-kind-icon">create<wbr>New</a>
 					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_logging_.html#expand" class="tsd-kind-icon">expand</a>
+					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_logging_.html#levelspecs" class="tsd-kind-icon">level<wbr>Specs</a>
+						<a href="../modules/_logging_.html#levelspecs-1" class="tsd-kind-icon">level<wbr>Specs</a>
 					</li>
 				</ul>
 			</nav>

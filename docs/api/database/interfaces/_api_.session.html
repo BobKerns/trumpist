@@ -113,6 +113,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_api_.session.html#query" class="tsd-kind-icon">query</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="_api_.session.html#withtransaction" class="tsd-kind-icon">with<wbr>Transaction</a></li>
 							</ul>
 						</section>
@@ -128,7 +129,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_api_.parent.html">Parent</a>.<a href="_api_.parent.html#database">database</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L31">api.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L31">api.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -139,7 +140,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_api_.parent.html">Parent</a>.<a href="_api_.parent.html#id">id</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L32">api.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L32">api.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -150,7 +151,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_api_.parent.html">Parent</a>.<a href="_api_.parent.html#log">log</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L30">api.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L30">api.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,13 +161,44 @@
 					<div class="tsd-signature tsd-kind-icon">mode<span class="tsd-signature-symbol">:</span> <a href="../enums/_api_.mode.html" class="tsd-signature-type">Mode</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L58">api.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L60">api.ts:60</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="query" class="tsd-anchor"></a>
+					<h3>query</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">query<span class="tsd-signature-symbol">(</span>q<span class="tsd-signature-symbol">: </span><a href="_api_.query.html" class="tsd-signature-type">Query</a>, params<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_api_.collectedresults.html" class="tsd-signature-type">CollectedResults</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L64">api.ts:64</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Shortcut to run one query in one transaction.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>q: <a href="_api_.query.html" class="tsd-signature-type">Query</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> params: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_api_.collectedresults.html" class="tsd-signature-type">CollectedResults</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
 					<a name="withtransaction" class="tsd-anchor"></a>
 					<h3>with<wbr>Transaction</h3>
@@ -177,7 +209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L60">api.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L62">api.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -237,9 +269,6 @@
 						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -265,9 +294,6 @@
 						<a href="_api_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_api_.expandresult.html" class="tsd-kind-icon">Expand<wbr>Result</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.marker.html" class="tsd-kind-icon">Marker</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -275,6 +301,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_api_.queryexpansion.html" class="tsd-kind-icon">Query<wbr>Expansion</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.record.html" class="tsd-kind-icon">Record</a>
@@ -291,7 +320,7 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_api_.resultsummaryprovider.html" class="tsd-kind-icon">Result<wbr>Summary<wbr>Provider</a>
 					</li>
 				</ul>
@@ -311,6 +340,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_api_.session.html#mode" class="tsd-kind-icon">mode</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_api_.session.html#query" class="tsd-kind-icon">query</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
 								<a href="_api_.session.html#withtransaction" class="tsd-kind-icon">with<wbr>Transaction</a>
 							</li>
@@ -326,6 +358,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_api_.html#maybe" class="tsd-kind-icon">Maybe</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_api_.html#pmarker" class="tsd-kind-icon">PMarker</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_api_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>

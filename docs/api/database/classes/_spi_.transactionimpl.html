@@ -83,11 +83,6 @@
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">TransactionImpl</span>
-								<ul class="tsd-hierarchy">
-									<li>
-										<a href="_test_mockdb_.mocktransaction.html" class="tsd-signature-type">MockTransaction</a>
-									</li>
-								</ul>
 							</li>
 						</ul>
 					</li>
@@ -106,7 +101,7 @@
 						<section class="tsd-index-section tsd-is-inherited tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.transactionimpl.html#_impl" class="tsd-kind-icon">_impl</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.transactionimpl.html#impl" class="tsd-kind-icon">impl</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_spi_.transactionimpl.html#parent" class="tsd-kind-icon">parent</a></li>
 							</ul>
 						</section>
@@ -115,7 +110,6 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.transactionimpl.html#database" class="tsd-kind-icon">database</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.transactionimpl.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.transactionimpl.html#impl" class="tsd-kind-icon">impl</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.transactionimpl.html#log" class="tsd-kind-icon">log</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_spi_.transactionimpl.html#outer" class="tsd-kind-icon">outer</a></li>
 							</ul>
@@ -139,38 +133,20 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<wbr>Impl<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.transactionimpl.html" class="tsd-signature-type">TransactionImpl</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Transaction<wbr>Impl<span class="tsd-signature-symbol">(</span>impl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span>, outer<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span>, parent<span class="tsd-signature-symbol">: </span><a href="../interfaces/_spi_.session.html" class="tsd-signature-type">Session</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_spi_.transactionimpl.html" class="tsd-signature-type">TransactionImpl</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L172">spi.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L271">spi.ts:271</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>impl: <span class="tsd-signature-type">function</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-siganture">
-											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>otter<span class="tsd-signature-symbol">: </span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">I</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>otter: <a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">I</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
+									<h5>impl: <span class="tsd-signature-type">I</span></h5>
 								</li>
 								<li>
 									<h5>outer: <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_api_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span></h5>
@@ -187,13 +163,13 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-					<a name="_impl" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _impl</h3>
-					<div class="tsd-signature tsd-kind-icon">_impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Future</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="impl" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> impl</h3>
+					<div class="tsd-signature tsd-kind-icon">impl<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">I</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#_impl">_impl</a></p>
+						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L33">spi.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L61">spi.ts:61</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -204,7 +180,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#parent">parent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L34">spi.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L62">spi.ts:62</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,7 +198,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#database">database</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L28">spi.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L57">spi.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -240,28 +216,10 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#id">id</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L29">spi.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L58">spi.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-					<a name="impl" class="tsd-anchor"></a>
-					<h3>impl</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> impl<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#impl">impl</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L31">spi.ts:31</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/_api_.html#maybe" class="tsd-signature-type">Maybe</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">I</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -276,7 +234,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#log">log</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L27">spi.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L53">spi.ts:53</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Logger</span></h4>
@@ -294,7 +252,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_spi_.base.html">Base</a>.<a href="_spi_.base.html#outer">outer</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L30">spi.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L59">spi.ts:59</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">O</span></h4>
@@ -314,7 +272,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L190">spi.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L289">spi.ts:289</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -338,7 +296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L179">spi.ts:179</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L278">spi.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -369,7 +327,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L183">spi.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L282">spi.ts:282</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -400,7 +358,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L181">spi.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L280">spi.ts:280</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -431,7 +389,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/spi.ts#L198">spi.ts:198</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/spi.ts#L297">spi.ts:297</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -484,9 +442,6 @@
 						<a href="../modules/_test_database_test_.html">"test/database.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="../modules/_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -502,13 +457,16 @@
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.base.html" class="tsd-kind-icon">Base</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_spi_.basewithspi.html" class="tsd-kind-icon">Base<wbr>With<wbr>Spi</a>
+					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_spi_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.databaseimpl.html" class="tsd-kind-icon">Database<wbr>Impl</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_spi_.providerimpl.html" class="tsd-kind-icon">Provider<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-class tsd-parent-kind-external-module">
@@ -532,7 +490,7 @@
 								<a href="_spi_.transactionimpl.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="_spi_.transactionimpl.html#_impl" class="tsd-kind-icon">_impl</a>
+								<a href="_spi_.transactionimpl.html#impl" class="tsd-kind-icon">impl</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="_spi_.transactionimpl.html#parent" class="tsd-kind-icon">parent</a>
@@ -542,9 +500,6 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="_spi_.transactionimpl.html#id" class="tsd-kind-icon">id</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_spi_.transactionimpl.html#impl" class="tsd-kind-icon">impl</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 								<a href="_spi_.transactionimpl.html#log" class="tsd-kind-icon">log</a>
@@ -589,6 +544,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.session.html" class="tsd-kind-icon">Session</a>
 					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../interfaces/_spi_.spiparent.html" class="tsd-kind-icon">Spi<wbr>Parent</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_spi_.transaction.html" class="tsd-kind-icon">Transaction</a>
 					</li>
@@ -599,13 +557,25 @@
 						<a href="../modules/_spi_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_spi_.html#pmarker" class="tsd-kind-icon">PMarker</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_spi_.html#providerfactory" class="tsd-kind-icon">Provider<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../modules/_spi_.html#spicallback" class="tsd-kind-icon">SPICallback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="../modules/_spi_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_spi_.html#wrapped" class="tsd-kind-icon">Wrapped</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="../modules/_spi_.html#wrapper" class="tsd-kind-icon">Wrapper</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_spi_.html#providers" class="tsd-kind-icon">PROVIDERS</a>

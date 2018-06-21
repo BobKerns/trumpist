@@ -84,10 +84,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="argv" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> argv</h3>
-					<div class="tsd-signature tsd-kind-icon">argv<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Arguments</span><span class="tsd-signature-symbol"> =&nbsp;yargs.strict().help().version().command(&#x27;import&#x27;, &quot;Import a brain&quot;,(yyargs) &#x3D;&gt; yyargs.option(&#x27;brz&#x27;, {description: &#x27;Location of a .brz file to import&#x27;,}).option(&#x27;dir&#x27;, {description: &#x27;location of a directory to import&#x27;,default: braindir,}),(yargv) &#x3D;&gt; load(new FilesystemSource(yargv.dir))).demandCommand(1, &quot;You must supply a command.&quot;).argv</span></div>
+					<div class="tsd-signature tsd-kind-icon">argv<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Arguments</span><span class="tsd-signature-symbol"> =&nbsp;yargs.strict().help().version().option(&#x27;debug&#x27;, {description: &quot;Enable debug logging&quot;,boolean: true,}).option(&#x27;trace&#x27;, {description: &quot;Enable trace logging&quot;,boolean: true,}).command(&#x27;import&#x27;, &quot;Import a brain&quot;,(yyargs) &#x3D;&gt; yyargs.option(&#x27;brz&#x27;, {description: &#x27;Location of a .brz file to import&#x27;,}).option(&#x27;dir&#x27;, {description: &#x27;location of a directory to import&#x27;,default: braindir,}),(yargv) &#x3D;&gt; new Loader({...yargv, source: new FilesystemSource(yargv.dir)}).run()).command(&#x27;init&#x27;, &#x27;Initialize a database&#x27;,yyargs &#x3D;&gt; yyargs.option(&#x27;preview&#x27;, {description: &#x27;Preview the operations to be peformed.&#x27;,boolean: true,}),yargv &#x3D;&gt; new InitApp(yargv).run()).demandCommand(1, &quot;You must supply a command.&quot;).exitProcess(true).argv</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/cmd/cmd.ts#L15">cmd.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/cmd/cmd.ts#L24">cmd.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -97,7 +97,7 @@
 					<div class="tsd-signature tsd-kind-icon">basedir<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;dirname(dirname(dirname(module.filename)))</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/cmd/cmd.ts#L11">cmd.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/cmd/cmd.ts#L20">cmd.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -107,7 +107,7 @@
 					<div class="tsd-signature tsd-kind-icon">braindir<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;join(basedir, &#x27;brain&#x27;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/cmd/cmd.ts#L12">cmd.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/cmd/cmd.ts#L21">cmd.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -119,8 +119,17 @@
 					<li class="globals  ">
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_initapp_.html">"<wbr>Init<wbr>App"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_app_.html">"app"</a>
+					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="_cmd_.html">"cmd"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="_test_app_test_.html">"test/app.test"</a>
 					</li>
 				</ul>
 			</nav>

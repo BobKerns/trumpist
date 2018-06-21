@@ -80,16 +80,16 @@
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.collectedresults.html" class="tsd-kind-icon">Collected<wbr>Results</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.connectionparameters.html" class="tsd-kind-icon">Connection<wbr>Parameters</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.database.html" class="tsd-kind-icon">Database</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.expandresult.html" class="tsd-kind-icon">Expand<wbr>Result</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.marker.html" class="tsd-kind-icon">Marker</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.parent.html" class="tsd-kind-icon">Parent</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.query.html" class="tsd-kind-icon">Query</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.queryexpansion.html" class="tsd-kind-icon">Query<wbr>Expansion</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.record.html" class="tsd-kind-icon">Record</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.recorditerableiterator.html" class="tsd-kind-icon">Record<wbr>Iterable<wbr>Iterator</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.recordstream.html" class="tsd-kind-icon">Record<wbr>Stream</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.resultiterator.html" class="tsd-kind-icon">Result<wbr>Iterator</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a></li>
-								<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported"><a href="../interfaces/_api_.resultsummaryprovider.html" class="tsd-kind-icon">Result<wbr>Summary<wbr>Provider</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.resultsummaryprovider.html" class="tsd-kind-icon">Result<wbr>Summary<wbr>Provider</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.session.html" class="tsd-kind-icon">Session</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_api_.transaction.html" class="tsd-kind-icon">Transaction</a></li>
 							</ul>
@@ -99,6 +99,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_api_.html#databasecallback" class="tsd-kind-icon">Database<wbr>Callback</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_api_.html#maybe" class="tsd-kind-icon">Maybe</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_api_.html#pmarker" class="tsd-kind-icon">PMarker</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_api_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_api_.html#transactioncallback" class="tsd-kind-icon">Transaction<wbr>Callback</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_api_.html#seconds" class="tsd-kind-icon">seconds</a></li>
@@ -127,7 +128,7 @@
 					<div class="tsd-signature tsd-kind-icon">Database<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L12">api.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L12">api.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -163,7 +164,17 @@
 					<div class="tsd-signature tsd-kind-icon">Maybe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L9">api.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L9">api.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="pmarker" class="tsd-anchor"></a>
+					<h3>PMarker</h3>
+					<div class="tsd-signature tsd-kind-icon">PMarker<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_api_.marker.html" class="tsd-signature-type">Marker</a><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_api_.parent.html" class="tsd-signature-type">Parent</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L35">api.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">Session<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L14">api.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L14">api.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -209,7 +220,7 @@
 					<div class="tsd-signature tsd-kind-icon">Transaction<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L16">api.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L16">api.ts:16</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -245,7 +256,7 @@
 					<div class="tsd-signature tsd-kind-icon">seconds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L21">api.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L21">api.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -263,7 +274,7 @@
 					<div class="tsd-signature tsd-kind-icon">ID_<wbr>COUNTER<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L200">api.ts:200</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L210">api.ts:210</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -280,7 +291,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/database/api.ts#L202">api.ts:202</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/database/api.ts#L212">api.ts:212</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -320,9 +331,6 @@
 						<a href="_test_database_test_.html">"test/database.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_test_mockdb_.html">"test/mockdb"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="_test_query_parser_test_.html">"test/query-<wbr>parser.test"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -348,9 +356,6 @@
 						<a href="../interfaces/_api_.database.html" class="tsd-kind-icon">Database</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_api_.expandresult.html" class="tsd-kind-icon">Expand<wbr>Result</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_api_.marker.html" class="tsd-kind-icon">Marker</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -358,6 +363,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_api_.query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_api_.queryexpansion.html" class="tsd-kind-icon">Query<wbr>Expansion</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_api_.record.html" class="tsd-kind-icon">Record</a>
@@ -374,7 +382,7 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_api_.resultsummary.html" class="tsd-kind-icon">Result<wbr>Summary</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_api_.resultsummaryprovider.html" class="tsd-kind-icon">Result<wbr>Summary<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
@@ -388,6 +396,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_api_.html#maybe" class="tsd-kind-icon">Maybe</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_api_.html#pmarker" class="tsd-kind-icon">PMarker</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="_api_.html#sessioncallback" class="tsd-kind-icon">Session<wbr>Callback</a>

@@ -67,7 +67,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Logging confguration and setup.</p>
+						<p>Logging configuration and setup.</p>
 					</div>
 				</div>
 			</section>
@@ -76,16 +76,32 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum tsd-parent-kind-external-module"><a href="../enums/_logging_.level.html" class="tsd-kind-icon">Level</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-external-module"><a href="../classes/_logging_.tlogger.html" class="tsd-kind-icon">TLogger</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported"><a href="../interfaces/_logging_.levelspecs.html" class="tsd-kind-icon">Level<wbr>Specs</a></li>
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_logging_.logger.html" class="tsd-kind-icon">Logger</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported"><a href="../interfaces/_logging_.loggerinfo.html" class="tsd-kind-icon">Logger<wbr>Info</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_logging_.transport.html" class="tsd-kind-icon">Transport</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_logging_.html#levelorinherit" class="tsd-kind-icon">Level<wbr>OrInherit</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_logging_.html#logmessage" class="tsd-kind-icon">Log<wbr>Message</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#loggerinfo" class="tsd-kind-icon">Logger<wbr>Info</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="_logging_.html#map" class="tsd-kind-icon">Map</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
@@ -96,6 +112,7 @@
 								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#createlogger" class="tsd-kind-icon">create<wbr>Logger</a></li>
 								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#format" class="tsd-kind-icon">format</a></li>
 								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#myformat" class="tsd-kind-icon">my<wbr>Format</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#queue" class="tsd-kind-icon">queue</a></li>
 								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#transports" class="tsd-kind-icon">transports</a></li>
 							</ul>
 						</section>
@@ -104,12 +121,13 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_logging_.html#create" class="tsd-kind-icon">create</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#createnew" class="tsd-kind-icon">create<wbr>New</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#expand" class="tsd-kind-icon">expand</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Object literals</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#levelspecs" class="tsd-kind-icon">level<wbr>Specs</a></li>
+								<li class="tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported"><a href="_logging_.html#levelspecs-1" class="tsd-kind-icon">level<wbr>Specs</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,42 +136,37 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="levelorinherit" class="tsd-anchor"></a>
+					<h3>Level<wbr>OrInherit</h3>
+					<div class="tsd-signature tsd-kind-icon">Level<wbr>OrInherit<span class="tsd-signature-symbol">:</span> <a href="../enums/_logging_.level.html" class="tsd-signature-type">Level</a><span class="tsd-signature-symbol"> | </span><a href="../enums/_logging_.level.html#inherit" class="tsd-signature-type">INHERIT</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L65">logging.ts:65</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
 					<a name="logmessage" class="tsd-anchor"></a>
 					<h3>Log<wbr>Message</h3>
 					<div class="tsd-signature tsd-kind-icon">Log<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L14">logging.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L17">logging.ts:17</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>We accept either a string, or a function that produces a string. If it&#39;s a function,
-							we only call it if logging is enabled.</p>
-						</div>
-					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="loggerinfo" class="tsd-anchor"></a>
-					<h3>Logger<wbr>Info</h3>
-					<div class="tsd-signature tsd-kind-icon">Logger<wbr>Info<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+					<a name="map" class="tsd-anchor"></a>
+					<h3>Map</h3>
+					<div class="tsd-signature tsd-kind-icon">Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L62">logging.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L35">logging.ts:35</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
-							<li class="tsd-parameter-index-signature">
-								<h5><span class="tsd-signature-symbol">[</span>k: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-							</li>
-							<li class="tsd-parameter">
-								<h5>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-							</li>
 						</ul>
 					</div>
 				</section>
@@ -166,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">LOGGERS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L51">logging.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L109">logging.ts:109</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -184,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">add<wbr>Colors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L18">logging.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L23">logging.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -194,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">create<wbr>Logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L18">logging.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L23">logging.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -204,7 +217,7 @@
 					<div class="tsd-signature tsd-kind-icon">format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L18">logging.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L23">logging.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -214,9 +227,29 @@
 					<div class="tsd-signature tsd-kind-icon">my<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;format.printf((info: LoggerInfo) &#x3D;&gt; {return &#x60;[${info.label}] ${info.level}: ${info.message}&#x60;;})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L63">logging.ts:63</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L126">logging.ts:126</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="queue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagLet">Let</span> queue</h3>
+					<div class="tsd-signature tsd-kind-icon">queue<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Promise.resolve()</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L168">logging.ts:168</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Queue shared among all loggers.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>type</dt>
+							<dd><p>{Promise<void>}</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="transports" class="tsd-anchor"></a>
@@ -224,7 +257,7 @@
 					<div class="tsd-signature tsd-kind-icon">transports<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L18">logging.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L23">logging.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -235,13 +268,13 @@
 					<a name="create" class="tsd-anchor"></a>
 					<h3>create</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, lvl<span class="tsd-signature-symbol">?: </span><a href="_logging_.html#levelorinherit" class="tsd-signature-type">LevelOrInherit</a>, parent<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L58">logging.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L116">logging.ts:116</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -257,6 +290,12 @@
 										<p>the name for the logger</p>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> lvl: <a href="_logging_.html#levelorinherit" class="tsd-signature-type">LevelOrInherit</a><span class="tsd-signature-symbol"> =&nbsp;Level.INHERIT</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></h4>
 							<p>the logger fo the specified key.</p>
@@ -267,13 +306,13 @@
 					<a name="createnew" class="tsd-anchor"></a>
 					<h3>create<wbr>New</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>New<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>New<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, level<span class="tsd-signature-symbol">: </span><a href="_logging_.html#levelorinherit" class="tsd-signature-type">LevelOrInherit</a>, parent<span class="tsd-signature-symbol">?: </span><a href="../classes/_logging_.tlogger.html" class="tsd-signature-type">TLogger</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L71">logging.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L134">logging.ts:134</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -289,8 +328,37 @@
 										<p>the name for the logger</p>
 									</div>
 								</li>
+								<li>
+									<h5>level: <a href="_logging_.html#levelorinherit" class="tsd-signature-type">LevelOrInherit</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> parent: <a href="../classes/_logging_.tlogger.html" class="tsd-signature-type">TLogger</a></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_logging_.logger.html" class="tsd-signature-type">Logger</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="expand" class="tsd-anchor"></a>
+					<h3>expand</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">expand<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><a href="_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L155">logging.ts:155</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>msg: <a href="_logging_.html#logmessage" class="tsd-signature-type">LogMessage</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -298,150 +366,100 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Object literals</h2>
 				<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="levelspecs" class="tsd-anchor"></a>
+					<a name="levelspecs-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> level<wbr>Specs</h3>
 					<div class="tsd-signature tsd-kind-icon">level<wbr>Specs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L20">logging.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L72">logging.ts:72</a></li>
 						</ul>
 					</aside>
+					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
+						<a name="levelspecs-1.levels" class="tsd-anchor"></a>
+						<h3>levels</h3>
+						<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> =&nbsp;Level.priority</span></div>
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L73">logging.ts:73</a></li>
+							</ul>
+						</aside>
+					</section>
 					<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="levelspecs.colors" class="tsd-anchor"></a>
+						<a name="levelspecs-1.colors" class="tsd-anchor"></a>
 						<h3>colors</h3>
 						<div class="tsd-signature tsd-kind-icon">colors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L29">logging.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L74">logging.ts:74</a></li>
 							</ul>
 						</aside>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.debug" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.debug" class="tsd-anchor"></a>
 							<h3>debug</h3>
 							<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;blue&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L34">logging.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L79">logging.ts:79</a></li>
 								</ul>
 							</aside>
 						</section>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.error" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.error" class="tsd-anchor"></a>
 							<h3>error</h3>
 							<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;bold red&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L31">logging.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L76">logging.ts:76</a></li>
 								</ul>
 							</aside>
 						</section>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.info" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.info" class="tsd-anchor"></a>
 							<h3>info</h3>
 							<div class="tsd-signature tsd-kind-icon">info<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;black&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L33">logging.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L78">logging.ts:78</a></li>
 								</ul>
 							</aside>
 						</section>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.severe" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.never" class="tsd-anchor"></a>
+							<h3>never</h3>
+							<div class="tsd-signature tsd-kind-icon">never<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;dim white white&quot;</span></div>
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L81">logging.ts:81</a></li>
+								</ul>
+							</aside>
+						</section>
+						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
+							<a name="levelspecs-1.colors.severe" class="tsd-anchor"></a>
 							<h3>severe</h3>
 							<div class="tsd-signature tsd-kind-icon">severe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;bold red yellowBG&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L30">logging.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L75">logging.ts:75</a></li>
 								</ul>
 							</aside>
 						</section>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.trace" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.trace" class="tsd-anchor"></a>
 							<h3>trace</h3>
 							<div class="tsd-signature tsd-kind-icon">trace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;dim blue cyanBG&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L35">logging.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L80">logging.ts:80</a></li>
 								</ul>
 							</aside>
 						</section>
 						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.colors.warn" class="tsd-anchor"></a>
+							<a name="levelspecs-1.colors.warn" class="tsd-anchor"></a>
 							<h3>warn</h3>
 							<div class="tsd-signature tsd-kind-icon">warn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;red&quot;</span></div>
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L32">logging.ts:32</a></li>
-								</ul>
-							</aside>
-						</section>
-					</section>
-					<section class="tsd-panel tsd-member tsd-kind-object-literal tsd-parent-kind-object-literal tsd-is-not-exported">
-						<a name="levelspecs.levels" class="tsd-anchor"></a>
-						<h3>levels</h3>
-						<div class="tsd-signature tsd-kind-icon">levels<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L21">logging.ts:21</a></li>
-							</ul>
-						</aside>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.debug-1" class="tsd-anchor"></a>
-							<h3>debug</h3>
-							<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;4</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L26">logging.ts:26</a></li>
-								</ul>
-							</aside>
-						</section>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.error-1" class="tsd-anchor"></a>
-							<h3>error</h3>
-							<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;1</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L23">logging.ts:23</a></li>
-								</ul>
-							</aside>
-						</section>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.info-1" class="tsd-anchor"></a>
-							<h3>info</h3>
-							<div class="tsd-signature tsd-kind-icon">info<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;3</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L25">logging.ts:25</a></li>
-								</ul>
-							</aside>
-						</section>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.severe-1" class="tsd-anchor"></a>
-							<h3>severe</h3>
-							<div class="tsd-signature tsd-kind-icon">severe<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L22">logging.ts:22</a></li>
-								</ul>
-							</aside>
-						</section>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.trace-1" class="tsd-anchor"></a>
-							<h3>trace</h3>
-							<div class="tsd-signature tsd-kind-icon">trace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;5</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L27">logging.ts:27</a></li>
-								</ul>
-							</aside>
-						</section>
-						<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
-							<a name="levelspecs.levels.warn-1" class="tsd-anchor"></a>
-							<h3>warn</h3>
-							<div class="tsd-signature tsd-kind-icon">warn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;2</span></div>
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/aa78c44/tools/util/logging.ts#L24">logging.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/6a56d18/tools/util/logging.ts#L77">logging.ts:77</a></li>
 								</ul>
 							</aside>
 						</section>
@@ -468,6 +486,9 @@
 						<a href="_logging_.html">"logging"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="_promissory_.html">"promissory"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="_streams_.html">"streams"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
@@ -480,14 +501,32 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
+						<a href="../enums/_logging_.level.html" class="tsd-kind-icon">Level</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_logging_.tlogger.html" class="tsd-kind-icon">TLogger</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/_logging_.levelspecs.html" class="tsd-kind-icon">Level<wbr>Specs</a>
+					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_logging_.logger.html" class="tsd-kind-icon">Logger</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../interfaces/_logging_.loggerinfo.html" class="tsd-kind-icon">Logger<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="../interfaces/_logging_.transport.html" class="tsd-kind-icon">Transport</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="_logging_.html#levelorinherit" class="tsd-kind-icon">Level<wbr>OrInherit</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="_logging_.html#logmessage" class="tsd-kind-icon">Log<wbr>Message</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_logging_.html#loggerinfo" class="tsd-kind-icon">Logger<wbr>Info</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="_logging_.html#map" class="tsd-kind-icon">Map</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_logging_.html#loggers" class="tsd-kind-icon">LOGGERS</a>
@@ -505,6 +544,9 @@
 						<a href="_logging_.html#myformat" class="tsd-kind-icon">my<wbr>Format</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_logging_.html#queue" class="tsd-kind-icon">queue</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_logging_.html#transports" class="tsd-kind-icon">transports</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
@@ -513,8 +555,11 @@
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_logging_.html#createnew" class="tsd-kind-icon">create<wbr>New</a>
 					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_logging_.html#expand" class="tsd-kind-icon">expand</a>
+					</li>
 					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_logging_.html#levelspecs" class="tsd-kind-icon">level<wbr>Specs</a>
+						<a href="_logging_.html#levelspecs-1" class="tsd-kind-icon">level<wbr>Specs</a>
 					</li>
 				</ul>
 			</nav>
