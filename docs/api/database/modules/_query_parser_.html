@@ -83,6 +83,7 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_query_parser_.html#paramformat" class="tsd-kind-icon">Param<wbr>Format</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_query_parser_.html#parsestep" class="tsd-kind-icon">Parse<wbr>Step</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_query_parser_.html#pick" class="tsd-kind-icon">Pick</a></li>
 							</ul>
@@ -93,12 +94,35 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="paramformat" class="tsd-anchor"></a>
+					<h3>Param<wbr>Format</h3>
+					<div class="tsd-signature tsd-kind-icon">Param<wbr>Format<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"id"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"val"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"lit"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"key"</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/878bae9/tools/database/query-parser.ts#L42">query-parser.ts:42</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Keys that can annotate paramater substitutions indicating the syntactic context.
+							E. g. <code>... {$[myKey:key]: $[myVal:val]}  ...</code></p>
+						</div>
+						<p>| <code>id</code>  | An identifier. The defaul is to surround it with backticks, and quote unusual characters with a backslash.
+							| <code>val</code> | A literal value, such as a number or a string. Strings are surounded with double quotes.
+							| <code>lit</code> | A string tha should be substituted as-is. An example might be the inclusion or not of a language keyword\
+							modifier, such as &#39;UNIQUE&#39;. The character set is limited to /^[a-zA-Z][a-zA-Z0-9_]+$/
+							| <code>key</code> | A value which is the identifier in a javascript-style object. It can remain unquoted if it fits the <code>lit</code>
+						description above.</p>
+						<p>The formatting and quoting can be overridden by subclasses as needed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
 					<a name="parsestep" class="tsd-anchor"></a>
 					<h3>Parse<wbr>Step</h3>
 					<div class="tsd-signature tsd-kind-icon">Parse<wbr>Step<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/220570b/tools/database/query-parser.ts#L27">query-parser.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/878bae9/tools/database/query-parser.ts#L27">query-parser.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -108,7 +132,7 @@
 					<div class="tsd-signature tsd-kind-icon">Pick<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/220570b/tools/database/query-parser.ts#L26">query-parser.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/878bae9/tools/database/query-parser.ts#L26">query-parser.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -186,6 +210,9 @@
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../interfaces/_query_parser_.parseresult.html" class="tsd-kind-icon">Parse<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="_query_parser_.html#paramformat" class="tsd-kind-icon">Param<wbr>Format</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_query_parser_.html#parsestep" class="tsd-kind-icon">Parse<wbr>Step</a>
