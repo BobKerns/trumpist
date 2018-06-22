@@ -1,0 +1,4 @@
+[submodule "immutable"]
+	path = immutable
+	url = https://github.com/facebook/immutable-js.git
+	branch = npm
