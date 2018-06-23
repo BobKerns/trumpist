@@ -9,3 +9,5 @@ out
 *.map
 *.d.ts
 *.js
+__snapshots__
+
