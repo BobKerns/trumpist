@@ -19,6 +19,7 @@ TYPEDOC_OPTIONS="--includeDeclarations --ignoreCompilerErrors -excludeExternals"
 
 
 TITLE="Trumpist Brain"
+THEME=--theme node_modules/typedoc-clarity-theme/bin
 
 subproject() {
     sub="${1}"
