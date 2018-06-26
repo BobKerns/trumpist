@@ -43,6 +43,7 @@
     "ts-jest": "^22.4.6",
     "tslint": "^5.10.0",
     "typedoc": "^0.11.1",
+    "typedoc-clarity-theme": "^1.1.0",
     "typedoc-plugin-internal-external": "^1.0.10",
     "typedoc-plugin-single-line-tags": "^1.0.0",
     "typescript": "^2.9.2"
@@ -98,13 +99,18 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+(?!\\.d\\.test)\\.tsx?$": "ts-jest",
+      "^.+\\.d\\.test\\.ts$": "dts-jest/transform"
     },
     "testRegex": "\\.test\\.tsx?$",
     "moduleFileExtensions": [
       "ts",
       "tsx",
       "js"
+    ],
+    "reporters": [
+      "default",
+      "dts-jest/reporter"
     ]
   },
   "types": [
