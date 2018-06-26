@@ -72,7 +72,10 @@ export class MockSession extends spi.SessionImpl<null, null> {
 export class MockResultSummary extends spi.ResultSummary {
     private readonly query: MockQuery;
     constructor(query: MockQuery) {
-        super();
+        super({elapsedTime: 5,
+        readCount: 0,
+        createCount: 1,
+        modifiedCount: 1});
         this.query = query;
     }
 }
