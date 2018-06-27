@@ -4,7 +4,6 @@
 
 
 import {Constructor, never} from "./types";
-import {clone, reduceRight} from "ramda";
 
 export interface Accessors<T, W extends string= never> {
     get<K extends keyof this>(key: K): this[K];
@@ -68,7 +67,7 @@ export interface Path<F, T> {
     (obj: F): BoundPath<F, T>;
     get(): (obj: F) => T;
     set(value: T): (obj: F) => F;
-    set(): (obj: F) => (val: T) => F;
+    set(): (val: T) => (obj: F) => F;
 }
 
 function cloneIf<P extends object, K extends Index, V>(parent: P, key: K, oldVal: V, newVal: V): P {
@@ -86,7 +85,7 @@ function cloneIf<P extends object, K extends Index, V>(parent: P, key: K, oldVal
 }
 
 /**
- * Make all properties in T writeable
+ * Make all properties in T writable
  */
 type Writeable<T> = {
     -readonly [P in keyof T]: T[P];
@@ -97,6 +96,8 @@ const DEFAULT = <V>(): V => DEFAULTED as any as V;
 
 function makeInterface<I extends object>(f: (...a: any[]) => any, initFn: (iface: Writeable<I>) => any) {
     const handler: ProxyHandler<I> = {
+        // This is the proxy delegation 'set', not the target method.
+        // This allows us to set the property on the target via the proxy.
         set: (target: I, key: string, value: any) => {
             return Reflect.defineProperty(target, key, {
                 value: value,
@@ -110,6 +111,8 @@ function makeInterface<I extends object>(f: (...a: any[]) => any, initFn: (iface
     return f as I;
 }
 
+type PathArray<F extends object, T> = Index[];
+
 function makePath<F extends object, T>(left: Reducer<F>, right: Reducer<F>): Path<F, T> {
     // tslint:disable no-shadowed-variable
     const pathFn: Path<F, T> = (function Path(obj: F) {
@@ -121,15 +124,16 @@ function makePath<F extends object, T>(left: Reducer<F>, right: Reducer<F>): Pat
             ? (o: any) => fn(o[key])
             : (o: any) => o[key]),
             (o: any) => o, pathFn);
-        const set0 = (v: T) => right((fn, key) => (p: any) => cloneIf(p, key, p[key], fn(p[key])),
+        const set0 = (v: T) => right(
+            (fn, key) => (p: any) => cloneIf(p, key, p[key], fn(p[key])),
             ((fpp?: any) => v as T),
             pathFn);
 
-        function set(): (obj1: F) => (val: T) => F;
-        function set(): (obj1: F) => F;
-        function set(val: T = DEFAULT()): (((obj1: F) => F) | ((obj1: F) => (val: T) => F)) {
+        function set(): (val: T) => (obj1: F) => F;
+        function set(val: T): (obj1: F) => F;
+        function set(val: T = DEFAULT()): (((obj1: F) => F) | ((val: T) => (obj1: F) => F)) {
             return Object.is(val, DEFAULTED)
-                ? ((obj: F) => (val: T) => (set0(val)(obj) as any as F))
+                ? ((val: T) => (obj: F) => (set0(val)(obj) as any as F))
                 : ((obj: F) => (set0(val)(obj) as any as F));
         }
         def.set = set;
@@ -148,7 +152,12 @@ function makeBoundPath<F, T>(path: Path<F, T>, obj: F): BoundPath<F, T> {
     const bpath: BoundPath<F, T> = (function BoundPath(): T {
         return path.get()(obj);
     }) as BoundPath<F, T>;
-    makeInterface<BoundPath<T, F>>(bpath, def => {
+    makeInterface<BoundPath<F, T>>(bpath, def => {
+        def.path = path.path;
+        const pGet = path.get();
+        def.get = () => pGet(obj);
+        const pSet = path.set();
+        def.set = (val: T) => pSet(val)(obj);
     });
     return bpath;
 }

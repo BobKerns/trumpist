@@ -89,60 +89,100 @@ describe("paths work.", () => {
         // Important: the depth varies. Failing to narrow the type to the specific key will result in failing to find
         // deeper keys.
         d: {
-            e: 88;
+            e: number;
         };
 
     }
-
     const v: XX = {a: {b: {c: [3, 5]}}, d: {e: 88}};
 
-    it('Paths  work to the zeroth level', () => {
-        const p = path<typeof v>()();
-        expect(typeof p).toBe('function');
-        expect(p.length).toBe(1);
-        expect(typeof p.get).toBe('function');
-        expect(p.get.length).toBe(0);
-        const g = p.get();
-        expect(typeof g).toBe('function');
-        expect(g.length).toBe(1);
-        expect(g(v)).toBe(v);
+    describe('when unbound', () => {
+        describe('for get', () => {
+            it('Paths  work to the zeroth level', () => {
+                const p = path<typeof v>()();
+                expect(typeof p).toBe('function');
+                expect(p.length).toBe(1);
+                expect(typeof p.get).toBe('function');
+                expect(p.get.length).toBe(0);
+                const g = p.get();
+                expect(typeof g).toBe('function');
+                expect(g.length).toBe(1);
+                expect(g(v)).toBe(v);
+            });
+
+            it('Paths  work to the first level', () => {
+                const p = path<typeof v>()('a')();
+                expect(typeof p).toBe('function');
+                expect(p.length).toBe(1);
+                expect(p.get()(v)).toBe(v.a);
+            });
+
+            it('Paths  work to the second level', () => {
+                const p = path<typeof v>()('a')('b')();
+                expect(typeof p).toBe('function');
+                expect(p.length).toBe(1);
+                expect(p.get()(v)).toBe(v.a.b);
+            });
+
+            it('Paths follow a type without confusion from shorter branches.', () => {
+                const p = path<typeof v>()('a')('b')('c')();
+                expect(p.get()(v)).toEqual(v.a.b.c);
+            });
+        });
+
+        describe('for set, object last', () => {
+            it('set on a null path does little.', () => {
+                const p = path<typeof v>()();
+                const s1 = p.set();
+                expect(typeof s1).toBe('function');
+                expect(s1.length).toBe(1);
+                const nv = {...v, d: {e: 47}};
+                const s2 = s1(nv);
+                expect(typeof s2).toBe('function');
+                expect(s2.length).toBe(1);
+                const s3 = s2(v);
+                expect(s3).toBe(nv);
+            });
+
+            it('set on a 1-step path does a little more.', () => {
+                const p = path<typeof v>()('d')();
+                const s1 = p.set();
+                expect(typeof s1).toBe('function');
+                expect(s1.length).toBe(1);
+                const nv = {...v, d: {e: 47}};
+                const s2 = s1({e: 47});
+                expect(typeof s2).toBe('function');
+                expect(s2.length).toBe(1);
+                const s3 = s2(v);
+                expect(s3).toEqual(nv);
+            });
+        });
     });
 
-    it('Paths  work to the first level', () => {
-        const p = path<typeof v>()('a')();
-        expect(typeof p).toBe('function');
-        expect(p.length).toBe(1);
-        expect(p.get()(v)).toBe(v.a);
-    });
+    describe('when bound', () => {
+        describe('for get', () => {
+            interface FooProps {
+                a: string;
+            }
+            const Foo = typeFactory<FooProps>('Foo');
+            type Foo = InstanceType<typeof Foo>;
+            interface BarProps {
+                foo: FooProps;
+            }
+            const Bar = typeFactory<BarProps>('Bar', Foo);
+            type Bar = InstanceType<typeof Bar>;
 
-    it('Paths  work to the second level', () => {
-        const p = path<typeof v>()('a')('b')();
-        expect(typeof p).toBe('function');
-        expect(p.length).toBe(1);
-        expect(p.get()(v)).toBe(v.a.b);
-    });
+            const bar = new Bar({foo: new Foo({a: 'yow'})});
 
-    it('Paths follow a type without confusion from shorter branches.', () => {
-        const p = path<typeof v>()('a')('b')('c')();
-        expect(p.get()(v)).toEqual(v.a.b.c);
+            it('Records support Javascript Paths', () => {
+                expect(bar.foo).toBeInstanceOf(Foo);
+                expect(bar.foo.a).toBe('yow');
+            });
+
+            it ('Records support Typescript paths', () => {
+                expect(path<Bar>()('foo')('a')().get()(bar)).toBe('yow');
+                expect(path<Bar>()('foo')('a')()(bar).get()).toBe('yow');
+            });
+        });
     });
 });
 
-describe('Bound paths', () => {
-    it.skip('Records support Paths', () => {
-        interface FooProps {
-            a: string;
-        }
-        const Foo = typeFactory<FooProps>('Foo');
-        type Foo = InstanceType<typeof Foo>;
-        interface BarProps {
-            foo: FooProps;
-        }
-        const Bar = typeFactory<BarProps>('Bar', Foo);
-        type Bar = InstanceType<typeof Bar>;
-        const bar = new Bar({foo: new Foo({a: 'yow'})});
-        expect(bar.foo).toBeInstanceOf(Foo);
-        expect(bar.foo.a).toBe('yow');
-        expect(bar.path()('foo')('a')().get()).toBe('yow');
-    });
-});
