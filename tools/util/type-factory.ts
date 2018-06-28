@@ -52,18 +52,28 @@ export function typeFactory<T, W extends string= never>(name: string, supertype:
 type Index = string | number;
 
 export type ReduceFn<A, K extends Index, V= any, O= any> = (accumulator: A, key: K, value: V, obj: O) => A;
-type Reducer<O> = <A>(fn: ReduceFn<A, Index, undefined, Path<O, any>>,
-                      accumulator: A | undefined,
-                      pathObj: Path<O, any>)
+type Reducer<O extends object> = <A>(fn: ReduceFn<A, Index, undefined, Path<O, any>>,
+                                     accumulator: A | undefined,
+                                     pathObj: Path<O, any>)
     => A;
 
-export interface PathStep<O, T> {
+export interface PathStep<O extends object, T> {
     <K extends keyof T= keyof T>(key: K): (K extends (string  | number) ? PathStep<O, T[K]> : never);
     (): Path<O, T>;
 }
 
-export interface Path<F, T> {
-    readonly path: Index[];
+interface PathArrayMarker<F, T> {
+    readonly isPathArray: true;
+    /** Never filled in; only carries type information. */
+    readonly pathArrayFrom?: F;
+    /** Never filled in; only carries type information. */
+    readonly pathArrayTo?: T;
+}
+
+export type PathArray<F extends object, T> = Index[] & PathArrayMarker<F, T>;
+
+export interface Path<F extends object, T> {
+    readonly path: PathArray<F, T>;
     (obj: F): BoundPath<F, T>;
     get(): (obj: F) => T;
     set(value: T): (obj: F) => F;
@@ -94,7 +104,7 @@ type Writeable<T> = {
 const DEFAULTED = Object.freeze({default: 'DEFAULTED'});
 const DEFAULT = <V>(): V => DEFAULTED as any as V;
 
-function makeInterface<I extends object>(f: (...a: any[]) => any, initFn: (iface: Writeable<I>) => any) {
+function makeInterface<I extends object>(f: any, initFn: (iface: Writeable<I>) => any) {
     const handler: ProxyHandler<I> = {
         // This is the proxy delegation 'set', not the target method.
         // This allows us to set the property on the target via the proxy.
@@ -111,15 +121,19 @@ function makeInterface<I extends object>(f: (...a: any[]) => any, initFn: (iface
     return f as I;
 }
 
-type PathArray<F extends object, T> = Index[];
-
 function makePath<F extends object, T>(left: Reducer<F>, right: Reducer<F>): Path<F, T> {
     // tslint:disable no-shadowed-variable
     const pathFn: Path<F, T> = (function Path(obj: F) {
         return makeBoundPath(pathFn, obj);
     }) as Path<F, T>;
+
+    const pArray = makeInterface<PathArray<F, T>>(
+        left<Index[]>((ac, key) => [...ac, key], [], pathFn),
+    def => {
+            def.isPathArray = true;
+    });
     return makeInterface<Path<F, T>>(pathFn, def => {
-        def.path = left<Index[]>((ac, key) => [...ac, key], [], pathFn);
+        def.path = pArray;
         def.get = () => right<(o: any) => any>((fn, key) => (fn
             ? (o: any) => fn(o[key])
             : (o: any) => o[key]),
@@ -141,14 +155,14 @@ function makePath<F extends object, T>(left: Reducer<F>, right: Reducer<F>): Pat
     return pathFn;
 }
 
-export interface BoundPath<F, T> {
-    readonly path: Index[];
+export interface BoundPath<F extends object, T> {
+    readonly path: PathArray<F, T>;
     (): T;
     get(): T;
     set(value: T): F;
 }
 
-function makeBoundPath<F, T>(path: Path<F, T>, obj: F): BoundPath<F, T> {
+function makeBoundPath<F extends object, T>(path: Path<F, T>, obj: F): BoundPath<F, T> {
     const bpath: BoundPath<F, T> = (function BoundPath(): T {
         return path.get()(obj);
     }) as BoundPath<F, T>;
