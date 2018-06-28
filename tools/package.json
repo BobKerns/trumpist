@@ -99,7 +99,7 @@
   },
   "jest": {
     "transform": {
-      "^.+(?!\\.d\\.test)\\.tsx?$": "ts-jest",
+      "^(?!.+\\.d\\.test).+\\.tsx?$": "ts-jest",
       "^.+\\.d\\.test\\.ts$": "dts-jest/transform"
     },
     "testRegex": "\\.test\\.tsx?$",
