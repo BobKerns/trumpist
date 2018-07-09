@@ -70,14 +70,15 @@ interface PathArrayMarker<F, T> {
     readonly pathArrayTo?: T;
 }
 
-export type PathArray<F extends object, T> = Index[] & PathArrayMarker<F, T>;
+export type PathArray<F, T> = Index[] & PathArrayMarker<F, T>;
 
-export interface Path<F extends object, T> {
+export interface Path<F, T> {
     readonly path: PathArray<F, T>;
     (obj: F): BoundPath<F, T>;
     get(): (obj: F) => T;
     set(value: T): (obj: F) => F;
     set(): (val: T) => (obj: F) => F;
+    size: number;
 }
 
 function cloneIf<P extends object, K extends Index, V>(parent: P, key: K, oldVal: V, newVal: V): P {
@@ -151,11 +152,12 @@ function makePath<F extends object, T>(left: Reducer<F>, right: Reducer<F>): Pat
                 : ((obj: F) => (set0(val)(obj) as any as F));
         }
         def.set = set;
+        def.size = pArray.length;
     });
     return pathFn;
 }
 
-export interface BoundPath<F extends object, T> {
+export interface BoundPath<F, T> {
     readonly path: PathArray<F, T>;
     (): T;
     get(): T;

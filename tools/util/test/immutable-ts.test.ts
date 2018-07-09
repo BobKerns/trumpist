@@ -5,13 +5,16 @@
 import * as TS from "../immutable-ts";
 import * as JS from "immutable";
 
+const exclude = (...keys: string[]) => (k: string) => !keys.includes(k);
+
 describe('Verify the re-exports of immutable', () => {
+    const TSOwn = Reflect.ownKeys(TS).filter(exclude('path', 'PathArray')).sort();
     it('top level', () => {
-        expect(Reflect.ownKeys(TS).sort()).toEqual(Reflect.ownKeys(JS).sort());
+        expect(TSOwn).toEqual(Reflect.ownKeys(JS).sort());
     });
 
     it('default', () => {
-        expect(Reflect.ownKeys(TS.default).sort()).toEqual(Reflect.ownKeys((JS as any).default).sort());
+        expect(TSOwn.filter(exclude('__esModule', 'default'))).toEqual(Reflect.ownKeys((JS as any).default).sort());
     });
 
     it('version', () => {

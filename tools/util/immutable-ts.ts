@@ -5,49 +5,70 @@
 import * as I from "immutable";
 import {PathArray} from "./type-factory";
 
+export {path, PathArray} from "./type-factory";
+
 export {fromJS, is, hash, isImmutable, isCollection, isKeyed, isIndexed, isAssociative, isOrdered, isValueObject, get, has, remove, set, update, merge, mergeWith, mergeDeep, mergeDeepWith, Range, Repeat} from "immutable";
 
-type Index = string | number | Symbol;
+type Index = string | number;
 
 export type ValueObject = I.ValueObject;
 
-interface ModIn {
-    hasIn<T>(keyPath: PathArray<this, T>): boolean;
-    hasIn(keyPath: Iterable<Index>): boolean;
-    getIn<T>(keyPath: PathArray<this, T>): T;
-    getIn(keyPath: Iterable<Index>): any;
-    setIn<T>(keyPath: PathArray<this, T>, value: T): this;
-    setIn<T>(keyPath: Iterable<Index>, value: any): this;
-    deleteIn<T>(keyPath: PathArray<this, T>): this;
-    deleteIn(keyPath: Iterable<Index>): this;
-    removeIn<T>(keyPath: PathArray<this, T>): this;
-    removeIn(keyPath: Iterable<Index>): this;
-    updateIn<T>(keyPath: PathArray<this, T>, notSetValue: T, updater: (value: T) => T): this;
-    updateIn<V>(keyPath: Iterable<Index>, notSetValue: V, updater: (value: V) => V): this;
-    updateIn<T>(keyPath: PathArray<this, T>, updater: (value: T) => T): this;
-    updateIn<V>(keyPath: Iterable<Index>, updater: (value: V) => V): this;
-    mergeIn<T>(keyPath: PathArray<this, T>, ...collections: T[]): this;
-    mergeIn<V>(keyPath: Iterable<Index>, ...collections: V[]): this;
-    mergeDeepIn<T>(keyPath: PathArray<this, T>, ...collections: T[]): this;
-    mergeDeepIn<V>(keyPath: Iterable<Index>, ...collections: V[]): this;
+interface ModIn<R, C extends R> {
+    hasIn<T>(keyPath: PathArray<R, T>): boolean;
+    getIn<T>(keyPath: PathArray<R, T>): T;
+    setIn<T>(keyPath: PathArray<R, T>, value: T): C;
+    deleteIn<T>(keyPath: PathArray<R, T>): C;
+    removeIn<T>(keyPath: PathArray<R, T>): C;
+    updateIn<T>(keyPath: PathArray<R, T>, notSetValue: T, updater: (value: T) => T): C;
+    updateIn<T>(keyPath: PathArray<R, T>, updater: (value: T) => T): C;
+    mergeIn<T>(keyPath: PathArray<R, T>, ...collections: T[]): C;
+    mergeDeepIn<T>(keyPath: PathArray<R, T>, ...collections: T[]): C;
 }
 
-interface ModRecord<W= never> {
-    get<K extends keyof this>(key: K): this[K];
-    set<K extends keyof this & W>(key: K, val: this[K]): this;
+interface ModRecord<T, W extends keyof T= never> {
+    get<K extends keyof T>(key: K): T[K];
+    set<K extends (keyof T) & W>(key: K, val: T[K]): Record<T, W>;
 }
 
-type Retype<C, IT> = {
-    [P in Exclude<keyof C, keyof ModIn>]: C[P];
+type Retype<R, IT, C extends R= R, S= never> = {
+    [P in Exclude<Exclude<keyof C, ((keyof ModIn<R, C>) | (keyof S) | (keyof R))>, (keyof ModIn<R, C>)>]: C[P];
 } & {
-    [Q in Exclude<keyof C, Exclude<keyof C, keyof ModIn>> & keyof ModIn]: ModIn[Q];
+    readonly [N in (keyof C) & (keyof R)]: C[N];
+} & {
+    [Q in Exclude<keyof C, Exclude<keyof C, (keyof ModIn<R, C>)> | (keyof S)> & (keyof ModIn<R, C>)]: ModIn<R, C>[Q];
+} & {
+    [X in (keyof S) & (keyof C)]: S[X];
 } & {
     [Symbol.iterator](): IterableIterator<IT>;
-} & (() => C);
+};
 
-export type List<T> = Retype<I.List<T>, T>;
+// export const Record: <TProps extends object, W>(defaultValues: TProps, name?: string) => Record.Factory<TProps, W> = I.Record;
+export type Record<T, W extends keyof T= never, K extends keyof T= keyof T> = Retype<Readonly<T>, [K, T[K]], I.Record<T> & Readonly<T>, ModRecord<T, W>>;
+export function Record<T, W extends keyof T= never>(defaults: T, name?: string): Record.Factory<T, W> {
+    return I.Record<T>(defaults, name) as any as Record.Factory<T, W>;
+}
+export namespace Record {
+    export namespace Factory {}
+
+    export interface Factory<T,
+        W extends keyof T= never,
+        K extends keyof T = keyof T
+        > {
+        (values?: Partial<T>): Record<T, W>;
+        new (values?: Partial<T>): Record<T, W>;
+    }
+
+    export function Factory<T extends object,
+        W extends keyof T= never,
+        K extends keyof T = keyof T
+        >(values?: Partial<T>): Record<T, W> {
+        return I.Record.Factory<T>(values as Partial<T>) as any as Record<T, W>;
+    }
+}
+Record.prototype = I.Record.prototype;
+
+export type List<T> = Retype<I.List<T>, T, never>;
 export const List = I.List;
-
 
 export type Map<K, V> = Retype<I.Map<K, V>, [K, V]>;
 export const Map = I.Map;
