@@ -102,7 +102,7 @@
 					<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Query</span><span class="tsd-signature-symbol"> =&nbsp;Q&#x60;MERGE (root:${LBL_ROOT} $[rootProps])-[branch:_BRANCH {name: &#x27;MASTER&#x27;}]-&gt;(commit:_COMMIT)ON CREATE SET branch +&#x3D; $branchProps,commit +&#x3D; $commitProps,root.commitTime &#x3D; datetime.transaction(),branch.commitTime &#x3D; datetime.transaction(),commit.commitTime &#x3D; datetime.transaction()RETURN root, branch, commit&#x60;.curry(&#x27;INIT&#x27;, {rootProps: ROOT_PROPS,branchProps: INIT_BRANCH_PROPS,commitProps: INIT_COMMIT_PROPS,})</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/878bae9/tools/dbs/neo4j/model-queries-neo4j.ts#L34">model-queries-neo4j.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/BobKerns/trumpist/blob/7f0c3b3/tools/dbs/neo4j/model-queries-neo4j.ts#L34">model-queries-neo4j.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
