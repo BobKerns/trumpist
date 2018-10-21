@@ -5,7 +5,8 @@
 
 import {ID} from "./id-factory";
 import {Constructor} from "../util/types";
-import {typeFactory} from "../util/type-factory";
+
+import {Map, RecordOf, Record} from "immutable";
 
 type Timestamp = Date;
 type UUID = string;
@@ -20,8 +21,8 @@ interface Persisted<T> {
     readonly type: T;
     readonly creationTime: Timestamp;
     readonly modificationTime: Timestamp;
-    updateTime: Timestamp;
-    name: string;
+    readonly updateTime: Timestamp;
+    readonly name: string;
 }
 
 
@@ -31,24 +32,46 @@ interface BrainPropsCommon {
     readonly TypeId?: UUID;
     readonly Kind: number;
     readonly CreationDateTime: TimeString;
-    Name: string;
-    ModificationDateTime: TimeString;
+    readonly Name: string;
+    readonly ModificationDateTime: TimeString;
 }
 
-interface BrainNode extends BrainPropsCommon {
+const defaultCommonProps: BrainPropsCommon = {
+    Id: "",
+    BrainId: "",
+    Kind: 0,
+    CreationDateTime: "",
+    Name: "",
+    ModificationDateTime: "",
+};
+
+interface BrainNodeProps extends BrainPropsCommon {
     ThoughtIconInfo: string;
     ACType: number;
     Label?: string;
 }
 
-export const BrainNode = typeFactory<BrainNode, WriteableProps>('BrainNode');
+const defaultBrainNode: BrainNodeProps = {
+    ...defaultCommonProps,
+    ThoughtIconInfo: "",
+    ACType: 0,
+};
 
-export interface Node extends Persisted<Node> {
+export const makeBrainNode = Record(defaultBrainNode);
+export type BrainNode = RecordOf<BrainNodeProps>;
+
+interface NodeProps extends Persisted<BrainNode> {
     brain?: BrainNode;
 }
-export const Node = typeFactory<Node, WriteableProps>('Node');
 
-interface BrainLink extends BrainPropsCommon {
+const defaultNode = {
+    ...defaultBrainNode,
+};
+
+export const makeNode = Record(defaultNode);
+export type Node = RecordOf<NodeProps>;
+
+interface BrainLinkProps extends BrainPropsCommon {
     ThoughtIdA: UUID;
     ThoughtIdB: UUID;
     Relation: number;
@@ -56,21 +79,41 @@ interface BrainLink extends BrainPropsCommon {
     Meaning: number;
 }
 
-export const BrainLink = typeFactory<BrainLink, WriteableProps>('BrainLink');
+const defaultBrainLink: BrainLinkProps = {
+    ...defaultCommonProps,
+    ThoughtIdA: "",
+    ThoughtIdB: "",
+    Relation: 0,
+    Direction: 0,
+    Meaning: 0,
+};
 
-export interface Link extends Persisted<LinkType> {
+export const makeBrainLink = Record(defaultBrainLink);
+export type BrainLink = RecordOf<BrainLinkProps>;
+
+interface LinkProps extends Persisted<LinkType> {
     readonly from: Node;
     readonly to: Node;
     brain?: BrainLink;
 }
 
-export const Link = typeFactory('Link');
+const defaultLinkProps = {
+    from: defaultNode,
+    to: defaultNode,
+};
 
-export interface Type<T= MetaType> extends Node {
+export const makeLink = Record(defaultLinkProps);
+export type Link = RecordOf<LinkProps>;
+
+interface TypeProps<T= MetaType> extends Node {
 
 }
+const defaultTypeProps = {
+    ...defaultNode
+};
 
-export const Type = typeFactory<Type>('Type');
+export const makeType = Record(defaultTypeProps);
+export type Type<T= MetaType> = RecordOf<TypeProps<T>>
 
 export interface NodeType extends Type<MetaType> {
 

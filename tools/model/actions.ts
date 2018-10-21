@@ -3,19 +3,28 @@
  */
 
 
-import {ModelState} from "./model-state";
-import {typeFactory} from "../util/type-factory";
+import {makeModelState, ModelState} from "./model-state";
+import {Map, List, Record, RecordOf} from "immutable";
 
-export interface ActionType {
+interface ActionTypeProps {
     readonly name: string;
 }
+const defaultActionType = {name: ""};
 
-export const ActionType = typeFactory<ActionType>('ActionType');
+export const makeActionType = Record(defaultActionType);
+export type ActionType = RecordOf<ActionTypeProps>;
 
-export interface ApplicationState {
+export interface ApplicationStateProps {
     readonly model: ModelState;
-    readonly comms: {};
-    readonly actionsTypes: {};
+    readonly comms: Map<string, any>;
+    readonly actionsTypes: List<ActionType>;
 }
 
-export const ApplicationState = typeFactory<ApplicationState>('ApplicationState');
+const defaultApplicationState = {
+    model: makeModelState(),
+    comms: Map(),
+    actionTypes: List(),
+};
+
+export const makeApplicationState = Record(defaultApplicationState);
+

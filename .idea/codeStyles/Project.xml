@@ -4,7 +4,6 @@
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
     </JSCodeStyleSettings>
     <MarkdownNavigatorCodeStyleSettings>
-      <option name="SMART_EDIT_TABLES" value="true" />
       <option name="RIGHT_MARGIN" value="72" />
     </MarkdownNavigatorCodeStyleSettings>
     <TypeScriptCodeStyleSettings>
