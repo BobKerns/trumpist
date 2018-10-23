@@ -2,6 +2,7 @@
   "bundleDependencies": [],
   "dependencies": {
     "@types/koa": "^2.0.46",
+    "@types/koa-router": "^7.0.32",
     "@types/node": "^10.12.0",
     "@types/yargs": "^11.1.2",
     "adm-zip": "^0.4.11",
@@ -10,6 +11,7 @@
     "jsdom": "^11.12.0",
     "jsonlines": "^0.1.1",
     "koa": "^2.5.3",
+    "koa-router": "^7.4.0",
     "lodash": "^4.17.11",
     "logform": "^1.10.0",
     "neo4j-driver": "^1.7.0",

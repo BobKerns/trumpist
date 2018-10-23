@@ -7,7 +7,7 @@ import {Map} from 'immutable';
 import {INode} from "./Node";
 
 async function startup() {
-    const req = await fetch('http://localhost:3001/');
+    const req = await fetch('http://localhost:3001/api/v1/start');
     const json = await req.json();
     const title = json.title || 'UNKNOWN';
     const telt = document.getElementsByTagName('title')[0];
