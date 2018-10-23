@@ -34,10 +34,11 @@ echo "Installing: $BRZ2"
 BINDIR=$(dirname "$0")
 
 
-ROOTDIR=$(dirname "$BINDIR")
-BRAINDIR=$(truname "$ROOTDIR/brain")
+ROOTDIR="$(truname "$BINDIR/..")"
+BRAINDIR="$(truname "$ROOTDIR/brain")"
 
 echo "Brain: $(truname "$BRAINDIR")"
+
 
 rm -rf "$BRAINDIR"/*
 
