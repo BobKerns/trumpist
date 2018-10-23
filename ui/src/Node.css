@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2018 Bob Kerns.
+ */
+
+g.Node {
+}
+
+g.Node > rect.Box {
+    fill: azure;
+    min-width: 10em;
+}
+
+g.Node > text.Name {
+    fill: black;
+    text-anchor: middle;
+    padding-top: 0.5em;
+    padding-bottom: 0em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+g.Node.S_Gov > rect.Box {
+     fill: #61dafb;
+     stroke: chocolate ;
+ }
+
+g.Node.S_Gov > rect.Box {
+    fill: #61dafb;
+    stroke: chocolate;
+}
+
+
+g.Node:hover {
+    stroke-width: 3px;
+    filter: blur(5px);
+}
+
+
+g.Node.S_Gov > text.Name {
+    fill: blue;
+}

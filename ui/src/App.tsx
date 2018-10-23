@@ -1,27 +1,28 @@
 import * as React from 'react';
 import {Component} from 'react';
-import logo from './logo.svg';
+import Logo from './logo.svg';
 import './App.css';
+import Header from './Header';
+import Graph from './Graph';
+import {INode} from "./Node";
+import {Map} from 'immutable';
 
-class App extends Component {
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload....
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+export interface IApp {
+    title: string;
+    nodes: Map<string, INode>;
+    start: string;
+}
+
+class App extends Component<IApp> {
+  public render(): any {
+      const anchor = this.props.nodes.get(this.props.start);
+      return (
+          <div className="App">
+              <header className="App-header">
+                  <Header title={this.props.title}/>
+              </header>
+              <Graph anchor={anchor} width={"100%"} height="calc(100% - 3rem)"/>
+          </div>
     );
   }
 }
