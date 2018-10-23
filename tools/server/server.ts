@@ -4,14 +4,11 @@
 
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import * as cors from '@koa/cors';
 
 const app = new Koa();
 const router = new Router();
-
-app.use(async (ctx, next) => {
-    ctx.response.append('Access-Control-Allow-Origin', '*');
-    await next();
-});
+app.use(cors({origin: '*'}));
 
 router.get('/api/v1/start', (ctx, next) => {
     ctx.response.body = {
