@@ -45,7 +45,8 @@ rm -rf "$BRAINDIR"/*
 (cd $BRAINDIR; unzip "$BRZ2")
 
 git add "$BRAINDIR"
-git commit --date="${BRZDATE} +0000" -m "Brain Update $BRZDATE UTC" || exit 0
+git commit --date="${BRZDATE} +0000" -m "Brain Update ${BRZDATE} UTC" || exit 0
+git tag -m"Brain Update ${BRZDATE} UTC" "BRAIN-${BRZDATE//:/-}"
 
 
 git log HEAD^..HEAD
