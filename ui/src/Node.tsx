@@ -9,7 +9,10 @@ import {RefObject} from "react";
 
 export interface INode {
     readonly id: string;
-    readonly title: string;
+    readonly properties: {
+        name: string;
+        [n: string]: any;
+    };
 }
 
 interface NodeProps {
@@ -83,7 +86,7 @@ export default class Node extends React.Component<NodeProps, NodeState> {
                transform={`translate(${state.x}, ${state.y})`}
                x={state.x} y={state.y}>
                 <rect className="Box" ref={this.boxRef} rx="0.4em" ry="0.4em"/>
-                <text className="Name" ref={this.textRef}>{this.props.node.title}</text>
+                <text className="Name" ref={this.textRef}>{this.props.node.properties.name}</text>
             </g>
         );
     }

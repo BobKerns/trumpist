@@ -45,8 +45,9 @@ export abstract class App {
         while (m.parent) {
             m = m.parent;
         }
-        const appdir = path.dirname(path.dirname(m.filename));
+        const appdir = path.dirname(m.filename);
         const defaultsFile = path.join(appdir, "trumpist-defaults.config");
+        console.log("Loading", defaultsFile);
         const dff = async () => {
             return load(defaultsFile);
         };
@@ -97,7 +98,7 @@ export abstract class App {
      * @param {SessionCallback<void>} cb
      * @returns {Promise<void>}
      */
-    protected async runInSession(cb: api.SessionCallback<any>): Promise<any> {
+    protected async runInSession<T>(cb: api.SessionCallback<T>): Promise<T> {
         const dbConfigs = await this.param('dbConfigs');
         const dbConfig = dbConfigs[await this.param('database', 'default')];
         const dbAccess = new DatabaseAccess({
