@@ -23,6 +23,8 @@ describe("Testing query parsing and parameter substitution", () => {
             {input: "begin/$[PARAM1]$[PARAM2]/end", steps: ["begin/", ["PARAM1"], ["PARAM2"], "/end"]},
             {input: "$[PARAM1]/mid/$[PARAM2]", steps: [["PARAM1"], "/mid/", ["PARAM2"]]},
             {input: "$[PARAM1]/mid/$[PARAM1]", steps: [["PARAM1"], "/mid/", ["PARAM1"]]},
+            {input: "MERGE (n:$[labels:labels] {id: $[id]}) SET n += $props;",
+                steps: ["MERGE (n:", ["labels", "labels"], " {id: ", ["id"], "}) SET n += $props;"]},
         ]
             .forEach(({input, steps}) => {
                 it(`parsing ${input}`, () => {

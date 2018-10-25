@@ -119,7 +119,7 @@ SET l += $props
 RETURN l;`;
 
     public readonly NODE_STATEMENT = Q`
-MERGE (n:$[labels:id] {id: $id})
+MERGE (n:$[labels:labels] {id: $id})
 SET n += $props;`;
 }
 

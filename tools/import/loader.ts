@@ -50,7 +50,7 @@ interface AnnoatedLink extends brain.ILink {
 const TYPES: AnyParams = {
     [brain.ID_NULL_NODE]: {
         Id: brain.ID_NULL_NODE,
-        labels: 'Node:_Node',
+        labels: ['Node', '_Node'],
     },
 };
 /**
@@ -178,6 +178,7 @@ export class Loader extends App {
             await this.loadMetadata(session);
             this.log.severe('Metadata Loaded');
             await this.loadNodes(session);
+            await this.loadLinks(session);
         });
     }
 
@@ -189,7 +190,6 @@ export class Loader extends App {
             this.log, Level.severe);
         await attachLog(this.loadTypeLabels(session),
             this.log, Level.severe);
-        await this.loadLinks(session);
         return session;
     }
 
@@ -254,13 +254,19 @@ export class Loader extends App {
         this.log.info('Loading composite node type labels from database');
         const failure: Nullable<Error> = null;
         const processData = (data: api.Record) => {
+            const id = data.get('id');
             try {
                 const cleanLabel = (v: string) => v.replace(RE_LABEL, '_');
-                const labels = data.get('labels').split(':').map(cleanLabel).join(':');
-                TYPES[data.get('id')].labels = labels;
+                const labels = data.get('labels').split(':').map(cleanLabel);
+                const type = TYPES[id];
+                if (type) {
+                    type.labels = labels;
+                } else {
+                    this.log.warn(`Missing or deleted type: ${id} ${data.get('labels')}`);
+                }
                 return data;
             } catch (e) {
-                this.log.error("FAIL: ${e.message}");
+                this.log.error(`FAIL: ${e.message} ${data.get('labels').join(':')} ${id}`);
                 throw e;
             }
         };
@@ -384,7 +390,7 @@ export class Loader extends App {
                 filter((t: brain.INode) => t.Kind === brain.KIND.NODE),
                 thru((t: brain.INode) => tx.query(this.getNodeStmt(t), nodeOpts(t))),
                 logstr,
-            ), this.log, 'loadNodes', Level.severe, Level.severe);
+            ), this.log, 'loadNodes', Level.info, Level.severe);
         });
         return session;
     }
@@ -423,7 +429,6 @@ export class Loader extends App {
                 thru((t: Extensible<brain.ILink>) => tx.query(this.getLinkStmt(t), t.link_options)),
                 logstr,
             );
-            this.log.info(`Foo: ${util.inspect(v)}`);
             return v;
         });
     }

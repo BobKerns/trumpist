@@ -39,7 +39,7 @@ type ParseStep = string | {param: string, pick: Pick};
  *
  * The formatting and quoting can be overridden by subclasses as needed.
  */
-type ParamFormat = 'id' | 'val' | 'lit' | 'key';
+type ParamFormat = 'id' | 'val' | 'lit' | 'key' | 'labels';
 
 interface ParseResult {
     name?: string;
@@ -89,7 +89,7 @@ export class QueryParser {
             return {steps: [''], parameters: []};
         }
         while (statement) {
-            const match = /\$\[([a-zA-Z0-9_]+)(?:[:](id|val|lit|key))?]/m.exec(statement);
+            const match = /\$\[([a-zA-Z0-9_]+)(?:[:](id|val|lit|key|labels))?]/m.exec(statement);
             if (match) {
                 const param = match[1];
                 const fmt: ParamFormat = (match[2] || 'val') as ParamFormat;
@@ -136,6 +136,8 @@ export class QueryParser {
                         && R.all(v => this.validate(v, fmt))(R.values(val));
                 }
                 return false;
+            case 'labels':
+                return Array.isArray(val) && val.every(k => typeof k === 'string');
             default:
                 return never(fmt, `Unknown format: "${fmt}"`);
         }
@@ -152,9 +154,24 @@ export class QueryParser {
                     } else {
                         return `\"${escape(v)}"`;
                     }
+                case 'labels':
                 case 'val': return `"${escape(v)}"`;
                 case 'lit': return escape(v);
                 default: return never(fmt, `Unknown format: "${fmt}"`);
+            }
+        };
+        const quoteArray = (arr: string[]) => {
+            const quoteLabel = (lbl: string) => {
+                if (lbl.match(/^[_a-zA-Z][_a-zA-Z0-9]*$/)) {
+                    return lbl;
+                }
+                return `\`${escape(lbl)}\``;
+            };
+            switch (fmt) {
+                case 'labels':
+                    return arr.map(quoteLabel).join(':');
+                default:
+                    return `[${arr.map(v => this.format(v, fmt)).join(',')}]`;
             }
         };
         const tVal = typeof val;
@@ -169,7 +186,7 @@ export class QueryParser {
                     // For prototyping.
                     return quoteStr(`date:${val.valueOf()}`);
                 } else if (Array.isArray(val)) {
-                    return `[${val.map(v => this.format(v, fmt)).join(',')}]`;
+                    return quoteArray(val);
                 } else {
                     const fn = (k: string) => `${this.format(k, 'id')}:${ this.format(val[k], fmt)}`;
                     return `{${Object.keys(val).sort().map(fn).join(', ') }}`;

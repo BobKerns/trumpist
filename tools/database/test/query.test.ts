@@ -29,4 +29,12 @@ describe("hot curried queries", () => {
         expect(query.name).toBe("banquet");
         expect(curried.name).toMatch(/^banquet-\d+$/);
     });
+
+    it("labels", () => {
+        const query = Q`MERGE (n:$[labels:labels] {id: $id}) SET n += $props;`
+        const curried = query.curry(null, {labels: ["a", "b"]});
+        expect(curried.parameters).toEqual({});
+        expect(curried.parse.parsed.parameters).toEqual([]);
+        expect(curried.statement).toBe("MERGE (n:a:b {id: $id}) SET n += $props;");
+    });
 });
