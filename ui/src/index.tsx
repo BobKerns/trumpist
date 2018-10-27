@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {Map} from 'immutable';
 import {INode} from "./Node";
+import {ILink} from "./Link";
 
 async function startup() {
     const req = await fetch('http://localhost:3001/api/v1/start');
@@ -16,6 +17,7 @@ async function startup() {
     const app = <App
         title={title}
         nodes={Map<string, INode>(json.nodes)}
+        links={Map<string, ILink>(json.links)}
         start={json.start}
     />;
 

@@ -10,6 +10,7 @@
     "@types/yargs": "^11.1.2",
     "adm-zip": "^0.4.11",
     "bomstrip": "^0.1.4",
+    "evernote": "^2.0.5",
     "immutable": "^4.0.0-rc.10",
     "jsdom": "^11.12.0",
     "jsonlines": "^0.1.1",

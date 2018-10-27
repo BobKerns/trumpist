@@ -6,6 +6,14 @@ svg {
     background-color: white;
 }
 
-svg > g.Translate {
+svg  g.Translate {
     transform: translate(50%, 50%);
+}
+
+svg g.FlipY {
+    transform: scale(1, -1);
+}
+
+svg text {
+    transform: scale(1, -1);
 }

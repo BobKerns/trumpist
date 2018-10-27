@@ -1,5 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Server" type="NodeJSConfigurationType" factoryName="Node.js" node-parameters="--harmony-array-flatten" path-to-js-file="server/server.js" working-dir="$PROJECT_DIR$/tools">
-    <method v="2" />
+    <method v="2">
+      <option name="FwBeforeLaunchTask" enabled="true" />
+    </method>
   </configuration>
 </component>

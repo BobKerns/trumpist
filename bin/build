@@ -51,21 +51,26 @@ echo "Building: $BRZ"
 #echo "Root: $ROOTDIR"
 #echo "Temp: $TMPDIR"
 
-
+function BOM() {
+    printf "\xef\xbb\xbf"
+}
 
 mkdir -p "$TMPDIR"
 rm -rf "$TMPDIR"/*
 cp -rp "$BRAINDIR"/ "$TMPDIR"/
 
-for f in "$BRAINDIR"/*.json; do
-    jq --compact-output '.BrainId = "'"$GUID"'"' <"$f" >"$f".tmp
+for j in "$BRAINDIR"/*.json; do
+    f="${TMPDIR}/$(basename "$j")"
+    echo "Updating GUID for $f"
+    (BOM; jq --compact-output '.BrainId = "'"$GUID"'"' <"$f" )>"$f".tmp
     mv "$f".tmp "$f"
 done
 
-jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" >"$TMPDIR/settings.json.tmp"
+(BOM; jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" )>"$TMPDIR/settings.json.tmp"
 mv "$TMPDIR/settings.json.tmp" "$TMPDIR/settings.json"
 
 mkdir -p "$BUILDDIR"
 rm -f "$BRZ"
 
 (cd $TMPDIR; zip --recurse-paths -q "$BRZ" .)
+rm -rf "$TMPDIR"
