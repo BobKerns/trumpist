@@ -45,9 +45,9 @@ export abstract class App {
         while (m.parent) {
             m = m.parent;
         }
-        const appdir = path.dirname(m.filename);
+        const appdir = path.dirname(path.dirname(m.filename));
         const defaultsFile = path.join(appdir, "trumpist-defaults.config");
-        console.log("Loading", defaultsFile);
+        this.log.info(`Loading ${defaultsFile}`);
         const dff = async () => {
             return load(defaultsFile);
         };

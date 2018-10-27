@@ -5,11 +5,13 @@ import './App.css';
 import Header from './Header';
 import Graph from './Graph';
 import {INode} from "./Node";
+import {ILink} from "./Link";
 import {Map} from 'immutable';
 
 export interface IApp {
     title: string;
     nodes: Map<string, INode>;
+    links: Map<string, ILink>;
     start: string;
 }
 
@@ -21,7 +23,7 @@ class App extends Component<IApp> {
               <header className="App-header">
                   <Header title={this.props.title}/>
               </header>
-              <Graph anchor={anchor} width={"100%"} height="calc(100% - 3rem)"/>
+              <Graph anchor={anchor} nodes={this.props.nodes} links={this.props.links} width={"100%"} height="calc(100% - 3rem)"/>
           </div>
     );
   }

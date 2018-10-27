@@ -15,18 +15,56 @@ declare module "koa" {
     }
 }
 
+const Q_START = Q`[START]:
+MATCH (p:_Node)--(qx:_Node)
+WITH p LIMIT 1
+MATCH (p)-[l]-(q)
+RETURN p, l, q;
+`;
+
+/**
+ * Handl the start operation
+ * @param ctx KOA Context
+ * @param next KOA next()
+ */
 async function doStart(ctx: Context, next: () => Promise<any>) {
     await ctx.withSession(session => {
         return session.withTransaction(Mode.READ, async (tx: api.Transaction) => {
-            const r = await tx.query(Q`MATCH (p) RETURN p LIMIT 1;`);
+            const r = await tx.query(Q_START);
             const rs = await r.getResults();
             const p = rs[0].get('p');
+            const pid = p.properties.id;
+            const nodes = {
+                [pid]: {
+                    id: pid,
+                    type: p.properties.type,
+                    properties: p.properties,
+                },
+            };
+            const links: {[k: string]: object} = {};
+            rs.forEach(row => {
+                const l = row.get('l');
+                const q = row.get('q');
+                const qid = q.properties.id;
+                nodes[qid] = {
+                    id: qid,
+                    type: q.properties.type,
+                    properties: q.properties,
+                };
+                const lid = l.properties.id;
+                links[lid] = {
+                    id: lid,
+                    type: l.type,
+                    properties: l.properties,
+                    from: pid,
+                    to: qid,
+                };
+            });
             ctx.response.body = {
                 title: 'Trumpist',
-                start: p.properties.id,
-                nodes: {
-                    [p.properties.id]: p,
-                },
+                start: pid,
+                nodes: nodes,
+                links: links,
             };
         });
     });
@@ -36,18 +74,7 @@ async function doStart(ctx: Context, next: () => Promise<any>) {
 export function makeApiRouterV1(options: any = {}): Router {
     const router = new Router(options);
     router
-        .get('/start', doStart)
-        .get('/foo', async (ctx, next) => {
-            await ctx.withSession(session => {
-                return session.withTransaction(Mode.READ, async (tx: api.Transaction) => {
-                    const r = await tx.query(Q`MATCH (p) RETURN p LIMIT 1;`);
-                    const rs = await r.getResults();
-                    const n = rs[0].get('p');
-                    ctx.response.body = n;
-                });
-            });
-            await next();
-        });
+        .get('/start', doStart);
     return router;
 }
 

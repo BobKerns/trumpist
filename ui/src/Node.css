@@ -8,13 +8,14 @@ g.Node {
 g.Node > rect.Box {
     fill: azure;
     min-width: 10em;
+    stroke: black;
 }
 
 g.Node > text.Name {
     fill: black;
     text-anchor: middle;
-    padding-top: 0.5em;
-    padding-bottom: 0em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
     padding-left: 0.25em;
     padding-right: 0.25em;
 }
