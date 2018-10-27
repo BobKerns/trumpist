@@ -16,10 +16,13 @@ declare module "koa" {
 }
 
 const Q_START = Q`[START]:
-MATCH (p:_Node)--(qx:_Node)
-WITH p LIMIT 1
+MATCH (p:_Node)-[l]-(qx:_Node)
+WHERE NOT l.label = "_TAG"
+WITH p, l LIMIT 5
 MATCH (p)-[l]-(q)
-RETURN p, l, q;
+optional match (p)-[lp:_TAG]->(tp)
+optional match (q)-[lq:_TAG]->(tq)
+RETURN p, l, q, collect(tp.name) as tp, collect(tq.name) as tq;
 `;
 
 /**
@@ -39,17 +42,20 @@ async function doStart(ctx: Context, next: () => Promise<any>) {
                     id: pid,
                     type: p.properties.type,
                     properties: p.properties,
+                    tags: rs[0].get('tp'),
                 },
             };
             const links: {[k: string]: object} = {};
             rs.forEach(row => {
                 const l = row.get('l');
                 const q = row.get('q');
+                const tq = row.get('tq');
                 const qid = q.properties.id;
                 nodes[qid] = {
                     id: qid,
                     type: q.properties.type,
                     properties: q.properties,
+                    tags: tq,
                 };
                 const lid = l.properties.id;
                 links[lid] = {

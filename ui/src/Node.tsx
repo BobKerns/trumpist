@@ -16,6 +16,7 @@ export interface INode {
         [n: string]: any;
     };
     readonly labels: string[];
+    readonly tags: string[];
 }
 
 interface NodeProps {
@@ -178,19 +179,22 @@ export default class Node extends React.Component<NodeProps, NodeState> {
         const labels = (this.props.node.labels || [])
             .map(l => `U_${l}`)
             .join(' ');
+        const tags = this.props.node.tags.length
+            ? ` [${this.props.node.tags.join(',')}]`
+            : '';
         return (
             <g>
-            <g id={node.id} className={`Node ${labels}`}
-               onClick={this.onClick}
-               ref={this.outerRef}
-               transform={`translate(${state.position.x}, ${state.position.y - state.size.y / 2})`}
-               x={state.position.x} y={state.position.y}>
-                <rect className="Box" ref={this.boxRef} rx="0.4em" ry="0.4em"/>
-                <text className="Name" ref={this.textRef}>{this.props.node.properties.name}</text>
-            </g>
                 {this.state.linkPoints.map(lp => <g>
                     <circle stroke="red" fill="transparent" r={3} cx={lp.point.x} cy={lp.point.y}/>
                 </g>)}
+                <g id={node.id} className={`Node ${labels}`}
+                   onClick={this.onClick}
+                   ref={this.outerRef}
+                   transform={`translate(${state.position.x}, ${state.position.y - state.size.y / 2})`}
+                   x={state.position.x} y={state.position.y}>
+                    <rect className="Box" ref={this.boxRef} rx="0.4em" ry="0.4em"/>
+                    <text className="Name" ref={this.textRef}>{this.props.node.properties.name}{tags}</text>
+                </g>
             </g>
         );
     }

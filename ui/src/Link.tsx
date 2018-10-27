@@ -43,6 +43,8 @@ export default class Link extends React.Component<LinkProps, LinkState> {
         };
     }
 
+    private onClick = () => alert(`click: ${this.props.link.id}`);
+
     public componentDidMount() {
         const fromNode = this.props.from.current;
         const toNode = this.props.to.current;
@@ -57,7 +59,10 @@ export default class Link extends React.Component<LinkProps, LinkState> {
         const df = Direction.UV[from.dir].mult(curviness).add(from.point);
         const dt = Direction.UV[to.dir].mult(curviness).add(to.point);
         const mid = from.point.add(to.point).mult(0.5);
-        return (<g className={`Link ${this.props.link.type || 'PLAIN'}`}>
+        return (
+            <g className={`Link ${this.props.link.type || 'PLAIN'}`}
+               onClick={this.onClick}
+            >
                 <text x={mid.x} y={-mid.y}>{this.props.link.properties.name || this.props.link.type}</text>
             <path
                 d={`M ${from.point.x} ${from.point.y} C ${df.x} ${df.y} ${dt.x} ${dt.y} ${to.point.x} ${to.point.y}`}

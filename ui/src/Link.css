@@ -2,6 +2,17 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-g.link {
+g.Link {
     color: blue;
+}
+
+
+g.Link:hover path {
+    color: red;
+    stroke-width: 2;
+}
+
+g.Link:hover text {
+    transform: translate(-3, -3);
+    font-weight: bolder;
 }

@@ -32,7 +32,7 @@ export default class Graph extends React.Component<GraphProps> {
         const nodeList = nodeKeys
             .filter(k => k !== anchor.id)
             .map(k => {
-                y += 70;
+                y -= 70;
                 x += 25;
                 const ref = React.createRef<Node>();
                 refs[k] = ref;
