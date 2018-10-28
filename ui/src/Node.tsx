@@ -179,8 +179,9 @@ export default class Node extends React.Component<NodeProps, NodeState> {
         const labels = (this.props.node.labels || [])
             .map(l => `U_${l}`)
             .join(' ');
-        const tags = this.props.node.tags.length
-            ? ` [${this.props.node.tags.join(',')}]`
+        const tagset = node.tags;
+        const tags = tagset && tagset.length
+            ? ` [${node.tags.join(',')}]`
             : '';
         return (
             <g>
