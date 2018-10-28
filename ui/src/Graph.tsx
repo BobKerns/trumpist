@@ -28,7 +28,7 @@ export default class Graph extends React.Component<GraphProps> {
         const refs: {[k: string]: React.RefObject<Node>} = {};
         const nodeKeys = [...this.props.nodes.keys()];
         const anchor = this.props.anchor;
-        const anchorRef = refs[anchor.id] = React.createRef();
+        const anchorRef = refs[anchor && anchor.id] = React.createRef();
         const nodeList = nodeKeys
             .filter(k => k !== anchor.id)
             .map(k => {
@@ -49,10 +49,52 @@ export default class Graph extends React.Component<GraphProps> {
         return (
             <div style={{width: this.props.width, height: this.props.height}}>
                 <svg width="100%" height="100%">
+                    <defs>
+                        <filter id="dropshadowUP" height="170%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                            <feOffset dx="-6" dy="-12" result="offsetblur"/>
+                            <feComponentTransfer>
+                                <feFuncA type="linear" slope="0.2"/>
+                            </feComponentTransfer>
+                            <feMerge>
+                                <feMergeNode/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    <filter id="dropshadow" height="170%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                        <feOffset dx="-1" dy="-6" result="offsetblur"/>
+                        <feComponentTransfer>
+                            <feFuncA type="linear" slope="0.2"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                        <filter id="dropshadow2" height="170%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                            <feOffset dx="-2" dy="-8" result="offsetblur"/>
+                            <feComponentTransfer>
+                                <feFuncA type="linear" slope="0.2"/>
+                            </feComponentTransfer>
+                            <feMerge>
+                                <feMergeNode/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                </defs>
                     <rect width={"100%"} height={"100%"} fill={"yellow"}/>
                     <g className="Translate">
-                            <g className="FlipY">
-                            <Node node={anchor} key={anchor.id} position={{x: 0, y: 0}} ref={anchorRef}/>
+                        <g className="FlipY">
+                            {
+                                anchor
+                                && <Node node={anchor}
+                                         key={anchor.id}
+                                         position={{x: 0, y: 0}}
+                                         ref={anchorRef}
+                                />
+                            }
                             {nodeList}
                             {linkList}
                             <circle radius={5} stroke="red" cx={0} cy={0}></circle>

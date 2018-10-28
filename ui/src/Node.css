@@ -2,16 +2,18 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-g.Node {
+g.Node g.OuterBox{
+    fill: transparent;
+    filter: url(#dropshadow);
 }
 
-g.Node > rect.Box {
+g.Node rect.Box {
     fill: azure;
     min-width: 10em;
     stroke: black;
 }
 
-g.Node > text.Name {
+g.Node text.Name {
     fill: black;
     text-anchor: middle;
     padding-top: 0.3em;
@@ -20,20 +22,21 @@ g.Node > text.Name {
     padding-right: 0.25em;
 }
 
-g.Node.S_Gov > rect.Box {
+g.Node.S_Gov rect.Box {
      fill: #61dafb;
      stroke: chocolate ;
  }
 
-g.Node.S_Gov > rect.Box {
-    fill: #61dafb;
-    stroke: chocolate;
+g.Node:hover {
+    transform: translate(1px, 4px);
 }
 
-
-g.Node:hover {
+g.Node:hover g.OuterBox {
     stroke-width: 3px;
-    filter: blur(5px);
+    filter: url(#dropshadowUP);
+}
+
+g.Node:hover text.name {
 }
 
 

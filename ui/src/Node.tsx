@@ -176,7 +176,7 @@ export default class Node extends React.Component<NodeProps, NodeState> {
     public render() {
         const node = this.props.node;
         const state = this.state;
-        const labels = (this.props.node.labels || [])
+        const labels = (node.labels || [])
             .map(l => `U_${l}`)
             .join(' ');
         const tagset = node.tags;
@@ -184,17 +184,20 @@ export default class Node extends React.Component<NodeProps, NodeState> {
             ? ` [${node.tags.join(',')}]`
             : '';
         return (
-            <g>
+            <g id={node.id}
+               className={`Node ${labels}`}
+            >
                 {this.state.linkPoints.map(lp => <g>
                     <circle stroke="red" fill="transparent" r={3} cx={lp.point.x} cy={lp.point.y}/>
                 </g>)}
-                <g id={node.id} className={`Node ${labels}`}
-                   onClick={this.onClick}
+                <g className="OuterBox"
                    ref={this.outerRef}
                    transform={`translate(${state.position.x}, ${state.position.y - state.size.y / 2})`}
+                   onClick={this.onClick}
                    x={state.position.x} y={state.position.y}>
                     <rect className="Box" ref={this.boxRef} rx="0.4em" ry="0.4em"/>
-                    <text className="Name" ref={this.textRef}>{this.props.node.properties.name}{tags}</text>
+                    <text className="Name" ref={this.textRef}
+                    >{node && node.properties.name}{tags}</text>
                 </g>
             </g>
         );

@@ -66,7 +66,6 @@ export default class Link extends React.Component<LinkProps, LinkState> {
                 <text x={mid.x} y={-mid.y}>{this.props.link.properties.name || this.props.link.type}</text>
             <path
                 d={`M ${from.point.x} ${from.point.y} C ${df.x} ${df.y} ${dt.x} ${dt.y} ${to.point.x} ${to.point.y}`}
-                stroke="green"
                 fill="transparent"></path> </g>
         );
     }
