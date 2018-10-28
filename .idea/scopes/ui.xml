@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ui" pattern="file[trumpist]:ui//*.ts||file[trumpist]:ui//*.tsx||file[trumpist]:ui//*.css||file[trumpist]:ui//*.svg" />
+</component>
