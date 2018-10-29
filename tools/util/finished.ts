@@ -43,7 +43,7 @@ export function finished(stream: Stream, opts: Nullable<StreamOptions|Callback>,
         return cb.call(obj, ...args);
     };
     const istream = stream as Extensible<Stream>;
-    if (typeof opts === 'function') { return finished(stream, null, opts); }
+    if (typeof opts === 'function') { return finished(stream, null, opts as Callback); }
     if (!opts) { opts = {}; }
 
     callback = once(callback || noop);

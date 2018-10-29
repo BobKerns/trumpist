@@ -90,7 +90,7 @@ export abstract class App {
         }
     }
 
-    protected abstract async doRun(): Promise<void>;
+    protected abstract async doRun(): Promise<any>;
 
     /**
      * To be called from {@link App.doRun} methods that want access to a database.
