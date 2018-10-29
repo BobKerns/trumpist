@@ -19,7 +19,7 @@ truname() {
 }
 
 BINDIR=$(dirname "$0")
-
+export PATH="$BINDIR:$PATH"
 
 ROOTDIR=$(truname $(dirname "$BINDIR"))
 BRAINDIR="$ROOTDIR/brain"
