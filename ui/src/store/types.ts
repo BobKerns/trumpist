@@ -12,7 +12,10 @@ export interface IAction<T extends string, P, M = any> {
     meta?: M;
 }
 
-export type ActionBuilder<T extends string, P = null, M = any> = (payload?: P, meta?: M) => IAction<T, P, M>;
+export interface ActionBuilder<T extends string, P = null, M = any> {
+    (payload?: P, meta?: M): IAction<T, P, M>;
+    type: T;
+}
 
 export interface INode {
     readonly id: string;

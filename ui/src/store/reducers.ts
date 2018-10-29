@@ -7,14 +7,16 @@ import {combineReducers} from 'redux';
 import {Map} from 'immutable';
 import {INode, ILink, State} from "./types";
 import {ActionType, StateType} from "typesafe-actions";
-import actions, {ADD_LINKS, ADD_NODES, SET_START, SET_TITLE, CLEAR_ERROR, SET_LOADING} from './actions';
+import actions from './actions';
 import {DeepReadonly} from "utility-types";
+
+const {ui, graph} = actions;
 
 export type Action = ActionType<typeof actions>;
 
 function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: Action) {
     switch (action.type) {
-        case ADD_NODES:
+        case graph.addNodes.type:
             return action.payload.reduce((s, v) => s.set(v.id, v), state);
         default:
             return state;
@@ -23,8 +25,7 @@ function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: 
 
 function doGraphLinks(state: Map<string, ILink> = Map<string, ILink>(), action: Action) {
     switch (action.type) {
-        case ADD_LINKS:
-            const bar = action;
+        case graph.addLinks.type:
             return action.payload.reduce((s, v) => s.set(v.id, v), state);
         default:
             return state;
@@ -54,7 +55,7 @@ function setter<T extends PayloadFor<Action, K>, K extends ActionKeys<Action>>(a
 
 function doLoading(state: number = 0, action: Action) {
     switch (action.type) {
-        case SET_LOADING:
+        case ui.setLoading.type:
             if (action.payload) {
                 return state + 1;
             } else {
@@ -67,7 +68,7 @@ function doLoading(state: number = 0, action: Action) {
 
 function doError(state: Error|null = null, action: Action) {
     switch (action.type) {
-        case CLEAR_ERROR:
+        case ui.clearError.type:
             return null;
         default:
             return action.error || state;
@@ -78,10 +79,10 @@ export const doState = combineReducers<State, Action>({
     graph: combineReducers({
         nodes: doGraphNodes,
         links: doGraphLinks,
-        startNode: setter(SET_START, "foo"),
+        startNode: setter(graph.setStartNode.type, "foo"),
     }),
     ui: combineReducers({
-        title: setter(SET_TITLE, "Unknown"),
+        title: setter(ui.setTitle.type, "Unknown"),
         loading: doLoading,
         error: doError,
     }),
