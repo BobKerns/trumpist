@@ -6,7 +6,7 @@
  * Define our actions.
  */
 import {createStandardAction} from 'typesafe-actions';
-import {INode, ILink, ActionBuilder} from './types';
+import {INode, ILink, ActionBuilder, InitResponse, Meta} from './types';
 
 /**
  * Create an action. react-redux omits payload & meta from the action types when not used,
@@ -21,10 +21,15 @@ import {INode, ILink, ActionBuilder} from './types';
  * @param type
  */
 function action<T extends string>(type: T) {
-    const creator = <P, M = any>() =>
+    const step1 = <P, M = any>() =>
         createStandardAction(type)<P>() as unknown as ActionBuilder<T, P, M>;
-    creator.actionType = type;
-    return creator;
+    return <P, M = any>() => {
+        const creator = step1<P, M>();
+        const errorCreator = (error: Error, meta?: Meta) => ({type, error, meta});
+        (creator as any).tag = type;
+        (creator as any).error = errorCreator;
+        return creator;
+    };
 }
 
 /**
@@ -35,7 +40,7 @@ export default {
         addNodes: action('graph/addNodes')<INode[]>(),
         addLinks: action('graph/addLinks')<ILink[]>(),
         setStartNode: action('graph/setStartNode')<string>(),
-        init: action('graph/init')<undefined>(),
+        init: action('graph/init')<InitResponse>(),
     },
     ui: {
         setTitle: action('ui/seetTitle')<string>(),

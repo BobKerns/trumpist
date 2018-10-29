@@ -7,6 +7,8 @@ import {Map} from 'immutable';
 import configureStore, {INode, ILink} from "./store";
 import {Provider} from 'react-redux';
 import createBrowserHistory from "history/createBrowserHistory";
+import {actions} from './store';
+const {ui} = actions;
 
 const history = createBrowserHistory();
 const store = configureStore(history, {});
@@ -24,19 +26,12 @@ async function startup() {
         }
     });
 
-    const req = await fetch('http://localhost:3001/api/v1/start');
-    const json = await req.json();
-    telt.text = title;
 
     const app = <Provider store={store}>
-            <App
-            title={title}
-            nodes={Map<string, INode>(json.nodes)}
-            links={Map<string, ILink>(json.links)}
-            start={json.start}
-            history={history}
-        />
+            <App history={history}/>
     </Provider>;
+
+    store.dispatch(ui.init());
 
     ReactDOM.render(app, document.getElementById('root'));
 

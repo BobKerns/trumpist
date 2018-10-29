@@ -178,7 +178,7 @@ export default class Node extends React.Component<NodeProps, NodeState> {
             <g id={node.id}
                className={`Node ${labels}`}
             >
-                {this.state.linkPoints.map(lp => <g>
+                {this.state.linkPoints.map((lp, k) => <g key={k}>
                     <circle stroke="red" fill="transparent" r={3} cx={lp.point.x} cy={lp.point.y}/>
                 </g>)}
                 <g className="OuterBox"

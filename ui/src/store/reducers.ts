@@ -3,21 +3,21 @@
  */
 
 import {ActionKeys, IAction, PayloadFor} from './types';
-import {combineReducers} from 'redux';
+import {combineReducers, Reducer} from 'redux';
 import {Map} from 'immutable';
-import {INode, ILink, State} from "./types";
+import {INode, ILink, State, Action} from "./types";
 import {ActionType, StateType} from "typesafe-actions";
 import actions from './actions';
 import {DeepReadonly} from "utility-types";
 
 const {ui, graph} = actions;
 
-export type Action = ActionType<typeof actions>;
-
 function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: Action) {
     switch (action.type) {
-        case graph.addNodes.type:
+        case graph.addNodes.tag:
             return action.payload.reduce((s, v) => s.set(v.id, v), state);
+        case graph.init.tag:
+            return state.merge(action.payload.nodes);
         default:
             return state;
     }
@@ -25,8 +25,10 @@ function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: 
 
 function doGraphLinks(state: Map<string, ILink> = Map<string, ILink>(), action: Action) {
     switch (action.type) {
-        case graph.addLinks.type:
+        case graph.addLinks.tag:
             return action.payload.reduce((s, v) => s.set(v.id, v), state);
+        case graph.init.tag:
+            return state.merge(action.payload.links);
         default:
             return state;
     }
@@ -55,7 +57,7 @@ function setter<T extends PayloadFor<Action, K>, K extends ActionKeys<Action>>(a
 
 function doLoading(state: number = 0, action: Action) {
     switch (action.type) {
-        case ui.setLoading.type:
+        case ui.setLoading.tag:
             if (action.payload) {
                 return state + 1;
             } else {
@@ -66,12 +68,34 @@ function doLoading(state: number = 0, action: Action) {
     }
 }
 
+function compose(...reducers: Reducer[]): Reducer {
+    return (s: any, a: Action) => reducers.reduce((ns, f) => f(ns, a), s);
+}
+
 function doError(state: Error|null = null, action: Action) {
     switch (action.type) {
-        case ui.clearError.type:
+        case ui.clearError.tag:
             return null;
         default:
             return action.error || state;
+    }
+}
+
+function doTitle(state: string, action: Action) {
+    switch (action.type) {
+        case graph.init.tag:
+            return (action.payload && action.payload.title) || "(Empty)";
+        default:
+            return state;
+    }
+}
+
+function doStartNode(state: string, action: Action) {
+    switch (action.type) {
+        case graph.init.tag:
+            return (action.payload && action.payload.start);
+        default:
+            return state;
     }
 }
 
@@ -79,10 +103,10 @@ export const doState = combineReducers<State, Action>({
     graph: combineReducers({
         nodes: doGraphNodes,
         links: doGraphLinks,
-        startNode: setter(graph.setStartNode.type, "foo"),
+        startNode: compose(doStartNode, setter(graph.setStartNode.tag, null)),
     }),
     ui: combineReducers({
-        title: setter(ui.setTitle.type, "Unknown"),
+        title: compose(doTitle, setter(ui.setTitle.tag, '[Unknown]')),
         loading: doLoading,
         error: doError,
     }),

@@ -2,15 +2,20 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {Store, createStore, applyMiddleware, DeepPartial} from 'redux';
+import {Store, createStore, applyMiddleware, DeepPartial, MiddlewareAPI, Dispatch} from 'redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
-import {State} from './types';
+import {IAction, Action, State} from './types';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 import {History} from "history";
 
+const logMiddleware = (api: MiddlewareAPI) => (next: Dispatch<Action>) => (action: Action) => {
+    // tslint:disable-next-line no-console
+    console.log(`DISPATCH ${action.type}`, action);
+    return next(action);
+};
 
 export default function configureStore(
     history: History<any>,
@@ -26,7 +31,11 @@ export default function configureStore(
     const store = createStore(
         connectRouter(history)(rootReducer),
         initialState,
-        composeEnhancers(applyMiddleware(routerMiddleware(history), sagaMiddleware)),
+        composeEnhancers(
+            applyMiddleware(
+            routerMiddleware(history),
+            sagaMiddleware,
+            logMiddleware)),
     );
 
     // Don't forget to run the root saga, and return the store object.

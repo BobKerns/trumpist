@@ -4,10 +4,11 @@ import Logo from './logo.svg';
 import './App.css';
 import Header from './Header';
 import Graph from './Graph';
-import {INode, ILink} from "./store";
+import {INode, ILink, State} from "./store";
 import {Map} from 'immutable';
 import {Router, Route} from 'react-router';
 import {History} from "history";
+import {connect} from "react-redux";
 
 export interface IApp {
     title: string;
@@ -33,11 +34,22 @@ class App extends Component<IApp> {
                           links={this.props.links}
                           width={"100%"} height="calc(100% - 3rem)"
                       />
-                  </Route>s
+                  </Route>
               </div>
           </Router>
     );
   }
 }
 
-export default App;
+function mapStateToProps(state: State) {
+    return {
+        title: state.ui.title,
+        nodes: state.graph.nodes,
+        links: state.graph.links,
+        start: state.graph.startNode,
+    };
+}
+
+const ConnectedApp = connect(mapStateToProps)(App);
+
+export default ConnectedApp;

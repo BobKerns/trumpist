@@ -4,17 +4,30 @@
 
 import {Map} from "immutable";
 import {Nullable} from "../../../tools/util/types";
+import {ActionType} from "typesafe-actions";
+import actions from "./actions";
 
-export interface IAction<T extends string, P, M = any> {
+export interface Meta {
+    source?: string;
+    skipStore?: boolean;
+}
+
+export interface IAction<T extends string, P, M extends Meta = Meta> {
     type: T;
     payload: P;
     error?: Error;
     meta?: M;
 }
 
-export interface ActionBuilder<T extends string, P = null, M = any> {
+export interface ErrorBuilder<T extends string, P = null, M extends Meta = Meta> {
+    (error: Error, meta?: M): IAction<T, P, M>;
+    readonly tag: T;
+}
+
+export interface ActionBuilder<T extends string, P = null, M extends Meta = Meta> {
     (payload?: P, meta?: M): IAction<T, P, M>;
-    type: T;
+    error: ErrorBuilder<T, M>;
+    readonly tag: T;
 }
 
 export interface INode {
@@ -38,6 +51,13 @@ export interface ILink {
     readonly type: string;
 }
 
+export interface InitResponse {
+    readonly title: string;
+    readonly start: string;
+    readonly nodes: Map<string, INode>;
+    readonly links: Map<string, ILink>;
+}
+
 export interface State {
     graph: {
         nodes: Map<string, INode>;
@@ -56,3 +76,6 @@ export type PayloadFor<A, K> =
     A extends {type: K, payload: infer U}
         ? U
         : never;
+
+
+export type Action = ActionType<typeof actions>;
