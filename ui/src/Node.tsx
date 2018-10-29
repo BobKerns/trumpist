@@ -8,18 +8,9 @@ import './Node.css';
 import {RefObject} from "react";
 import Point, {IPoint} from "./Point";
 import {DirectionProperty} from "csstype";
+import {INode} from './store';
 
-export interface INode {
-    readonly id: string;
-    readonly properties: {
-        name: string;
-        [n: string]: any;
-    };
-    readonly labels: string[];
-    readonly tags: string[];
-}
-
-interface NodeProps {
+export interface NodeProps {
     readonly node: INode;
     readonly position: IPoint;
 }

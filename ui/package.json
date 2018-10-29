@@ -3,12 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/history": "^4.7.2",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
+    "@types/react-redux": "^6.0.9",
+    "@types/react-router": "^4.0.32",
+    "connected-react-router": "^4.5.0",
+    "history": "^4.7.2",
     "immutable": "^4.0.0-rc.10",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+    "react-redux": "^5.1.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.0.5",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-saga": "^1.0.0-beta.3",
+    "typesafe-actions": "^2.0.4",
+    "utility-types": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

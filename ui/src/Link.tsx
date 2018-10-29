@@ -7,21 +7,11 @@ import {RefObject} from 'react';
 import Node, {Connector, Direction} from './Node';
 import './Link.css';
 import Point from "./Point";
+import {ILink} from './store';
 
-const DEFAULT_CURVINESS = 120;
+export const DEFAULT_CURVINESS = 120;
 
-export interface ILink {
-    readonly id: string;
-    readonly properties: {
-        name: string;
-        [n: string]: any;
-    };
-    readonly from: string;
-    readonly to: string;
-    readonly type: string;
-}
-
-interface LinkProps {
+export interface LinkProps {
     readonly link: ILink;
     readonly from: RefObject<Node>;
     readonly to: RefObject<Node>;
