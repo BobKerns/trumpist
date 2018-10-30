@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {v1 as neo4j} from './neo4j-driver/index';
+import {v1 as neo4j} from 'neo4j-driver';
 import * as spi from "../../database/spi";
 import * as api from "../../database/api";
 
@@ -15,7 +15,17 @@ import {tryCatch} from "ramda";
 import {ConnectionParameters, RecordStream} from "../../database/spi";
 import {ResultStream} from "../../database/result-stream";
 import {Neo4jRecordStream} from "./neo4j-record-stream";
+import {v1} from "neo4j-driver";
+import * as util from "util";
+const {inSafeRange, toNumber} = v1.integer;
+const {isDateTime} = v1.temporal;
+const {isInt} = v1;
 
+const DateTime = v1.types.DateTime as unknown as ({new(year: number, month: number, day: number,
+                                                       hour: number, minute: number, second: number, nano: number,
+                                                       tzOffset: number | null,
+                                                       tzspec: string | null): typeof v1.types.DateTime}
+    & v1.DateTime<number>);
 
 interface Neo4JParams extends spi.ConnectionParameters {
     url: string;
@@ -239,8 +249,8 @@ class Neo4JResultSummary extends spi.ResultSummary {
 }
 
 class Neo4JRecord implements api.Record {
-    private readonly record: neo4j.types.Record;
-    constructor(r: neo4j.types.Record) {
+    private readonly record: neo4j.Record;
+    constructor(r: neo4j.Record) {
         this.record = r;
     }
     public get(key: string): any {

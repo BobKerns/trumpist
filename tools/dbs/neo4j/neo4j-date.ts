@@ -2,9 +2,9 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {v1 as neo4j} from './neo4j-driver/index';
+import {v1 as neo4j} from 'neo4j-driver';
 
-export function convertDateTime(date: Date | string | number): neo4j.types.DateTime<number> {
+export function convertDateTime(date: Date | string | number): neo4j.DateTime<number> {
     if (date instanceof Date) {
         // All set
     } else if ((typeof date === 'string') || (typeof date === 'number')) {
@@ -12,7 +12,7 @@ export function convertDateTime(date: Date | string | number): neo4j.types.DateT
     } else {
         throw new TypeError(`Incorrect type in convertDateTime(${date})`);
     }
-    return new neo4j.types.DateTime(
+    return new neo4j.DateTime(
         date.getUTCFullYear(),
         date.getUTCMonth(),
         date.getUTCDate(),

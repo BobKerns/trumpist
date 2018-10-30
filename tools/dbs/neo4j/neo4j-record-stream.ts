@@ -4,7 +4,7 @@
 "use Strict";
 
 import {Readable} from "stream";
-import {v1 as neo4j} from "./neo4j-driver";
+import {v1 as neo4j} from "neo4j-driver";
 import {api, spi} from "../../database";
 import CollectedResults = api.CollectedResults;
 import {Query} from "../../database/spi";
@@ -49,7 +49,7 @@ export class Neo4jRecordStream extends spi.RecordStream
         const result = this.transaction.run(this.query.statement, this.query.parameters);
         const stream = this;
         result.subscribe({
-            onNext(r: neo4j.types.Record) {
+            onNext(r: neo4j.Record) {
                 stream.readCount++;
                 stream.push(r);
             },
