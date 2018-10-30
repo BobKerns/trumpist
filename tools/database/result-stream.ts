@@ -4,8 +4,8 @@
 "use Strict";
 
 import {Readable} from "stream";
-import {v1 as neo4j} from "../dbs/neo4j/neo4j-driver";
-import {CollectedResults} from "./database-access";
+import {v1 as neo4j} from "neo4j-driver";
+import {CollectedResults} from "./api";
 
 
 interface ResultStreamOptions {

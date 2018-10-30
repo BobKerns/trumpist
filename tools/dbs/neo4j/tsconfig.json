@@ -11,8 +11,8 @@
     "listFiles": true,
     "listEmittedFiles": true,
     "declaration": true,
-    "lib": ["ESNext"],
-    "types": ["ramda", "winston", "logform", "node", "neo4j-driver", "jest-test"]
+    "lib": ["esnext"],
+    "types": ["ramda", "winston", "logform", "node", "neo4j-driver"]
   },
   "include": [
     "./*.ts"

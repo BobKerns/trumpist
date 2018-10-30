@@ -248,13 +248,117 @@ class Neo4JResultSummary extends spi.ResultSummary {
     }
 }
 
+function unfixNumbers(n: any): any {
+    if (!n) {
+        return n;
+    }
+    if (typeof n !== 'object') {
+        return n;
+    }
+    switch (n.$type$) {
+        case 'DATE': {
+            const d = new Date(n.unix);
+            return new DateTime(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(),
+                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds() * 1000 + (n.nano || 0),
+                0, null);
+        }
+        case 'NUMBER':
+            return {low: n.low, hight: n.high};
+        default:
+            if (Array.isArray(n)) {
+                const len = n.length;
+                const nn = new Array(len);
+                let unfixed = false;
+                for (let i = 0; i < len; i++) {
+                    const nv = n[i];
+                    const nnv = unfixNumbers(nv);
+                    if (nnv !== nv) {
+                        unfixed = true;
+                    }
+                    nn[i] = nnv;
+                }
+                return unfixed ? nn : n;
+            } else if (typeof n === 'object') {
+                const nn: {[k: string]: any} = new Object();
+                let unfixed = false;
+                for (const k in n) {
+                    if (n.hasOwnProperty(k)) {
+                        const nv = n[k];
+                        const nnv = unfixNumbers(nv);
+                        if (nv !== nnv) {
+                            unfixed = true;
+                        }
+                        nn[k] = nnv;
+                    }
+                }
+                return unfixed ? nn : n;
+            }
+    }
+    return n;
+}
+
+/**
+ * Convert recursively from Neo4J's awkward number and date format.
+ * @param n
+ */
+function fixNumbers(n: any): any {
+    if (!n) {
+        return n;
+    }
+    if (typeof n !== 'object') {
+        return n;
+    }
+    if (isInt(n)) {
+        if (inSafeRange(n)) {
+            return toNumber(n);
+        }
+        return {$type$: 'NUMBER', ...n};
+    }
+    if (isDateTime(n)) {
+        const nano = fixNumbers(n.nanosecond);
+        const unix = Date.UTC(fixNumbers(n.year), fixNumbers(n.month), fixNumbers(n.day),
+            fixNumbers(n.hour), fixNumbers(n.minute), fixNumbers(n.second), nano / 1000);
+        const text = new Date(unix).toUTCString();
+        return {$type$: 'DATE', unix, nano: nano % 1000, text};
+    }
+    if (Array.isArray(n)) {
+        const len = n.length;
+        const nn = new Array(len);
+        let fixed = false;
+        for (let i = 0; i < len; i++) {
+            const nv = n[i];
+            const nnv = fixNumbers(nv);
+            if (nnv !== nv) {
+                fixed = true;
+            }
+            nn[i] = nnv;
+        }
+        return fixed ? nn : n;
+    } else if (typeof n === 'object') {
+        const nn: {[k: string]: any} = {};
+        let fixed = false;
+        for (const k in n) {
+            if (n.hasOwnProperty(k)) {
+                const nv = n[k];
+                const nnv = fixNumbers(nv);
+                if (nv !== nnv) {
+                    fixed = true;
+                }
+                nn[k] = nnv;
+            }
+        }
+        return fixed ? nn : n;
+    }
+    return n;
+}
+
 class Neo4JRecord implements api.Record {
     private readonly record: neo4j.Record;
     constructor(r: neo4j.Record) {
         this.record = r;
     }
     public get(key: string): any {
-        return this.record.get(key);
+        return fixNumbers(this.record.get(key));
     }
 }
 

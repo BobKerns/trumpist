@@ -8,8 +8,13 @@ import {ActionType} from "typesafe-actions";
 import actions from "./actions";
 
 export interface Meta {
-    source?: string;
-    skipStore?: boolean;
+    readonly source?: string;
+    readonly skipStore?: boolean;
+    readonly [k: string]: any;
+}
+
+export interface ServerErrorMeta extends Meta {
+    serverStack?: string;
 }
 
 export interface IAction<T extends string, P, M extends Meta = Meta> {
@@ -49,6 +54,22 @@ export interface ILink {
     readonly from: string;
     readonly to: string;
     readonly type: string;
+}
+
+export interface JSONSuccess<T extends object = object> {
+    readonly op: string;
+    readonly payload: T;
+}
+
+export interface JSONFailure {
+    readonly op: string;
+    readonly error: string;
+    readonly stack?: string;
+}
+
+export type JSONResponse<T extends object = object> = (JSONSuccess<T> | JSONFailure);
+export function isJSONError<T extends object>(json: JSONResponse<T>): json is JSONFailure {
+    return json.hasOwnProperty('error') && !!(json as JSONFailure).error;
 }
 
 export interface InitResponse {
