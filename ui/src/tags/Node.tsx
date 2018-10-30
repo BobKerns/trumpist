@@ -4,11 +4,11 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './Node.css';
+import '../css/Node.css';
 import {RefObject} from "react";
-import Point, {IPoint} from "./Point";
+import Point, {IPoint} from "../Point";
 import {DirectionProperty} from "csstype";
-import {INode} from './store';
+import {INode} from '../store';
 
 export interface NodeProps {
     readonly node: INode;

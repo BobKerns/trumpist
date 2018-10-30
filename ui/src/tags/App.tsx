@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2018 Bob Kerns.
+ */
+
 import * as React from 'react';
 import {Component} from 'react';
 import Logo from './logo.svg';
-import './App.css';
+import '../css/App.css';
 import Header from './Header';
 import Graph from './Graph';
-import {INode, ILink, State} from "./store";
+import {INode, ILink, State} from "../store";
 import {Map} from 'immutable';
 import {Router, Route} from 'react-router';
 import {History} from "history";

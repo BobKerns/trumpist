@@ -15,9 +15,5 @@
     "types": ["ramda", "winston", "logform", "node", "neo4j-driver"]
   },
   "exclude": [
-  ],
-  "typeRoot": [
-    "./@types",
-    "../node_modules/neo4j-driver/types/index.d.ts"
   ]
 }

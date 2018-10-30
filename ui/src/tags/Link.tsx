@@ -5,9 +5,9 @@
 import * as React from 'react';
 import {RefObject} from 'react';
 import Node, {Connector, Direction} from './Node';
-import './Link.css';
-import Point from "./Point";
-import {ILink} from './store';
+import '../css/Link.css';
+import Point from "../Point";
+import {ILink} from '../store';
 
 export const DEFAULT_CURVINESS = 120;
 

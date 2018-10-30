@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import './css/index.css';
+import App from './tags/App';
 import * as serviceWorker from './serviceWorker';
 import {Map} from 'immutable';
 import configureStore, {INode, ILink} from "./store";

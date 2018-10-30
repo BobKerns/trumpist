@@ -6,8 +6,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Node from './Node';
 import Link from './Link';
-import {ILink, INode} from './store';
-import "./Graph.css";
+import {ILink, INode} from '../store';
+import "../css/Graph.css";
 import {Map} from 'immutable';
 
 export interface GraphProps {

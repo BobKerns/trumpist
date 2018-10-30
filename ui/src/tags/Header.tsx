@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './index.css';
+import '../css/index.css';
 
 export default function Header(props: {title: string}) {
     return (

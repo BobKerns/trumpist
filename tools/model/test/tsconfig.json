@@ -11,7 +11,7 @@
     "listFiles": true,
     "listEmittedFiles": true,
     "declaration": true,
-    "lib": ["ESNext"],
+    "lib": ["esnext"],
     "types": ["ramda", "winston", "logform", "node"]
   },
   "exclude": [
