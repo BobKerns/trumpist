@@ -7,6 +7,6 @@ import configureStore from "./store";
 export default configureStore;
 export * from './store';
 export * from './types';
-export {default as actions} from './actions';
+export * from './actions';
 export * from './reducers';
 export * from './sagas';

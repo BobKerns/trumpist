@@ -3,49 +3,106 @@
  */
 
 import * as React from 'react';
-import {RefObject} from 'react';
+import {Dispatch} from "redux";
+import {connect} from "react-redux";
 import Node, {Connector, Direction} from './Node';
 import '../css/Link.css';
 import Point from "../Point";
-import {ILink} from '../store';
-
+import {Action, actions, bindActions, ILink, NodeState, Nullable} from '../store';
 export const DEFAULT_CURVINESS = 120;
 
 export interface LinkProps {
+    readonly id: string;
     readonly link: ILink;
-    readonly from: RefObject<Node>;
-    readonly to: RefObject<Node>;
     readonly curviness?: number;
+    readonly dispatch?: Dispatch;
 }
 
-interface LinkState {
-    from: Connector;
-    to: Connector;
+interface LinkNodeData<T> {
+    from: T;
+    to: T;
 }
 
-export default class Link extends React.Component<LinkProps, LinkState> {
+export interface LinkState {
+    nodes: LinkNodeData<NodeState>;
+    connectors: LinkNodeData<Connector>;
+}
+
+export class BaseLink extends React.Component<LinkProps, LinkState> {
     constructor(props: LinkProps) {
         super(props);
-        const dummy = new Connector(new Point(0, 0), Direction.S);
         this.state = {
-            from: dummy,
-            to: dummy,
+            nodes: {
+                from: null,
+                to: null,
+            },
+            connectors: {
+                from: null,
+                to: null,
+            },
         };
     }
 
     private onClick = () => alert(`click: ${this.props.link.id}`);
 
+
+    /**
+     * Compute the position to link to, given another node.
+     * @param o
+     */
+    private getLinkPoint(tNode: NodeState, oNode: NodeState): Connector {
+        const op = oNode.position;
+        const p = tNode.position;
+        const conn = tNode.linkPoints
+            .map(t => ({p: t, d: t.point.distance(op)}))
+            .reduce((prev, cur) => ((cur.d < prev.d) ? cur : prev),
+                {p: new Connector(p, Direction.N), d: p.distance(op)})
+            .p;
+        return conn;
+    }
+
+    private updateEndpoints(old: LinkState, state: LinkState) {
+        const fromNode = this.state.nodes.from;
+        const toNode = this.state.nodes.to;
+        if (fromNode && toNode) {
+            const from = this.getLinkPoint(fromNode, toNode);
+            const to = this.getLinkPoint(toNode, fromNode);
+            if ((from !== this.state.connectors.from)
+                && (to !== this.state.connectors.to)) {
+                this.setState({
+                    connectors: {
+                        from: from,
+                        to: to,
+                    },
+                });
+            }
+        }
+    }
+
+    private dispatch(action: Action) {
+        const props: any = this.props;
+        const dispatch = props.dispatch as Nullable<Dispatch>;
+        if (dispatch) {
+            dispatch(action);
+        }
+    }
+
     public componentDidMount() {
-        const fromNode = this.props.from.current;
-        const toNode = this.props.to.current;
-        fromNode.watch(f => this.setState({from: f.getLinkPoint(toNode)}));
-        toNode.watch(t => this.setState({to: t.getLinkPoint(fromNode)}));
+        this.dispatch(actions.ui.connectLink({
+            link: this.props.id,
+            from: this.props.link.from,
+            to: this.props.link.to,
+        }));
     }
 
     public render() {
-        const from = this.state.from;
-        const to = this.state.to;
-        const curviness = (this.props.curviness || DEFAULT_CURVINESS) * this.state.from.point.distance(this.state.to.point) / 200;
+        const from = this.state.connectors.from;
+        const to = this.state.connectors.to;
+        if (!from || !to) {
+            // Can't render yet.
+            return null;
+        }
+        const curviness = (this.props.curviness || DEFAULT_CURVINESS) * from.point.distance(to.point) / 200;
         const df = Direction.UV[from.dir].mult(curviness).add(from.point);
         const dt = Direction.UV[to.dir].mult(curviness).add(to.point);
         const mid = from.point.add(to.point).mult(0.5);
@@ -60,3 +117,6 @@ export default class Link extends React.Component<LinkProps, LinkState> {
         );
     }
 }
+
+const Link = connect(null, null)(BaseLink);
+export default Link;

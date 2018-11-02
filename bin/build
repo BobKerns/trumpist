@@ -66,8 +66,9 @@ for j in "$BRAINDIR"/*.json; do
     mv "$f".tmp "$f"
 done
 
-(BOM; jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" )>"$TMPDIR/settings.json.tmp"
-mv "$TMPDIR/settings.json.tmp" "$TMPDIR/settings.json"
+# (BOM; jq --compact-output 'if .Id=="'$K_NAME'" then .Value="'$BRAIN_NAME'" else . end' <"$TMPDIR/settings.json" )>"$TMPDIR/settings.json.tmp"
+# mv "$TMPDIR/settings.json.tmp" "$TMPDIR/settings.json"
+cp "$ROOTDIR/alt-settings.json" "$TMPDIR/settings.json"
 
 mkdir -p "$BUILDDIR"
 rm -f "$BRZ"

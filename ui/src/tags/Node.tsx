@@ -4,21 +4,19 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import '../css/Node.css';
 import {RefObject} from "react";
+import {bindActionCreators, Dispatch} from "redux";
+import {connect} from "react-redux";
 import Point, {IPoint} from "../Point";
 import {DirectionProperty} from "csstype";
-import {INode} from '../store';
+import {INode, State, NodeState, actions, bindActions} from '../store';
+import '../css/Node.css';
+
 
 export interface NodeProps {
+    readonly id: string;
     readonly node: INode;
-    readonly position: IPoint;
-}
-
-interface NodeState {
-    readonly position: Point;
-    readonly size: Point;
-    readonly linkPoints: Connector[];
+    readonly placement: IPoint;
 }
 
 function num(str: string | number) {
@@ -32,7 +30,7 @@ function num(str: string | number) {
     return Number(match[1] || 0);
 }
 
-export type NodeWatcher = (n: Node) => void;
+export type NodeWatcher = (n: BaseNode) => void;
 
 export enum Direction {
     N, NE, E, SE, S, SW, W, NW,
@@ -67,7 +65,7 @@ export class Connector {
 }
 
 
-export default class Node extends React.Component<NodeProps, NodeState> {
+export class BaseNode extends React.Component<NodeProps, NodeState> {
     private readonly textRef: RefObject<SVGTextElement>;
     private readonly boxRef: RefObject<SVGRectElement>;
     private readonly outerRef: RefObject<SVGGElement>;
@@ -76,16 +74,17 @@ export default class Node extends React.Component<NodeProps, NodeState> {
     constructor(props: NodeProps) {
         super(props);
         this.state = {
-            position: new Point(props.position),
+            position: new Point(props.placement),
             size: new Point(0, 0),
             linkPoints: [new Connector(new Point(0, 0), Direction.N)],
+            node: null,
         };
         this.textRef = React.createRef();
         this.boxRef = React.createRef();
         this.outerRef = React.createRef();
     }
 
-    private onClick = () => alert(`click: ${this.props.node.id}`);
+    private onClick = () => alert(`click: ${this.props.id}`);
 
     public getPosition(): Point {
         return this.state.position;
@@ -96,30 +95,6 @@ export default class Node extends React.Component<NodeProps, NodeState> {
      */
     public getSize(): Point {
         return this.state.size;
-    }
-
-    /**
-     * Compute the position to link to, given another node.
-     * @param o
-     */
-    public getLinkPoint(o: Node): Connector {
-        const p = this.getPosition();
-        const op = o.getPosition();
-        const conn = this.state.linkPoints
-            .map(t => ({p: t, d: t.point.distance(op)}))
-            .reduce((prev, cur) => ((cur.d < prev.d) ? cur : prev),
-                {p: new Connector(p, Direction.N), d: p.distance(op)})
-            .p;
-        return conn;
-    }
-
-    /**
-     * Add a [[Watcher]] to be notified of a change in [[Node]] state.
-     * @param watcher The callback to be notified.
-     */
-    public watch(watcher: NodeWatcher) {
-        this.watchers.push(watcher);
-        watcher(this);
     }
 
     /**
@@ -194,3 +169,17 @@ export default class Node extends React.Component<NodeProps, NodeState> {
         );
     }
 }
+
+function mapStateToProps(state: State, props: NodeProps): NodeProps {
+    return props;
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+    return {
+        onClick: bindActionCreators(actions.user.click, dispatch),
+    };
+}
+
+const Node = connect(mapStateToProps, mapDispatchToProps)(BaseNode);
+
+export default Node;

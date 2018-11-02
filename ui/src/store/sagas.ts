@@ -2,11 +2,18 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
+/**
+ * General workflow actions, especially talking to the back end.
+ */
 
-import {take, call, all, put} from 'redux-saga/effects';
-import actions from './actions';
-import {ActionBuilder, InitResponse, isJSONError, JSONFailure, JSONResponse, ServerErrorMeta} from "./types";
-const {ui, graph} = actions;
+/**
+ * Imports
+ */
+import {take, call, all, put, takeEvery} from 'redux-saga/effects';
+import {actions} from './actions';
+import {Action, ActionBuilder, InitResponse, isJSONError, JSONFailure, JSONResponse, ServerErrorMeta} from "./types";
+import It = jest.It;
+const {ui, graph, cmd} = actions;
 
 class ServerError extends Error {
     public readonly op: string;
@@ -109,10 +116,19 @@ function* fetchJSON(resp: ActionBuilder<string, any>, url: string): IterableIter
  * Saga to obtain our initial startup info from the server.
  */
 function* fetchInit(): IterableIterator<any>  {
-    const url = 'http://localhost:3001/api/v1/start';
-    const req = ui.init;
-    yield take(req.tag);
-    return yield fetchJSON(graph.init, url);
+    function* expandOne(action: Action): IterableIterator<any> {
+        const url = 'http://localhost:3001/api/v1/start';
+        return yield fetchJSON(graph.init, url);
+    }
+    yield takeEvery(ui.init.tag, expandOne);
+}
+
+function* fetchExpand(): IterableIterator<any> {
+    function* expandOne(action: Action): IterableIterator<any> {
+        const url = `http//localhost:3001/api/v1/${action.payload}/expand`;
+        return yield fetchJSON(graph.expand, url);
+    }
+    yield takeEvery(cmd.expand.tag, expandOne);
 }
 
 /**
@@ -121,5 +137,6 @@ function* fetchInit(): IterableIterator<any>  {
 export default function* rootSaga(): IterableIterator<any> {
     yield all([
         fetchInit(),
+        fetchExpand(),
     ]);
 }

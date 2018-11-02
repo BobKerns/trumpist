@@ -5,11 +5,14 @@
 import {Map} from "immutable";
 import {Nullable} from "../../../tools/util/types";
 import {ActionType} from "typesafe-actions";
-import actions from "./actions";
+import {actions} from "./actions";
+import Point from "../Point";
+import {Connector} from "../tags/Node";
 
 export interface Meta {
     readonly source?: string;
     readonly skipStore?: boolean;
+    readonly timestamp?: number;
     readonly [k: string]: any;
 }
 
@@ -22,6 +25,31 @@ export interface IAction<T extends string, P, M extends Meta = Meta> {
     payload: P;
     error?: Error;
     meta?: M;
+}
+
+/**
+ * Things the user can click or press.
+ */
+export enum Clickables {
+    keyboard = 'kbd',
+    node = 'node',
+    link = 'link',
+    button = 'button',
+    webLink = 'webLink',
+    background = 'background',
+}
+
+export interface ClickPayload {
+    id: string;
+    clicked: Clickables;
+    modifier: string;
+    location?: Point;
+}
+
+export interface ConnectLinkRequest {
+    link: string;
+    from: string;
+    to: string;
 }
 
 export interface ErrorBuilder<T extends string, P = null, M extends Meta = Meta> {
@@ -79,6 +107,20 @@ export interface InitResponse {
     readonly links: Map<string, ILink>;
 }
 
+
+export interface NodeState {
+    readonly position: Point;
+    readonly size: Point;
+    readonly linkPoints: Connector[];
+    readonly node: INode;
+}
+
+export interface Model {
+    nodes: Map<string, INode>,
+    links: Map<string, ILink>,
+    startNode?: string,
+}
+
 export interface State {
     graph: {
         nodes: Map<string, INode>;
@@ -89,10 +131,16 @@ export interface State {
         title: string;
         loading: number;
         error: Error;
+        nodeStates: Map<string, NodeState>
     };
 }
 
-export type ActionKeys<T> = T extends {type: infer U} ? U : never;
+export interface KeyedPayload<T> {
+    key: string;
+    data: T;
+}
+
+export type ActionKeys<T = Action> = T extends {type: infer U} ? U : never;
 export type PayloadFor<A, K> =
     A extends {type: K, payload: infer U}
         ? U
@@ -100,3 +148,17 @@ export type PayloadFor<A, K> =
 
 
 export type Action = ActionType<typeof actions>;
+
+// Utility
+
+/**
+ * Return the type of a [[Map]] type's key
+ */
+export type MapKey<M extends Map<any, any>> = M extends Map<infer U, any> ? U : never;
+
+/**
+ * Return the type of a [[Map]] type's value
+ */
+export type MapValue<M extends Map<any, any>> = M extends Map<any, infer U> ? U : never;
+
+export type Nullable<T> = T | null;

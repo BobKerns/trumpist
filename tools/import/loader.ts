@@ -8,7 +8,7 @@ import {App} from "../cmd/app";
 import {DbOptions, api} from "../database";
 import * as brain from "../brain";
 import {done, filter, logstream, pipeline, sink, thru} from "../util/streams";
-import {v1 as neo4j} from "../dbs/neo4j/neo4j-driver";
+import {v1 as neo4j} from "neo4j-driver";
 import {queries} from "./import-neo4j-queries";
 import {convertDateTime} from "../dbs/neo4j/neo4j-date";
 import * as R from "ramda";

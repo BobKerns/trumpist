@@ -40,3 +40,8 @@ out
 log
 stdout
 stderr
+
+!webpack.config.js
+!svgTransform.js
+!jest.config.js
+!cssTransform.js

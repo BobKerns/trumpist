@@ -26,26 +26,20 @@ export default class Graph extends React.Component<GraphProps> {
         let x = (this.props.x || 0) - 30;
         const nodes = this.props.nodes;
         const links = this.props.links;
-        const refs: {[k: string]: React.RefObject<Node>} = {};
         const nodeKeys = [...this.props.nodes.keys()];
         const anchor = this.props.anchor;
-        const anchorRef = refs[anchor && anchor.id] = React.createRef();
         const nodeList = nodeKeys
             .filter(k => k !== anchor.id)
             .map(k => {
                 y -= 70;
                 x += 25;
-                const ref = React.createRef<Node>();
-                refs[k] = ref;
                 const node = nodes.get(k);
-                return <Node node={node} key={node.id} position={{x, y}} ref={ref}/>;
+                return <Node id={node.id} node={node} key={node.id} placement={{x, y}}/>;
             });
         const linkList = [...this.props.links.keys()]
             .map(k => {
                 const link = links.get(k);
-                const from = refs[link.from];
-                const to = refs[link.to];
-                return <Link link={link} key={link.id} from={from} to={to}/>;
+                return <Link id={link.id} link={link} key={link.id}/>;
             });
         return (
             <div style={{width: this.props.width, height: this.props.height}}>
@@ -90,10 +84,10 @@ export default class Graph extends React.Component<GraphProps> {
                         <g className="FlipY">
                             {
                                 anchor
-                                && <Node node={anchor}
+                                && <Node id={anchor.id}
+                                         node={anchor}
                                          key={anchor.id}
-                                         position={{x: 0, y: 0}}
-                                         ref={anchorRef}
+                                         placement={{x: 0, y: 0}}
                                 />
                             }
                             {nodeList}

@@ -5,7 +5,7 @@
 import * as ReactDOM from 'react-dom';
 import App from "../App";
 import * as React from 'react';
-import {INode, ILink, State} from "../../store";
+import {INode, ILink, State, NodeState} from "../../store";
 import {Map} from 'immutable';
 import createBrowserHistory from "history/createBrowserHistory";
 import {Provider} from "react-redux";
@@ -21,6 +21,7 @@ it('renders without crashing', () => {
           title: 'goo',
           loading: 0,
           error: null,
+          nodeStates: Map<string, NodeState>(),
       },
       graph: {
           nodes: Map<string, INode>(),
@@ -28,6 +29,7 @@ it('renders without crashing', () => {
           startNode: "nowhere",
       },
   };
+
   const store = configureStore(createMemoryHistory(), state);
   ReactDOM.render(
       <Provider store={store}>
