@@ -10,6 +10,11 @@
   "include": [
     "./src/**/*"
   ],
+  "exclude": [
+    "./src/node_modules/**",
+    "node_modules",
+    "src/node_modules"
+  ],
   "files": [
     "src/custom.d.ts"
   ]
