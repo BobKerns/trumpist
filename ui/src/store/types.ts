@@ -142,10 +142,14 @@ export interface NodeState {
     readonly node: INode;
 }
 
-export interface Model {
+export interface IView {
     nodes: Map<string, INode>;
     links: Map<string, ILink>;
     startNode?: string;
+}
+
+export interface ModelInterface {
+    query(id: string): void;
 }
 
 export interface ErrorPayload {
@@ -158,6 +162,7 @@ export interface State {
         nodes: Map<string, INode>;
         links: Map<string, ILink>;
         startNode: string;
+        connection: string;
     };
     ui: {
         title: string;

@@ -55,6 +55,7 @@ export const actions = {
 
         // Lifecycle
         init: action('graph/init')<InitResponse>(),
+        setConnection: action('graph/setConection')<string>(),
 
     },
     ui: {

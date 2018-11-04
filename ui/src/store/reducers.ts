@@ -178,6 +178,7 @@ export const doState = combineReducers<State, Action>({
         nodes: doGraphNodes,
         links: doGraphLinks,
         startNode: compose(doStartNode, setter(graph.setStartNode.tag, null)),
+        connection: setter(graph.setConnection.tag, null),
     }),
     ui: combineReducers({
         title: compose(doTitle, setter(ui.setTitle.tag, '[Unknown]')),

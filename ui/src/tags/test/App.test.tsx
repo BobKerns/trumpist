@@ -29,6 +29,7 @@ it('renders without crashing', () => {
           nodes: Map<string, INode>(),
           links: Map<string, ILink>(),
           startNode: "nowhere",
+          connection: "test",
       },
   };
 
