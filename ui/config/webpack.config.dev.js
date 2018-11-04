@@ -201,7 +201,14 @@ module.exports = {
             },
           },
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+            {
+                test: /\.tsx?$/,
+                exclude: [
+                    /node_modules/,
+                    /\.test\.tsx?/,
+                ],
+                loader: "awesome-typescript-loader"
+            },
             /*
             {
                 test: /\.tsx?$/,
@@ -213,13 +220,16 @@ module.exports = {
                 test: /\.js$/,
                 use: ["source-map-loader"],
                 enforce: "pre",
-                exclude: "/node_modules/"
+                exclude: [/node_modules/, /\.test\.js/],
             },
           // Process application JS with Babel.
           // The preset includes JSX, Flow, and some ESnext features.
           {
             test: /\.(js|mjs|jsx)$/,
             include: paths.appSrc,
+              exclude: [
+                  /\.test.jsx?/,
+              ],
             loader: require.resolve('babel-loader'),
             options: {
               customize: require.resolve(

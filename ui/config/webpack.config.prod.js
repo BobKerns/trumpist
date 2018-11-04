@@ -277,7 +277,10 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
+                exclude: [
+                    /node_modules/,
+                    /\.test\.tsx?/,
+                    ],
             },
           // Process application JS with Babel.
           // The preset includes JSX, Flow, and some ESnext features.
