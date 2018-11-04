@@ -9,7 +9,7 @@ import {ActionType, createStandardAction} from 'typesafe-actions';
 import {
     INode, ILink,
     ActionBuilder,
-    InitResponse, Meta, NodeState, KeyedPayload,
+    InitResponse, Meta, NodeState, KeyedPayload, ErrorPayload,
     ClickPayload, Action, ConnectLinkRequest, ActionKeys, Clickables, Modifier, IAction,
 } from './types';
 import {LinkState} from "../tags/Link";
@@ -61,7 +61,7 @@ export const actions = {
         setTitle: action('ui/seetTitle')<string>(),
         setLoading: action('ui/setLoading')<boolean>(),
         clearError: action('ui/clearError')<undefined>(),
-        setError: action('ui/setError')<string|Error>(),
+        setError: action('ui/setError')<ErrorPayload>(),
 
         // Lifecycle
         init: action('ui/init')<undefined>(),
@@ -70,8 +70,8 @@ export const actions = {
         // Actions for storing specific component state.
         // If the keys are all unique, we could stuff these all into on big Map, but that would be more confusing,
         // and likely less performant, than necssary.
-        setNodeState: action('ui/setNodeState')<KeyedPayload<Partial<NodeState>>>(),
-        setLinkState: action('ui/setLinkState')<KeyedPayload<Partial<LinkState>>>(),
+        setNodeState: action('ui/setNodeState')<KeyedPayload<string, Partial<NodeState>>>(),
+        setLinkState: action('ui/setLinkState')<KeyedPayload<string, Partial<LinkState>>>(),
     },
     user: {
         click: action('user/clickLink')<ClickPayload>(),

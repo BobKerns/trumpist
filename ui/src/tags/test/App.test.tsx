@@ -11,6 +11,7 @@ import createBrowserHistory from "history/createBrowserHistory";
 import {Provider} from "react-redux";
 import configureStore from "../../store/store";
 import {createMemoryHistory} from "history";
+import {LinkState} from "../Link";
 
 const history = createBrowserHistory();
 
@@ -22,6 +23,7 @@ it('renders without crashing', () => {
           loading: 0,
           error: null,
           nodeStates: Map<string, NodeState>(),
+          linkStates: Map<string, LinkState>(),
       },
       graph: {
           nodes: Map<string, INode>(),

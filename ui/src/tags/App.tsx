@@ -14,6 +14,7 @@ import {Router, Route} from 'react-router';
 import {History} from "history";
 import {connect, Provider} from "react-redux";
 import {TabTitleR} from "./TabTitle";
+import ErrorPopup from "./ErrorPopup";
 
 export interface IApp {
     title: string;
@@ -33,6 +34,7 @@ class App extends Component<IApp> {
                   <header className="App-header">
                       <Header title={this.props.title}/>
                   </header>
+                  <ErrorPopup/>
                   <Route>
                       <Graph
                           anchor={anchor}

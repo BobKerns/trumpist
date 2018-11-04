@@ -51,7 +51,10 @@ const logMiddleware = (api: MiddlewareAPI) => (next: Dispatch<Action>) => (actio
 
 const errorMiddleware = (api: MiddlewareAPI) => (next: Dispatch<Action>) => (action: Action) => {
     if (action.error) {
-        return next(actions.ui.setError(action.error));
+        return next(actions.ui.setError({
+            message: action.error.message || String(action.error),
+            stack: action.error.stack,
+        }));
     }
     return next(action);
 };

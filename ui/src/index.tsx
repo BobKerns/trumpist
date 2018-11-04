@@ -7,6 +7,7 @@ import {Map} from 'immutable';
 import configureStore, {INode, ILink} from "./store";
 import {Provider} from 'react-redux';
 import createBrowserHistory from "history/createBrowserHistory";
+import {StoreProvider} from "./tags/Store";
 import {actions} from './store';
 const {ui} = actions;
 
@@ -17,7 +18,9 @@ const store = configureStore(history, {});
 async function startup() {
     const app = (
         <Provider store={store}>
-            <App history={history}/>
+            <StoreProvider value={store}>
+                <App history={history}/>
+            </StoreProvider>
         </Provider>
     );
 

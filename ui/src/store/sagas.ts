@@ -11,7 +11,16 @@
  */
 import {take, call, all, put, takeEvery} from 'redux-saga/effects';
 import {actions} from './actions';
-import {Action, ActionBuilder, InitResponse, isJSONError, JSONFailure, JSONResponse, ServerErrorMeta} from "./types";
+import {
+    Action,
+    ActionBuilder,
+    ErrorPayload,
+    InitResponse,
+    isJSONError,
+    JSONFailure,
+    JSONResponse,
+    ServerErrorMeta,
+} from "./types";
 import It = jest.It;
 const {ui, graph, cmd} = actions;
 
@@ -94,17 +103,18 @@ async function fetchJSONAsync<T extends object>(url: string): Promise<T> {
  */
 function* fetchJSON(resp: ActionBuilder<string, any>, url: string): IterableIterator<any>  {
     try {
+        (actions.ui.setLoading(true));
         const json: JSONResponse = yield call(fetchJSONAsync, url);
         yield put(resp(json));
     } catch (e) {
-        if (e instanceof ServerError) {
-            const meta: ServerErrorMeta = {
-                source: url,
-                serverStack: e.stack,
-                op: e.op,
-            };
-            yield put(resp.error(e, meta));
-        }
+        const meta: ServerErrorMeta = {
+            source: url,
+            serverStack: e.stackStack,
+            op: e.op,
+        };
+        yield put(resp.error(e, meta));
+    } finally {
+        actions.ui.setLoading(false);
     }
 }
 

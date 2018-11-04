@@ -4,6 +4,12 @@
 
 /**
  * Moudule to enable subscription and injection of middleware through the Redux dispatch mechanism.
+ *
+ * This isn't fully worked out yet. It needs to work with Redux time-travel debugging.
+ *
+ * I think that probably works, if the subscriptions and middleware activations are properly tied to component
+ * lifetimes, but it would help with debugging that, at least, if they were recorded in the state tree as active,
+ * since we have very good tools for examining the state.
  */
 
 import {actions} from "./actions";
@@ -26,7 +32,8 @@ export type ChangeListener = (newVal: any, oldVal: any) => any;
 export type Selector = (val: any) => any;
 
 /**
- * Payload for a subscribe request
+ * Payload for a subscribe request.
+ * Consider adding an identifier that can be recorded in the state tree.
  */
 export interface SubscribeReq {
     selector?: Selector;
@@ -34,6 +41,10 @@ export interface SubscribeReq {
     unsubCallback: UnsubCallback;
 }
 
+/**
+ * Payload for a middleware request.
+ * Consider adding an identifier that can be recorded in the state tree.
+ */
 export interface MiddlewareReq {
     middleware: Middleware;
     unsubCallback: UnsubCallback;

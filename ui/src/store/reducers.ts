@@ -2,13 +2,14 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {ActionKeys, IAction, KeyedPayload, MapValue, PayloadFor} from './types';
+import {ActionKeys, ErrorPayload, IAction, KeyedPayload, MapValue, NodeState, PayloadFor} from './types';
 import {combineReducers, Reducer} from 'redux';
 import {Map} from 'immutable';
 import {INode, ILink, State, Action} from "./types";
 import {ActionType, StateType} from "typesafe-actions";
 import {actions} from './actions';
 import {DeepReadonly} from "utility-types";
+import {LinkState} from "../tags/Link";
 
 const {ui, graph} = actions;
 
@@ -27,7 +28,7 @@ function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: 
         case graph.init.tag:
             return state.merge(action.payload.nodes);
         default:
-            return state;
+            return state || Map();
     }
 }
 
@@ -45,7 +46,7 @@ function doGraphLinks(state: Map<string, ILink> = Map<string, ILink>(), action: 
         case graph.init.tag:
             return state.merge(action.payload.links);
         default:
-            return state;
+            return state || Map();
     }
 }
 
@@ -76,18 +77,15 @@ function setter<T extends PayloadFor<Action, K>, K extends ActionKeys<Action>>(a
  * @param dflt Default/initial value
  * @returns {Function}
  */
-function keyedSetter<
-    T extends PayloadFor<Action, K> & KeyedPayload<T['data']>,
-    K extends ActionKeys<Action> & string
-    >(actType: K, dflt: T) {
+function keyedSetter<A extends string, K extends string, D extends any, T extends Map<K, D>>(actType: A, dflt: T) {
     return (state: T, action: Action): T => {
         switch (action.type) {
             case actType:
-                const keyed = action as IAction<K, KeyedPayload<T['data']>>;
+                const keyed = action as IAction<K, KeyedPayload<K, D>>;
                 if (!keyed.payload || !keyed.payload.key) {
                     return state || dflt;
                 }
-                return action.payload as T['data'];
+                return state.set(keyed.payload.key, keyed.payload.data);
             default:
                 return state || dflt;
         }
@@ -108,7 +106,7 @@ function doLoading(state: number = 0, action: Action) {
                 return state - 1;
             }
         default:
-            return state;
+            return state || 0;
     }
 }
 
@@ -125,12 +123,22 @@ function compose<S, A extends Action>(...reducers: Array<Reducer<S, A>>): Reduce
  * @param state
  * @param action
  */
-function doError(state: Error|null = null, action: Action) {
+function doError(state: ErrorPayload | null, action: Action) {
     switch (action.type) {
+        case ui.setError.tag:
+            let msg = action.payload.message;
+            // Safety; we want the error msg even if we got it the wrong way.
+            if ((msg as any) instanceof Error) {
+                msg = (msg as any).messsage;
+            }
+            return {
+                message: msg,
+                stack: action.payload.stack,
+            };
         case ui.clearError.tag:
             return null;
         default:
-            return action.error || state;
+            return state || null;
     }
 }
 
@@ -144,7 +152,7 @@ function doTitle(state: string, action: Action) {
         case graph.init.tag:
             return (action.payload && action.payload.title) || "(Empty)";
         default:
-            return state;
+            return state || "(Unknown)";
     }
 }
 
@@ -158,7 +166,7 @@ function doStartNode(state: string, action: Action) {
         case graph.init.tag:
             return (action.payload && action.payload.start);
         default:
-            return state;
+            return state || null;
     }
 }
 
@@ -175,8 +183,8 @@ export const doState = combineReducers<State, Action>({
         title: compose(doTitle, setter(ui.setTitle.tag, '[Unknown]')),
         loading: doLoading,
         error: doError,
-        nodeStates: keyedSetter(ui.setNodeState.tag, null),
-        linkStates: keyedSetter(ui.setLinkState.tag, null),
+        nodeStates: keyedSetter(ui.setNodeState.tag, Map<string, NodeState>()),
+        linkStates: keyedSetter(ui.setLinkState.tag, Map<string, LinkState>()),
     }),
 });
 

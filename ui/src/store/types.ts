@@ -8,6 +8,7 @@ import {ActionType} from "typesafe-actions";
 import {actions} from "./actions";
 import Point from "../Point";
 import {Connector} from "../tags/Node";
+import {LinkState} from "../tags/Link";
 
 export interface Meta {
     readonly source?: string;
@@ -147,6 +148,11 @@ export interface Model {
     startNode?: string;
 }
 
+export interface ErrorPayload {
+    message: string;
+    stack?: string;
+}
+
 export interface State {
     graph: {
         nodes: Map<string, INode>;
@@ -156,13 +162,14 @@ export interface State {
     ui: {
         title: string;
         loading: number;
-        error: Error;
-        nodeStates: Map<string, NodeState>
+        error: null | ErrorPayload;
+        nodeStates: Map<string, NodeState>,
+        linkStates: Map<string, LinkState>,
     };
 }
 
-export interface KeyedPayload<T> {
-    key: string;
+export interface KeyedPayload<K extends string, T> {
+    key: K;
     data: T;
 }
 
