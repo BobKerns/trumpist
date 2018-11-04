@@ -9,7 +9,7 @@ import {Provider} from 'react-redux';
 import createBrowserHistory from "history/createBrowserHistory";
 import {StoreProvider} from "./tags/Store";
 import {actions} from './store';
-const {ui} = actions;
+const {ui, graph} = actions;
 
 const history = createBrowserHistory();
 const store = configureStore(history, {});
@@ -25,6 +25,7 @@ async function startup() {
     );
 
     store.dispatch(ui.init());
+    store.dispatch(graph.setConnection(`${location.protocol}://${location.host}/`));
 
     ReactDOM.render(app, document.getElementById('root'));
 
