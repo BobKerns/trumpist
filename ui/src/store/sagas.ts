@@ -19,15 +19,11 @@ class ServerError extends Error {
     public readonly op: string;
     public readonly serverStack?: string;
     constructor(message: string, op: string, stack?: string) {
-        super(message);
+        super(`[${op}] ${message}`);
         this.op = op;
         if (stack) {
             this.serverStack = stack;
         }
-    }
-
-    public getMessage() {
-        return `[${this.op}] ${super.message}`;
     }
 }
 

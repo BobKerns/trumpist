@@ -39,10 +39,36 @@ export enum Clickables {
     background = 'background',
 }
 
+export enum Modifier {
+    none = '',
+    control = 'c-',
+    meta = 'm-',
+    controlMeta = 'c-m-',
+    shift = 'sh-',
+    controlShift = 'c-sh-',
+    metaShift = 'm-sh-',
+    controlMetaShift = 'c-m-sh',
+    super = 's-',
+    conrolSuper = 'c-s-',
+    metaSuper = 'm-s-',
+    controlMetaSuper = 'c-m-s-',
+    shiftSuper = 's-sh-',
+    controlShiftSuper = 'c-sh-s-',
+    metaShiftSuper = 'm-sh-s-',
+    controlMetaShiftSuper = 'c-m-sh-s-',
+}
+
+export const modifiers: Modifier[] = [
+    Modifier.none, Modifier.control, Modifier.meta, Modifier.controlMeta,
+    Modifier.shift, Modifier.controlShift, Modifier.metaShift, Modifier.controlMetaShift,
+    Modifier.super, Modifier.conrolSuper, Modifier.metaSuper, Modifier.controlMetaSuper,
+    Modifier.shiftSuper, Modifier.controlShiftSuper, Modifier.metaShiftSuper, Modifier.controlMetaShiftSuper,
+];
+
 export interface ClickPayload {
     id: string;
     clicked: Clickables;
-    modifier: string;
+    modifier: Modifier;
     location?: Point;
 }
 
@@ -116,9 +142,9 @@ export interface NodeState {
 }
 
 export interface Model {
-    nodes: Map<string, INode>,
-    links: Map<string, ILink>,
-    startNode?: string,
+    nodes: Map<string, INode>;
+    links: Map<string, ILink>;
+    startNode?: string;
 }
 
 export interface State {

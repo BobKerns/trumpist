@@ -23,7 +23,7 @@ function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: 
     type V = MapValue<S>;
     switch (action.type) {
         case graph.addNodes.tag:
-            return action.payload.reduce((s: S, v: V) => s.set(v.id, v), state);
+            return action.payload.reduce((s: S, v: V) => s.set(v.id, v), state) as typeof state;
         case graph.init.tag:
             return state.merge(action.payload.nodes);
         default:
@@ -116,8 +116,8 @@ function doLoading(state: number = 0, action: Action) {
  * Compose simple reducers working on the same data.
  * @param reducers
  */
-function compose(...reducers: Reducer[]): Reducer {
-    return (s: any, a: Action) => reducers.reduce((ns, f) => f(ns, a), s);
+function compose<S, A extends Action>(...reducers: Array<Reducer<S, A>>): Reducer<S, A> {
+    return (s: any, a: A) => reducers.reduce((ns, f) => f(ns, a), s);
 }
 
 /**

@@ -17,7 +17,7 @@ export interface SubscribeMiddlewareOpts {
 export const defaultOpts: SubscribeMiddlewareOpts = Object.freeze({
 });
 
-const SUBSCRIBE_TYPE= "$$Subscribe$$";
+const SUBSCRIBE_TYPE = "$$Subscribe$$";
 const MIDDLEWARE_TYPE = "$$Middleware$$";
 const SET_STORE_TYPE = "$$SetStore$$";
 
@@ -113,10 +113,11 @@ export function middleware<
                             throw new Error("Attempt to set incorrect store.");
                         }
                         store = a.payload;
-                    }
                         break;
+                    }
                     default:
-                        return (a: AnyAction) => dispatch(a);
+                        // Pass it along
+                        return dispatch(act);
                 }
             };
         };
@@ -124,6 +125,5 @@ export function middleware<
 
 export function initSubscriptionService(store: Store): Store {
     store.dispatch({type: SET_STORE_TYPE, payload: store});
-    console.log('STORE', inspect(store));
     return store;
 }

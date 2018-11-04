@@ -15,21 +15,11 @@ const store = configureStore(history, {});
 
 
 async function startup() {
-    const telt = document.getElementsByTagName('title')[0];
-    let title = telt.text;
-    store.subscribe(() => {
-        const state = store.getState();
-        const ntitle = state.ui.title;
-        if (ntitle !== title) {
-            telt.text = ntitle;
-            title = ntitle;
-        }
-    });
-
-
-    const app = <Provider store={store}>
+    const app = (
+        <Provider store={store}>
             <App history={history}/>
-    </Provider>;
+        </Provider>
+    );
 
     store.dispatch(ui.init());
 

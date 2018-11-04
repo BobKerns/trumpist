@@ -39,8 +39,20 @@ const flatten = (tree: ActionTreeTree):
 };
 
 const logMiddleware = (api: MiddlewareAPI) => (next: Dispatch<Action>) => (action: Action) => {
-    // tslint:disable-next-line no-console
-    console.log(`DISPATCH ${action.type}`, action);
+    if (action.error) {
+        // tslint:disable-next-line no-console
+        console.error(`ERROR DISPATCH ${action.type}`, action);
+    } else {
+        // tslint:disable-next-line no-console
+        console.log(`DISPATCH ${action.type}`, action);
+    }
+    return next(action);
+};
+
+const errorMiddleware = (api: MiddlewareAPI) => (next: Dispatch<Action>) => (action: Action) => {
+    if (action.error) {
+        return next(actions.ui.setError(action.error));
+    }
     return next(action);
 };
 
@@ -65,6 +77,7 @@ export default function configureStore(
             routerMiddleware(history),
             sagaMiddleware,
             subscribe({}),
+            errorMiddleware,
             logMiddleware)),
     );
 

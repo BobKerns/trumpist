@@ -12,7 +12,8 @@ import {INode, ILink, State} from "../store";
 import {Map} from 'immutable';
 import {Router, Route} from 'react-router';
 import {History} from "history";
-import {connect} from "react-redux";
+import {connect, Provider} from "react-redux";
+import {TabTitleR} from "./TabTitle";
 
 export interface IApp {
     title: string;
@@ -28,6 +29,7 @@ class App extends Component<IApp> {
       return (
           <Router history={this.props.history}>
               <div className="App">
+                  <TabTitleR>Default</TabTitleR>
                   <header className="App-header">
                       <Header title={this.props.title}/>
                   </header>
