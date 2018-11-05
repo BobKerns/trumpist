@@ -39,7 +39,7 @@ function mapStateToProps(state: any) {
             message: state.ui.error.message,
         };
     } else {
-        return null;
+        return {};
     }
 }
 

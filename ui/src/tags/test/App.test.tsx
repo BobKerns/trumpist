@@ -5,13 +5,14 @@
 import * as ReactDOM from 'react-dom';
 import App from "../App";
 import * as React from 'react';
-import {INode, ILink, State, NodeState} from "../../store";
+import {INode, ILink, State, NodeState, IView, LayoutState} from "../../store";
 import {Map} from 'immutable';
 import createBrowserHistory from "history/createBrowserHistory";
 import {Provider} from "react-redux";
 import configureStore from "../../store/store";
 import {createMemoryHistory} from "history";
 import {LinkState} from "../Link";
+import {string} from "prop-types";
 
 const history = createBrowserHistory();
 
@@ -22,15 +23,12 @@ it('renders without crashing', () => {
           title: 'goo',
           loading: 0,
           error: null,
-          nodeStates: Map<string, NodeState>(),
-          linkStates: Map<string, LinkState>(),
+          layoutStates: Map<string, LayoutState>(),
       },
-      graph: {
-          nodes: Map<string, INode>(),
-          links: Map<string, ILink>(),
-          startNode: "nowhere",
+      app: {
           connection: "test",
       },
+      graph: Map<string, IView>(),
   };
 
   const store = configureStore(createMemoryHistory(), state);

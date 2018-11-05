@@ -73,9 +73,11 @@ async function formatNeighborhood(r: CollectedResults, ctx: Context) {
     });
     ctx.response.body = {
         title: 'Trumpist',
-        start: pid,
-        nodes: nodes,
-        links: links,
+        view: {
+            startNode: pid,
+            nodes: nodes,
+            links: links,
+        },
     };
 }
 

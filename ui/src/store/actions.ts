@@ -10,7 +10,7 @@ import {
     INode, ILink,
     ActionBuilder,
     InitResponse, Meta, NodeState, KeyedPayload, ErrorPayload,
-    ClickPayload, Action, ConnectLinkRequest, ActionKeys, Clickables, Modifier, IAction,
+    ClickPayload, Action, ConnectLinkRequest, ActionKeys, Clickables, Modifier, IAction, IView, LayoutState, IUpdate,
 } from './types';
 import {LinkState} from "../tags/Link";
 import {createSelector} from "reselect";
@@ -48,14 +48,12 @@ function action<T extends string>(type: T) {
  */
 export const actions = {
     graph: {
-        addNodes: action('graph/addNodes')<INode[]>(),
-        addLinks: action('graph/addLinks')<ILink[]>(),
+        update: action('graph/update')<IUpdate>(),
         setStartNode: action('graph/setStartNode')<string>(),
         expand: action('graph/expand')<InitResponse>(),
 
         // Lifecycle
         init: action('graph/init')<InitResponse>(),
-        setConnection: action('graph/setConection')<string>(),
 
     },
     ui: {
@@ -70,9 +68,11 @@ export const actions = {
 
         // Actions for storing specific component state.
         // If the keys are all unique, we could stuff these all into on big Map, but that would be more confusing,
-        // and likely less performant, than necssary.
-        setNodeState: action('ui/setNodeState')<KeyedPayload<string, Partial<NodeState>>>(),
-        setLinkState: action('ui/setLinkState')<KeyedPayload<string, Partial<LinkState>>>(),
+        // and likely less performant, than necessary.
+        setLayout: action('ui/setNodeState')<KeyedPayload<string, Partial<LayoutState>>>(),
+    },
+    app: {
+        setConnection: action('app/setConnection')<string>(),
     },
     user: {
         click: action('user/clickLink')<ClickPayload>(),

@@ -2,7 +2,17 @@
  * Copyright (c) 2018 Bob Kerns.
  */
 
-import {ActionKeys, ErrorPayload, IAction, KeyedPayload, MapValue, NodeState, PayloadFor} from './types';
+import {
+    ActionKeys,
+    ErrorPayload,
+    IAction,
+    IView,
+    KeyedPayload, LayoutState,
+    MapValue,
+    NodeState,
+    PayloadFor,
+    ROOT_VIEW,
+} from './types';
 import {combineReducers, Reducer} from 'redux';
 import {Map} from 'immutable';
 import {INode, ILink, State, Action} from "./types";
@@ -11,7 +21,7 @@ import {actions} from './actions';
 import {DeepReadonly} from "utility-types";
 import {LinkState} from "../tags/Link";
 
-const {ui, graph} = actions;
+const {ui, app, graph} = actions;
 
 
 /**
@@ -19,32 +29,31 @@ const {ui, graph} = actions;
  * @param state
  * @param action
  */
-function doGraphNodes(state: Map<string, INode> = Map<string, INode>(), action: Action) {
+function doGraph(state: Map<string, IView> = Map<string, IView>(), action: Action): Map<string, IView> {
     type S = typeof state;
     type V = MapValue<S>;
     switch (action.type) {
-        case graph.addNodes.tag:
-            return action.payload.reduce((s: S, v: V) => s.set(v.id, v), state) as typeof state;
+        case graph.update.tag:
+            const payload = action.payload;
+            const u1 = state.get(payload.id);
+            const nodes = u1.nodes
+                .removeAll(payload.removeNodes)
+                .merge(payload.nodes);
+            const links = u1.links
+                .removeAll(payload.removeLinks)
+                .merge(payload.links);
+            const nval = {
+                nodes, links,
+                startNode: payload.startNode,
+            };
+            return state.set(payload.id, nval);
         case graph.init.tag:
-            return state.merge(action.payload.nodes);
-        default:
-            return state || Map();
-    }
-}
-
-/**
- * Handle actions that update links in the graph.
- * @param state
- * @param action
- */
-function doGraphLinks(state: Map<string, ILink> = Map<string, ILink>(), action: Action) {
-    type S = typeof state;
-    type V = MapValue<S>;
-    switch (action.type) {
-        case graph.addLinks.tag:
-            return action.payload.reduce((s: S, v: V) => s.set(v.id, v), state);
-        case graph.init.tag:
-            return state.merge(action.payload.links);
+            const view = action.payload.view;
+            return state.set(ROOT_VIEW, {
+                nodes: Map(view.nodes),
+                links: Map(view.links),
+                startNode: view.startNode,
+            });
         default:
             return state || Map();
     }
@@ -164,7 +173,7 @@ function doTitle(state: string, action: Action) {
 function doStartNode(state: string, action: Action) {
     switch (action.type) {
         case graph.init.tag:
-            return (action.payload && action.payload.start);
+            return (action.payload && action.payload.view && action.payload.view.startNode);
         default:
             return state || null;
     }
@@ -174,18 +183,15 @@ function doStartNode(state: string, action: Action) {
  * Our master handler.
  */
 export const doState = combineReducers<State, Action>({
-    graph: combineReducers({
-        nodes: doGraphNodes,
-        links: doGraphLinks,
-        startNode: compose(doStartNode, setter(graph.setStartNode.tag, null)),
-        connection: setter(graph.setConnection.tag, null),
+    graph: doGraph,
+    app: combineReducers({
+        connection: (state: string, action: Action) => "foo",
     }),
     ui: combineReducers({
         title: compose(doTitle, setter(ui.setTitle.tag, '[Unknown]')),
         loading: doLoading,
         error: doError,
-        nodeStates: keyedSetter(ui.setNodeState.tag, Map<string, NodeState>()),
-        linkStates: keyedSetter(ui.setLinkState.tag, Map<string, LinkState>()),
+        layoutStates: keyedSetter(ui.setLayout.tag, Map<string, LayoutState>()),
     }),
 });
 

@@ -9,14 +9,14 @@ import {Provider} from 'react-redux';
 import createBrowserHistory from "history/createBrowserHistory";
 import {StoreProvider} from "./tags/Store";
 import {actions} from './store';
-const {ui, graph} = actions;
+const {ui, app, graph} = actions;
 
 const history = createBrowserHistory();
 const store = configureStore(history, {});
 
 
 async function startup() {
-    const app = (
+    const top = (
         <Provider store={store}>
             <StoreProvider value={store}>
                 <App history={history}/>
@@ -25,9 +25,9 @@ async function startup() {
     );
 
     store.dispatch(ui.init());
-    store.dispatch(graph.setConnection(`${location.protocol}://${location.host}/`));
+    store.dispatch(app.setConnection(`${location.protocol}://${location.host}/`));
 
-    ReactDOM.render(app, document.getElementById('root'));
+    ReactDOM.render(top, document.getElementById('root'));
 
     // If you want your app to work offline and load faster, you can change
     // unregister() to register() below. Note this comes with some pitfalls.

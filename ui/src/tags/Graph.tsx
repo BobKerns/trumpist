@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Node from './Node';
 import Link from './Link';
-import {ILink, INode} from '../store';
+import {ILink, INode, IView} from '../store';
 import "../css/Graph.css";
 import {Map} from 'immutable';
 import Viewport from "./Viewport";
@@ -17,17 +17,17 @@ export interface GraphProps {
     width: number | string;
     x?: number;
     y?: number;
-    nodes: Map<string, INode>;
-    links: Map<string, ILink>;
+    view: IView;
 }
 
 export default class Graph extends React.Component<GraphProps> {
     public render() {
         let y = this.props.y || 0;
         let x = (this.props.x || 0) - 30;
-        const nodes = this.props.nodes;
-        const links = this.props.links;
-        const nodeKeys = [...this.props.nodes.keys()];
+        const view = this.props.view;
+        const nodes = view && view.nodes || Map();
+        const links = view && view.links || Map();
+        const nodeKeys = [...nodes.keys()];
         const anchor = this.props.anchor;
         const nodeList = nodeKeys
             .filter(k => k !== anchor.id)
@@ -37,7 +37,7 @@ export default class Graph extends React.Component<GraphProps> {
                 const node = nodes.get(k);
                 return <Node id={node.id} node={node} key={node.id} placement={{x, y}}/>;
             });
-        const linkList = [...this.props.links.keys()]
+        const linkList = [...links.keys()]
             .map(k => {
                 const link = links.get(k);
                 return <Link id={link.id} link={link} key={link.id}/>;

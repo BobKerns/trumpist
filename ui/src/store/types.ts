@@ -9,6 +9,7 @@ import {actions} from "./actions";
 import Point from "../Point";
 import {Connector} from "../tags/Node";
 import {LinkState} from "../tags/Link";
+import {Unsubscribe} from "redux";
 
 export interface Meta {
     readonly source?: string;
@@ -129,9 +130,7 @@ export function isJSONError<T extends object>(json: JSONResponse<T>): json is JS
 
 export interface InitResponse {
     readonly title: string;
-    readonly start: string;
-    readonly nodes: Map<string, INode>;
-    readonly links: Map<string, ILink>;
+    readonly view: IView;
 }
 
 
@@ -148,8 +147,26 @@ export interface IView {
     startNode?: string;
 }
 
+export interface IUpdate extends IView {
+    id: string;
+    removeNodes: string[];
+    removeLinks: string[];
+}
+
+export interface LayoutState {
+    nodeState: Map<string, NodeState>;
+    linkState: Map<string, LinkState>;
+}
+
 export interface ModelInterface {
-    query(id: string): void;
+    /**
+     * Obtain a subview.
+     * @param viewId
+     * @param filter
+     * @param queryId
+     * @param queryParams
+     */
+    query(viewId: string, filter: (view: IView) => IView, queryId: string, queryParams?: any): Unsubscribe;
 }
 
 export interface ErrorPayload {
@@ -158,18 +175,15 @@ export interface ErrorPayload {
 }
 
 export interface State {
-    graph: {
-        nodes: Map<string, INode>;
-        links: Map<string, ILink>;
-        startNode: string;
+    graph: Map<string, IView>;
+    app: {
         connection: string;
     };
     ui: {
         title: string;
         loading: number;
         error: null | ErrorPayload;
-        nodeStates: Map<string, NodeState>,
-        linkStates: Map<string, LinkState>,
+        layoutStates: Map<string, LayoutState>;
     };
 }
 
@@ -200,3 +214,6 @@ export type MapKey<M extends Map<any, any>> = M extends Map<infer U, any> ? U : 
 export type MapValue<M extends Map<any, any>> = M extends Map<any, infer U> ? U : never;
 
 export type Nullable<T> = T | null;
+
+// The ID of the root view
+export const ROOT_VIEW = '$$ROOT_VIEW';

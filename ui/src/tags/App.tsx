@@ -8,7 +8,7 @@ import Logo from './logo.svg';
 import '../css/App.css';
 import Header from './Header';
 import Graph from './Graph';
-import {INode, ILink, State} from "../store";
+import {INode, ILink, State, ROOT_VIEW, IView} from "../store";
 import {Map} from 'immutable';
 import {Router, Route} from 'react-router';
 import {History} from "history";
@@ -18,15 +18,14 @@ import ErrorPopup from "./ErrorPopup";
 
 export interface IApp {
     title: string;
-    nodes: Map<string, INode>;
-    links: Map<string, ILink>;
-    start: string;
+    view: IView;
     history: History<any>;
 }
 
 class App extends Component<IApp> {
   public render(): any {
-      const anchor = this.props.nodes.get(this.props.start);
+      const view = this.props.view;
+      const anchor = view && view.startNode && view.nodes.get(view.startNode);
       return (
           <Router history={this.props.history}>
               <div className="App">
@@ -38,8 +37,7 @@ class App extends Component<IApp> {
                   <Route>
                       <Graph
                           anchor={anchor}
-                          nodes={this.props.nodes}
-                          links={this.props.links}
+                          view={view}
                           width={"100%"} height="calc(100% - 3rem)"
                       />
                   </Route>
@@ -52,9 +50,7 @@ class App extends Component<IApp> {
 function mapStateToProps(state: State) {
     return {
         title: state.ui.title,
-        nodes: state.graph.nodes,
-        links: state.graph.links,
-        start: state.graph.startNode,
+        view: state.graph.get(ROOT_VIEW),
     };
 }
 
