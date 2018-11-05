@@ -18,7 +18,6 @@ export function TabTitle(props: {}) {
     );
 }
 
-// const mapStatetoProps = defaultMemoize((state: State) => ({children: state.ui.title}));
-const mapStatetoProps = (state: State) => ({children: state.ui.title});
+const mapStatetoProps = defaultMemoize((state: State) => ({children: state.ui.title}));
 
 export const TabTitleR = connect(mapStatetoProps)(TabTitle);
