@@ -25,7 +25,7 @@ export interface IApp {
 class App extends Component<IApp> {
   public render(): any {
       const view = this.props.view;
-      const anchor = view && view.startNode && view.nodes.get(view.startNode);
+      const anchor = view && view.options.startNode && view.nodes.get(view.options.startNode);
       return (
           <Router history={this.props.history}>
               <div className="App">

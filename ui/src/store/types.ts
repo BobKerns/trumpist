@@ -10,6 +10,7 @@ import Point from "../Point";
 import {Connector} from "../tags/Node";
 import {LinkState} from "../tags/Link";
 import {Unsubscribe} from "redux";
+import {IView, ViewOptions} from "./view";
 
 export interface Meta {
     readonly source?: string;
@@ -91,22 +92,20 @@ export interface ActionBuilder<T extends string, P = null, M extends Meta = Meta
     readonly tag: T;
 }
 
-export interface INode {
+export interface IGraphCommon {
     readonly id: string;
     readonly properties: {
         name: string;
         [n: string]: any;
     };
+}
+
+export interface INode extends IGraphCommon {
     readonly labels: string[];
     readonly tags: string[];
 }
 
-export interface ILink {
-    readonly id: string;
-    readonly properties: {
-        name: string;
-        [n: string]: any;
-    };
+export interface ILink extends IGraphCommon {
     readonly from: string;
     readonly to: string;
     readonly type: string;
@@ -128,11 +127,30 @@ export function isJSONError<T extends object>(json: JSONResponse<T>): json is JS
     return json.hasOwnProperty('error') && !!(json as JSONFailure).error;
 }
 
-export interface InitResponse {
-    readonly title: string;
+export interface ViewOp {
+    readonly id: string;
+}
+
+export interface SetView extends ViewOp {
     readonly view: IView;
 }
 
+/**
+ * Extends ViewSet with a list of nodes and links to remove. Also make the individual options optional.
+ */
+export interface ViewUpdate extends ViewOp {
+    readonly nodes: Map<string, INode>;
+    readonly links: Map<string, ILink>;
+    removeNodes: string[];
+    removeLinks: string[];
+    options: Partial<ViewOptions>;
+}
+
+export interface GraphQuery {
+    queryId: string;
+    // Limited query parameters for now.
+    queryParams: {[k: string]: string|number|boolean|Date};
+}
 
 export interface NodeState {
     readonly position: Point;
@@ -141,24 +159,14 @@ export interface NodeState {
     readonly node: INode;
 }
 
-export interface IView {
-    nodes: Map<string, INode>;
-    links: Map<string, ILink>;
-    startNode?: string;
-}
-
-export interface IUpdate extends IView {
-    id: string;
-    removeNodes: string[];
-    removeLinks: string[];
-}
-
 export interface LayoutState {
     nodeState: Map<string, NodeState>;
     linkState: Map<string, LinkState>;
 }
 
 export interface ModelInterface {
+    // The ID under which this placed in the store.
+    readonly viewId: string;
     /**
      * Obtain a subview.
      * @param viewId
@@ -166,7 +174,10 @@ export interface ModelInterface {
      * @param queryId
      * @param queryParams
      */
-    query(viewId: string, filter: (view: IView) => IView, queryId: string, queryParams?: any): Unsubscribe;
+    onCreate(): void;
+    onConnect(): void;
+    onDisconnect(): void;
+    onDestroy(): void;
 }
 
 export interface ErrorPayload {

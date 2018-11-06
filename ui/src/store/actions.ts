@@ -7,10 +7,23 @@
  */
 import {ActionType, createStandardAction} from 'typesafe-actions';
 import {
-    INode, ILink,
+    INode,
+    ILink,
     ActionBuilder,
-    InitResponse, Meta, NodeState, KeyedPayload, ErrorPayload,
-    ClickPayload, Action, ConnectLinkRequest, ActionKeys, Clickables, Modifier, IAction, IView, LayoutState, IUpdate,
+    Meta,
+    NodeState,
+    KeyedPayload,
+    ErrorPayload,
+    ClickPayload,
+    Action,
+    ConnectLinkRequest,
+    ActionKeys,
+    Clickables,
+    Modifier,
+    IAction,
+    LayoutState,
+    ViewUpdate,
+    GraphQuery, SetView,
 } from './types';
 import {LinkState} from "../tags/Link";
 import {createSelector} from "reselect";
@@ -18,6 +31,7 @@ import {Dispatch, bindActionCreators, MiddlewareAPI, AnyAction, DeepPartial} fro
 import {Map} from "immutable";
 import {string} from "prop-types";
 import {Omit} from "utility-types";
+import {ViewOp} from "./types";
 
 /**
  * Create an action. react-redux omits payload & meta from the action types when not used,
@@ -48,12 +62,13 @@ function action<T extends string>(type: T) {
  */
 export const actions = {
     graph: {
-        update: action('graph/update')<IUpdate>(),
-        setStartNode: action('graph/setStartNode')<string>(),
-        expand: action('graph/expand')<InitResponse>(),
+        set: action('graph/set')<SetView>(),
+        update: action('graph/update')<ViewUpdate>(),
+        query: action('graph/query')<GraphQuery>(),
 
         // Lifecycle
-        init: action('graph/init')<InitResponse>(),
+        create: action('graph/create')<SetView>(),
+        remove: action('graph/remove')<ViewOp>(),
 
     },
     ui: {

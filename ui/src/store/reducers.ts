@@ -6,7 +6,6 @@ import {
     ActionKeys,
     ErrorPayload,
     IAction,
-    IView,
     KeyedPayload, LayoutState,
     MapValue,
     NodeState,
@@ -20,6 +19,7 @@ import {ActionType, StateType} from "typesafe-actions";
 import {actions} from './actions';
 import {DeepReadonly} from "utility-types";
 import {LinkState} from "../tags/Link";
+import {IView, makeView} from "./view";
 
 const {ui, app, graph} = actions;
 
@@ -42,18 +42,14 @@ function doGraph(state: Map<string, IView> = Map<string, IView>(), action: Actio
             const links = u1.links
                 .removeAll(payload.removeLinks)
                 .merge(payload.links);
-            const nval = {
-                nodes, links,
-                startNode: payload.startNode,
-            };
+            const options = {...u1.options, ...(payload.options || {})};
+            const nval = makeView(nodes, links, options);
             return state.set(payload.id, nval);
-        case graph.init.tag:
-            const view = action.payload.view;
-            return state.set(ROOT_VIEW, {
-                nodes: Map(view.nodes),
-                links: Map(view.links),
-                startNode: view.startNode,
-            });
+        case graph.create.tag:
+        case graph.set.tag:
+            return state.set(action.payload.id, action.payload.view);
+        case graph.remove.tag:
+            return state.remove(action.payload.id);
         default:
             return state || Map();
     }
@@ -158,24 +154,10 @@ function doError(state: ErrorPayload | null, action: Action) {
  */
 function doTitle(state: string, action: Action) {
     switch (action.type) {
-        case graph.init.tag:
-            return (action.payload && action.payload.title) || "(Empty)";
+        case ui.setTitle.tag:
+            return (action.payload && action.payload) || state || "(Empty)";
         default:
             return state || "(Unknown)";
-    }
-}
-
-/**
- * Handle setting our starting node.
- * @param state
- * @param action
- */
-function doStartNode(state: string, action: Action) {
-    switch (action.type) {
-        case graph.init.tag:
-            return (action.payload && action.payload.view && action.payload.view.startNode);
-        default:
-            return state || null;
     }
 }
 

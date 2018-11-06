@@ -14,14 +14,14 @@ import {actions} from './actions';
 import {
     Action,
     ActionBuilder,
-    ErrorPayload,
-    InitResponse,
+    ErrorPayload, GraphQuery, IAction, ILink, INode,
     isJSONError,
     JSONFailure,
-    JSONResponse,
+    JSONResponse, JSONSuccess, ROOT_VIEW,
     ServerErrorMeta,
 } from "./types";
 import It = jest.It;
+import {makeView, ViewOptions} from "./view";
 const {ui, graph, cmd} = actions;
 
 class ServerError extends Error {
@@ -102,6 +102,15 @@ export default function* rootSaga(): IterableIterator<any> {
         return fixJSON(json.payload) as T;
     }
 
+    interface StartPayload {
+        title: string;
+        view: {
+            nodes: INode[];
+            links: ILink[];
+            options: ViewOptions;
+        };
+    }
+
     /**
      * Saga to fetch JSON at some URL
      * @param resp
@@ -110,8 +119,15 @@ export default function* rootSaga(): IterableIterator<any> {
     function* fetchJSON(resp: ActionBuilder<string, any>, url: string): IterableIterator<any>  {
         try {
             yield put(actions.ui.setLoading(true));
-            const json: JSONResponse = yield call(fetchJSONAsync, url);
-            yield put(resp(json));
+            const json: StartPayload = yield call(fetchJSONAsync, url);
+            const title: string = json.title;
+            if (title) {
+                yield put (ui.setTitle(title));
+            }
+            yield put(resp({
+                id: ROOT_VIEW,
+                view: makeView(json.view.nodes, json.view.links, json.view.options),
+            }));
         } catch (e) {
             const meta: ServerErrorMeta = {
                 source: url,
@@ -132,23 +148,23 @@ export default function* rootSaga(): IterableIterator<any> {
     function* fetchInit(): IterableIterator<any>  {
         function* expandOne(action: Action): IterableIterator<any> {
             const url = '/api/v1/start';
-            return yield fetchJSON(graph.init, url);
+            return yield fetchJSON(graph.set, url);
         }
         yield takeEvery(ui.init.tag, expandOne);
     }
 
-    function* fetchExpand(): IterableIterator<any> {
-        function* expandOne(action: Action): IterableIterator<any> {
-            const url = `/api/v1/${action.payload}/expand`;
-            return yield fetchJSON(graph.expand, url);
+    function* fetchQuery(): IterableIterator<any> {
+        function* expandOne(action: ReturnType<typeof graph.query>): IterableIterator<any> {
+            const url = `/api/v1/query/${action.payload.queryId}`;
+            return yield fetchJSON(graph.query, url);
         }
-        yield takeEvery(cmd.expand.tag, expandOne);
+        yield takeEvery(graph.query.tag, expandOne);
     }
 
     // Run the Sagas.
 
     yield all([
         fetchInit(),
-        fetchExpand(),
+        fetchQuery(),
     ]);
 }
