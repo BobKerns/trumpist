@@ -5,10 +5,10 @@
 import * as React from 'react';
 import {Dispatch} from "redux";
 import {connect} from "react-redux";
-import Node, {Connector, Direction} from './Node';
+import Node, {Direction} from './Node';
 import '../css/Link.css';
 import Point from "../Point";
-import {Action, actions, bindActions, ILink, NodeState, Nullable} from '../store';
+import {Action, actions, bindActions, ILink, LinkState, NodeState, IConnector, Nullable} from '../store';
 export const DEFAULT_CURVINESS = 120;
 
 export interface LinkProps {
@@ -16,16 +16,6 @@ export interface LinkProps {
     readonly link: ILink;
     readonly curviness?: number;
     readonly dispatch?: Dispatch;
-}
-
-interface LinkNodeData<T> {
-    from: T;
-    to: T;
-}
-
-export interface LinkState {
-    nodes: LinkNodeData<NodeState>;
-    connectors: LinkNodeData<Connector>;
 }
 
 export class BaseLink extends React.Component<LinkProps, LinkState> {
@@ -50,15 +40,18 @@ export class BaseLink extends React.Component<LinkProps, LinkState> {
      * Compute the position to link to, given another node.
      * @param o
      */
-    private getLinkPoint(tNode: NodeState, oNode: NodeState): Connector {
+    private getLinkPoint(tNode: NodeState, oNode: NodeState): IConnector {
         const op = oNode.position;
         const p = tNode.position;
+        /*
         const conn = tNode.linkPoints
             .map(t => ({p: t, d: t.point.distance(op)}))
             .reduce((prev, cur) => ((cur.d < prev.d) ? cur : prev),
                 {p: new Connector(p, Direction.N), d: p.distance(op)})
             .p;
         return conn;
+        */
+        return null;
     }
 
     private updateEndpoints(old: LinkState, state: LinkState) {
@@ -102,10 +95,10 @@ export class BaseLink extends React.Component<LinkProps, LinkState> {
             // Can't render yet.
             return null;
         }
-        const curviness = (this.props.curviness || DEFAULT_CURVINESS) * from.point.distance(to.point) / 200;
+        const curviness = (this.props.curviness || DEFAULT_CURVINESS) * new Point(from.point).distance(to.point) / 200;
         const df = Direction.UV[from.dir].mult(curviness).add(from.point);
         const dt = Direction.UV[to.dir].mult(curviness).add(to.point);
-        const mid = from.point.add(to.point).mult(0.5);
+        const mid = new Point(from.point).add(to.point).mult(0.5);
         return (
             <g className={`Link ${this.props.link.type || 'PLAIN'}`}
                onClick={this.onClick}

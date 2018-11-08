@@ -4,14 +4,16 @@
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {IView as ModelBaseProps, ModelInterface, ROOT_VIEW} from "../store";
+import {IView as ModelBaseProps, ModelInterface, ROOT_VIEW, ViewOptions} from "../store";
 import {ModelConnector} from "../model";
 import {Store} from "redux";
 
 export interface ModelProps {
-    viewId: string;
-    store: Store;
-    children: (model: ModelInterface) => any;
+    readonly viewId: string;
+    readonly parent?: ModelConnector;
+    readonly store: Store;
+    readonly options?: ViewOptions;
+    readonly children: (model: ModelInterface) => any;
 }
 
 export interface ModelState {
@@ -26,7 +28,11 @@ class Model extends React.Component<ModelProps, ModelState> {
     constructor(props: ModelProps) {
         super(props);
         this.viewId = props.viewId;
-        this.model = new ModelConnector(this.viewId, null, props.store);
+        const options = {
+            ...props.options,
+            parent: props.parent && props.parent.viewId,
+        };
+        this.model = new ModelConnector(this.viewId, options, props.store);
     }
 
     public render() {
@@ -45,3 +51,5 @@ class Model extends React.Component<ModelProps, ModelState> {
         );
     }
 }
+
+export default Model;

@@ -7,9 +7,9 @@
 
 import {instanceOf} from "prop-types";
 
-export interface IPoint {
-    x: number;
-    y: number;
+export interface IPoint<T = number> {
+    x: T;
+    y: T;
 }
 
 export function isPointLike(v: any): v is IPoint {
@@ -44,7 +44,7 @@ export class Point implements Readonly<IPoint> {
      * Create a new [[Point]] offset by the supplied point (vector) value.
      * @param offset
      */
-    public add(offset: Point): Point;
+    public add(offset: IPoint): Point;
 
     /**
      * Implementation of [[Point.move]].
@@ -56,6 +56,18 @@ export class Point implements Readonly<IPoint> {
             return this.add(x.x, x.y);
         }
         return new Point(x + this.x, y + this.y);
+    }
+
+    /**
+     * The sum of two [IPoint] objects.
+     * @param p1
+     * @param p2
+     */
+    public static add(p1: IPoint, p2: IPoint): IPoint {
+        return {
+            x: p1.x + p2.x,
+            y: p1.y + p2.y,
+        };
     }
 
     /**
@@ -84,6 +96,18 @@ export class Point implements Readonly<IPoint> {
     }
 
     /**
+     * The difference between two [IPoint] objects.
+     * @param p1
+     * @param p2
+     */
+    public static sub(p1: IPoint, p2: IPoint): IPoint {
+        return {
+            x: p1.x - p2.x,
+            y: p1.y - p2.y,
+        };
+    }
+
+    /**
      * Scale a point/vector/size by different X/Y values
      * @param x
      * @param y (defaults to be the same as x).
@@ -103,6 +127,25 @@ export class Point implements Readonly<IPoint> {
             y = x;
         }
         return new Point(this.x * x, this.y * y);
+    }
+
+    /**
+     * Scale an [IPoint] uniformly (n = number) or with separate X, U (n = [IPoint])
+     * @param p
+     * @param n
+     */
+    public static mult(p: IPoint, n: IPoint | number) {
+        if (isPointLike(n)) {
+            return {
+                x: p.x * n.x,
+                y: p.y * n.y,
+            };
+        } else {
+            return {
+              x: p.x * n,
+              u: p.y * n,
+            };
+        }
     }
 
     /**
@@ -128,10 +171,29 @@ export class Point implements Readonly<IPoint> {
     }
 
     /**
+     * Distnace betweeen two [IPoint]s.
+     * @param p1
+     * @param p2
+     */
+    public static distance(p1: IPoint, p2: IPoint): number {
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    /**
      * Return the length or magnitude of the vector.
      */
     public magnitude() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    /**
+     * Magnitude of an [IPoint]
+     * @param p
+     */
+    public static magnitude(p: IPoint) {
+        return Math.sqrt( p.x * p.x + p.y * p.y);
     }
 
     /**

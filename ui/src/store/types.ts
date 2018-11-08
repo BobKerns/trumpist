@@ -6,11 +6,10 @@ import {Map} from "immutable";
 import {Nullable} from "../../../tools/util/types";
 import {ActionType} from "typesafe-actions";
 import {actions} from "./actions";
-import Point from "../Point";
-import {Connector} from "../tags/Node";
-import {LinkState} from "../tags/Link";
+import Point, {IPoint} from "../Point";
 import {Unsubscribe} from "redux";
 import {IView, ViewOptions} from "./view";
+import {Direction} from "../tags/Node";
 
 export interface Meta {
     readonly source?: string;
@@ -92,20 +91,22 @@ export interface ActionBuilder<T extends string, P = null, M extends Meta = Meta
     readonly tag: T;
 }
 
-export interface IGraphCommon {
-    readonly id: string;
-    readonly properties: {
-        name: string;
-        [n: string]: any;
-    };
+export interface ICommonProperties {
+    name: string;
+    [n: string]: any;
 }
 
-export interface INode extends IGraphCommon {
+export interface IGraphCommon<P extends ICommonProperties = ICommonProperties> {
+    readonly id: string;
+    readonly properties: P;
+}
+
+export interface INode<P extends ICommonProperties = ICommonProperties> extends IGraphCommon<P> {
     readonly labels: string[];
     readonly tags: string[];
 }
 
-export interface ILink extends IGraphCommon {
+export interface ILink<P extends ICommonProperties = ICommonProperties> extends IGraphCommon<P> {
     readonly from: string;
     readonly to: string;
     readonly type: string;
@@ -155,13 +156,29 @@ export interface GraphQuery {
 export interface NodeState {
     readonly position: Point;
     readonly size: Point;
-    readonly linkPoints: Connector[];
     readonly node: INode;
 }
 
-export interface LayoutState {
-    nodeState: Map<string, NodeState>;
-    linkState: Map<string, LinkState>;
+export interface LinkNodeData<T> {
+    from: T;
+    to: T;
+}
+
+export interface IConnector {
+    point: IPoint;
+    dir: Direction;
+    normal: IPoint;
+}
+
+export interface LinkState {
+    nodes: LinkNodeData<NodeState>;
+    connectors: LinkNodeData<IConnector>;
+}
+
+export interface LayoutMgrState {
+    readonly view: IView;
+    readonly nodeState: Map<string, NodeState>;
+    readonly linkState: Map<string, LinkState>;
 }
 
 export interface ModelInterface {
@@ -194,7 +211,7 @@ export interface State {
         title: string;
         loading: number;
         error: null | ErrorPayload;
-        layoutStates: Map<string, LayoutState>;
+        layoutStates: Map<string, LayoutMgrState>;
     };
 }
 

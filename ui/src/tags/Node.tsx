@@ -11,12 +11,14 @@ import Point, {IPoint} from "../Point";
 import {DirectionProperty} from "csstype";
 import {INode, State, NodeState, actions, bindActions} from '../store';
 import '../css/Node.css';
+import {NodeType} from "../model/node-types";
 
 
 export interface NodeProps {
     readonly id: string;
     readonly node: INode;
     readonly placement: IPoint;
+    readonly type?: NodeType;
 }
 
 function num(str: string | number) {
@@ -52,18 +54,6 @@ export namespace Direction {
     export const UV = makeUVs();
 }
 
-export class Connector {
-    public readonly point: Point;
-    public readonly dir: Direction;
-    public readonly normal: Point;
-
-    constructor(p: Point, d: Direction) {
-        this.point = p;
-        this.dir = d;
-        this.normal = Direction.UV[d].mult(8);
-    }
-}
-
 
 export class BaseNode extends React.Component<NodeProps, NodeState> {
     private readonly textRef: RefObject<SVGTextElement>;
@@ -76,7 +66,6 @@ export class BaseNode extends React.Component<NodeProps, NodeState> {
         this.state = {
             position: new Point(props.placement),
             size: new Point(0, 0),
-            linkPoints: [new Connector(new Point(0, 0), Direction.N)],
             node: null,
         };
         this.textRef = React.createRef();
@@ -129,13 +118,8 @@ export class BaseNode extends React.Component<NodeProps, NodeState> {
         const pos = this.getPosition();
         const obbox = this.boxRef.current.getBBox();
         this.setState({
+            // or nodeType.size();
             size: new Point(obbox.width, obbox.height),
-            linkPoints: [
-                new Connector(new Point(pos.x - obbox.width / 2, pos.y), Direction.W),
-                new Connector(new Point(pos.x, pos.y - obbox.height / 2), Direction.S),
-                new Connector(new Point(pos.x + obbox.width / 2, pos.y), Direction.E),
-                new Connector(new Point(pos.x, pos.y + obbox.height / 2), Direction.N),
-            ],
         });
     }
 
@@ -149,11 +133,13 @@ export class BaseNode extends React.Component<NodeProps, NodeState> {
         const tags = tagset && tagset.length
             ? ` [${node.tags.join(',')}]`
             : '';
+        const linkPoints =
+                this.props.type.connectors(node, this.props.placement, {});
         return (
             <g id={node.id}
                className={`Node ${labels}`}
             >
-                {this.state.linkPoints.map((lp, k) => <g key={k}>
+                {linkPoints.map((lp, k) => <g key={k}>
                     <circle stroke="red" fill="transparent" r={3} cx={lp.point.x} cy={lp.point.y}/>
                 </g>)}
                 <g className="OuterBox"

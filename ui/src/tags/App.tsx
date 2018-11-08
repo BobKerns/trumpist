@@ -18,14 +18,11 @@ import ErrorPopup from "./ErrorPopup";
 
 export interface IApp {
     title: string;
-    view: IView;
     history: History<any>;
 }
 
 class App extends Component<IApp> {
   public render(): any {
-      const view = this.props.view;
-      const anchor = view && view.options.startNode && view.nodes.get(view.options.startNode);
       return (
           <Router history={this.props.history}>
               <div className="App">
@@ -36,9 +33,10 @@ class App extends Component<IApp> {
                   <ErrorPopup/>
                   <Route>
                       <Graph
-                          anchor={anchor}
-                          view={view}
-                          width={"100%"} height="calc(100% - 3rem)"
+                          viewId="main"
+                          size={{x: "100%", y: "calc(100% - 3rem)"}}
+                          center={{x: 0, y: 0}}
+                          options={{}}
                       />
                   </Route>
               </div>

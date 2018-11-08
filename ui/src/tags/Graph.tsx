@@ -10,52 +10,39 @@ import {ILink, INode, IView} from '../store';
 import "../css/Graph.css";
 import {Map} from 'immutable';
 import Viewport from "./Viewport";
+import Model from "./Model";
+import Store from "./Store";
+import {LayoutMgr, LayoutOptions} from "./LayoutMgr";
+import {IPoint} from "../Point";
 
 export interface GraphProps {
-    anchor: INode;
-    height: number | string;
-    width: number | string;
-    x?: number;
-    y?: number;
-    view: IView;
+    center: IPoint<number>;
+    size: IPoint<string|number>;
+    viewId: string;
+    options: LayoutOptions;
 }
 
 export default class Graph extends React.Component<GraphProps> {
     public render() {
-        let y = this.props.y || 0;
-        let x = (this.props.x || 0) - 30;
-        const view = this.props.view;
-        const nodes = view && view.nodes || Map();
-        const links = view && view.links || Map();
-        const nodeKeys = [...nodes.keys()];
-        const anchor = this.props.anchor;
-        const nodeList = nodeKeys
-            .filter(k => k !== anchor.id)
-            .map(k => {
-                y -= 70;
-                x += 25;
-                const node = nodes.get(k);
-                return <Node id={node.id} node={node} key={node.id} placement={{x, y}}/>;
-            });
-        const linkList = [...links.keys()]
-            .map(k => {
-                const link = links.get(k);
-                return <Link id={link.id} link={link} key={link.id}/>;
-            });
+        const center = this.props.center;
+        const viewId = this.props.viewId;
+        const size = this.props.size;
         return (
-            <Viewport height={this.props.height} width={this.props.width}>
-                {
-                    anchor
-                    && <Node id={anchor.id}
-                             node={anchor}
-                             key={anchor.id}
-                             placement={{x: 0, y: 0}}
-                    />
+            <Store.Consumer>{
+                store => {
+                    return (
+                        <Model viewId={viewId} store={store}>{
+                            model => {
+                                return (
+                                    <Viewport size={size}>
+                                        <LayoutMgr viewId={viewId} options={{}} center={center}/>
+                                    </Viewport>
+                                );
+                            }
+                        }</Model>
+                    );
                 }
-                {nodeList}
-                {linkList}
-                <circle radius={5} stroke="red" cx={0} cy={0}></circle>
-            </Viewport>
+            }</Store.Consumer>
         );
     }
 }

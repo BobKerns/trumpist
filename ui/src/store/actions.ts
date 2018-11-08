@@ -12,6 +12,7 @@ import {
     ActionBuilder,
     Meta,
     NodeState,
+    LinkState,
     KeyedPayload,
     ErrorPayload,
     ClickPayload,
@@ -21,11 +22,10 @@ import {
     Clickables,
     Modifier,
     IAction,
-    LayoutState,
+    LayoutMgrState,
     ViewUpdate,
     GraphQuery, SetView,
 } from './types';
-import {LinkState} from "../tags/Link";
 import {createSelector} from "reselect";
 import {Dispatch, bindActionCreators, MiddlewareAPI, AnyAction, DeepPartial} from "redux";
 import {Map} from "immutable";
@@ -84,7 +84,7 @@ export const actions = {
         // Actions for storing specific component state.
         // If the keys are all unique, we could stuff these all into on big Map, but that would be more confusing,
         // and likely less performant, than necessary.
-        setLayout: action('ui/setNodeState')<KeyedPayload<string, Partial<LayoutState>>>(),
+        setLayout: action('ui/setNodeState')<KeyedPayload<string, Partial<LayoutMgrState>>>(),
     },
     app: {
         setConnection: action('app/setConnection')<string>(),

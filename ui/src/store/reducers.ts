@@ -6,7 +6,7 @@ import {
     ActionKeys,
     ErrorPayload,
     IAction,
-    KeyedPayload, LayoutState,
+    KeyedPayload, LayoutMgrState,
     MapValue,
     NodeState,
     PayloadFor,
@@ -14,11 +14,9 @@ import {
 } from './types';
 import {combineReducers, Reducer} from 'redux';
 import {Map} from 'immutable';
-import {INode, ILink, State, Action} from "./types";
-import {ActionType, StateType} from "typesafe-actions";
+import {INode, ILink, State, Action, LinkState} from "./types";
 import {actions} from './actions';
 import {DeepReadonly} from "utility-types";
-import {LinkState} from "../tags/Link";
 import {IView, makeView} from "./view";
 
 const {ui, app, graph} = actions;
@@ -173,7 +171,7 @@ export const doState = combineReducers<State, Action>({
         title: compose(doTitle, setter(ui.setTitle.tag, '[Unknown]')),
         loading: doLoading,
         error: doError,
-        layoutStates: keyedSetter(ui.setLayout.tag, Map<string, LayoutState>()),
+        layoutStates: keyedSetter(ui.setLayout.tag, Map<string, LayoutMgrState>()),
     }),
 });
 

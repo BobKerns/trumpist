@@ -6,16 +6,16 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {ReactNode} from "react";
 import SvgDropShadow from "./SvgDropShadow";
+import {IPoint} from "../Point";
 
 
 export interface ViewProps {
-    height: number | string;
-    width: number | string;
+    size: IPoint<number | string>;
 }
 
 export default function Viewport(props: ViewProps & {children?: ReactNode}) {
     return (
-        <div style={{width: props.width, height: props.height}}>
+        <div style={{width: props.size.x, height: props.size.y}}>
             <svg width="100%" height="100%">
                 <defs>
                     {
