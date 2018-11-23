@@ -1,0 +1,29 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX trump: <http://4kows.com/trump/>
+PREFIX tb: <http://4kows.com/tbrain/>
+
+select (coalesce(?t, ?p, ?n) as ?type)
+(coalesce(?c, ?cc, ?cd, ?l, ?node, "blank") as ?label)
+(coalesce(?cc, ?p) as ?comment)
+?rank
+{
+  {
+    graph trump:main {
+      #    ?node a trump:commit .
+      OPTIONAL { ?node rdf:label ?l }
+      OPTIONAL { ?node rdf:type ?t }
+      OPTIONAL { ?node rdf:Predicate ?p }
+      OPTIONAL { ?node trump:commitTime ?cval }
+      OPTIONAL { ?node trump:commitMessage ?cc }
+    }
+  } union {
+    graph tb:Commits {
+      OPTIONAL { ?node tb:commitBegin ?cb }
+      OPTIONAL { ?node tb:commitEnd ?ce }
+      OPTIONAL { ?node tb:commitDiscovered ?cd }
+    }
+  }
+  bind(if(contains(?node, "/node/"), "node", ?fooo) as ?n)
+  bind(substr(str(?cval), 1, 10) as ?c)
+  bind(if(bound(?cval), 0.05, 0.08) as ?rank)
+}

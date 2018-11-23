@@ -1,0 +1,37 @@
+PREFIX tb: <http://4kows.com/tbrain/>
+PREFIX spif: <http://spinrdf.org/spif#>
+
+construct {
+  tb:AllCommits tb:Commits [
+    	                  tb:discoveredCommitTime ?C ;
+    	                  tb:commitBucketBegin ?OC ;
+    	                  tb:commitBucketEnd ?NC 
+                        ] .
+} 
+where {
+  select ?NC ?OC (max(?c) as ?C) {
+    ?row tb:__-_ModificationDateTime ?cstr .
+    bind(xsd:dateTime(?cstr) as ?c)
+    bind(year(?c) as ?Yx)
+    bind(str(?Yx) as ?Y)
+    bind(month(?c) as ?Mx)
+    bind(if(?Mx < 10, concat("0", str(?Mx)), str(?Mx)) as ?M)
+    bind(day(?c) as ?Dx)
+    bind(if(?Dx < 10, concat("0", str(?Dx)), str(?Dx)) as ?D)
+    bind(hours(?c) as ?Hx)
+    bind(if(?Hx < 10, concat("0", str(?Hx)), str(?Hx)) as ?H)
+    bind(if(?Hx = 23, 0, ?Hx + 1) as ?NHx)
+    bind(?Hx = 23 && ((?Mx in (2) && ?Dx = 28) || (?Mx in (4, 6, 9, 11) && ?D = 30) || (?Mx in (1, 3, 5, 7, 8, 10, 12) && ?Dx = 31)) as ?carry)
+    bind(if(?carry, 1, ?Dx + 1) as ?NDx)
+    bind(if(?carry && ?Mx = 12, 1, ?Mx + 1) as ?NMx)
+    bind(if(?carry && ?Mx = 12, ?Yx +1, ?Yx) as ?NYx)
+    bind(str(?NYx) as ?NY)
+    bind(if(?NMx < 10, concat("0", str(?NMx)), str(?NMx)) as ?NM)
+    bind(if(?NDx < 10, concat("0", str(?NDx)), str(?NDx)) as ?ND)
+    bind(if(?NHx < 10, concat("0", str(?NHx)), str(?NHx)) as ?NH)
+    bind(xsd:dateTime(concat(?Y, "-", ?M, "-", ?D, "T", ?H, ":00:00-08:00")) as ?OC)
+    bind(xsd:dateTime(concat(?NY, "-", ?NM, "-", ?ND, "T", ?NH, ":00:00-08:00")) as ?NC)
+  }
+  group by ?NC ?OC ?c
+  order by ?OC
+}

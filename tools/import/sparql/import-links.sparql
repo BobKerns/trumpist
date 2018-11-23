@@ -1,0 +1,148 @@
+BASE <http://4kows.com/trump/>
+PREFIX trump: <http://4kows.com/brain/trump/>
+PREFIX t: <http://4kows.com/trump/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Construct our target ontology.
+insert {
+  graph t:main {
+    ?id a t:Link ;
+        t:commit ?commitURI ;
+        rdf:Subject ?subject ;
+        rdf:Predicate ?predicate ;
+        rdf:Object ?object ;
+        rdf:label ?label ;
+    t:brain [
+              a t:LinkBrain ;
+              t:BrainId ?BrainId ;
+              t:Direction ?Direction ;
+              t:Relation ?Relation ;
+              t:SyncSentId ?SyncSentId ;
+              t:SyncUpdateId ?SyncUpdateId ;
+              t:SyncUpdateTime ?SyncUpdateDateTime
+            ] ;
+    t:format [
+               a t:LinkFormat ;
+               t:name ?Name ;
+               t:color ?Color ;
+               t:thickness ?Thickness ;
+               t:direction ?direction ;
+               t:relation ?Relation
+             ] .
+    ?explicitType a rdfs:Property ;
+        rdfs:subPropertyOf ?altType .
+    ?altType a rdfs:Property ;
+        rdfs:subPropertyOf t:link .
+    ?commitURI a t:commit ;
+        t:commitMessage ?commitMessage ;
+        t:commitTime ?commitTime .
+    }
+} WHERE {
+  SERVICE <ontorefine:1656688442490> {
+    # Triple patterns for accessing each row and the columns in contains
+    # Note that no triples will be generated for NULL values in the table
+    # You should inspect your data in Refine mode and add OPTIONAL accordingly
+    ?row a trump:BrainLink ;
+        trump:__-_Id ?t_Id ;
+       trump:__-_Kind ?Kind ;
+       trump:__-_Meaning ?Meaning ;
+       trump:__-_BrainId ?BrainId ;
+       trump:__-_Relation ?Relation ;
+       trump:__-_Direction ?Direction ;
+       trump:__-_ThoughtIdA ?ThoughtIdA ;
+       trump:__-_ThoughtIdB ?ThoughtIdB ;
+       trump:__-_CreationDateTime ?CreationDateTime ;
+       trump:__-_ModificationDateTime ?ModificationDateTime .
+       optional {
+         ?row trump:__-_Thickness ?Thickness ;
+         trump:__-_SyncSentId ?SyncSentId ;
+         trump:__-_SyncUpdateId ?SyncUpdateId ;
+         trump:__-_SyncUpdateDateTime ?SyncUpdateDateTime ;
+         trump:__-_TypeId ?TypeId ;
+         trump:__-_Name ?Name ;
+         trump:__-_Color ?Color .
+       }
+  }
+
+  bind(xsd:dateTime(?ModificationDateTime) as ?mod)
+  bind(year(?mod) as ?yearMod)
+  bind(month(?mod) as ?monthMod)
+  bind(day(?mod) as ?dayMod)
+  {
+    select ?commitTime
+    {
+      {
+        select (sample(?t) as ?time) ?Y ?M ?D
+        where {
+          SERVICE <ontorefine:1656688442490> {
+            ?r trump:__-_ModificationDateTime ?rawTime .
+          }
+          bind(xsd:dateTime(?rawTime) as ?t)
+          bind(year(?t) as ?Y)
+          bind(month(?t) as ?M)
+          bind(day(?t) as ?D)
+        }
+        group by ?Y ?M ?D
+      }
+    }
+  }
+
+  filter (year(?commitTime) = ?yearMod && month(?commitTime) = ?monthMod && day(?commitTime) = ?dayMod)
+
+  bind(IRI(concat("link/", ?t_Id)) as ?id)
+  bind(IRI(concat("node/", ?ThoughtIdA)) as ?xsubject)
+  bind(
+       if((?Meaning = 0), "PROTO",
+          if((?Meaning = 1), "NORMAL",
+             if((?Meaning = 2), "MEMBER",
+                if((?Meaning = 3), "SUBTYPE",
+                   if((?Meaning = 5), "TAG",
+                      if((?Meaning = 6), "PIN",
+                         str(?Meaning)))))))
+       as ?meaningName)
+  bind(
+       if((?Kind = 0), "PROTO",
+          if((?Kind = 1), "LINK",
+             if((?Kind = 2), "TYPE",
+                if((?Kind = 4), "TAG",
+                   if((?Kind = 5), "SPECIAL",
+                      str(?Kind))))))
+       as ?kindName)
+  bind(?Direction in (3, 6, 7, 10, 11, 14, 15) as ?reverse)
+  bind(
+       if((?Relation = 0), "PROTO",
+          if((?Relation = 1) && ?reverse, "DOWN",
+             if((?Relation = 1), "UP",
+                if((?Relation = 3) && ?reverse, "LEFT",
+                   if((?Relation = 3), "RIGHT",
+                      str(?Relation))))))
+       as ?direction)
+  bind(if((?kindName = "LINK") && (?meaningName = "NORMAL"),
+          "NORMAL",
+          if((?kindName = "LINK") && (?meaningName = "TAG"),
+             "TAG",
+             if((?kindName = "LINK") && (?meaningName = "MEMBER"),
+                "MEMBER",
+                if((?kindName = "LINK") && (?meaningName = "PIN"),
+                   "PIN",
+                   concat(?kindName, "/", ?meaningName)))))
+       as ?altTypeName)
+  bind(IRI(?altTypeName) as ?altType)
+  bind(IRI(concat("link/", ?TypeId)) as ?explicitType)
+  bind(coalesce(?explicitType, ?altType) as ?predicate)
+  bind(IRI(concat("node/", ?ThoughtIdB)) as ?xobject)
+  bind(if(?reverse, ?xobject, ?xsubject) as ?subject)
+  bind(if(?reverse, ?xsubject, ?xobject) as ?object)
+  bind(concat("State as of ", str(?commitTime)) as ?commitMessage)
+  bind(IRI(concat("commit/temp/",
+                  sha256(concat(strlen(?commitMessage), ?commitMessage,
+                                strlen(str(?commitTime)), str(?commitTime)))))
+       as ?commitURI)
+  bind(coalesce(?Name,
+                concat(?altType, "_", substr(?TypeId, 1, 6), "_", substr(?t_id, 1, 6)),
+                concat(?altType, "_", substr(?t_id, 1, 6)))
+       as ?label)
+}
+#limit 300

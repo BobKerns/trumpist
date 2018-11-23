@@ -1,0 +1,14 @@
+PREFIX trump: <http://4kows.com/trump/>
+PREFIX tb: <http://4kows.com/tbrain/>
+
+select ?property ?value {
+  {
+    graph trump:main {
+	  ?node ?property ?value .
+    }
+  } union {
+    graph tb:Commits {
+	  ?node ?property ?value .
+    }
+  }
+}

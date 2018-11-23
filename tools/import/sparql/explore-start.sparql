@@ -1,0 +1,21 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX trump: <http://4kows.com/trump/>
+PREFIX tb: <http://4kows.com/tbrain/>
+
+construct {
+  ?node ?pred ?obj
+}
+where {
+  {
+    {
+      graph tb:main {
+        { ?node ?pred ?obj } union { ?obj ?pred ?node }
+      }
+    } union {
+      graph tb:Commits {
+        { ?node ?pred ?obj } union { ?obj ?pred ?node }
+      }
+    }
+  }
+  filter(isIRI(?node))
+}
