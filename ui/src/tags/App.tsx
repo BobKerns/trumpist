@@ -26,7 +26,7 @@ class App extends Component<IApp> {
       return (
           <Router history={this.props.history}>
               <div className="App">
-                  <TabTitleR>Default</TabTitleR>
+                  <TabTitleR>Def`ault</TabTitleR>
                   <header className="App-header">
                       <Header title={this.props.title}/>
                   </header>

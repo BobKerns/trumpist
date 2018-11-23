@@ -8,7 +8,7 @@ import createSagaMiddleware from 'redux-saga';
 import {connectRouter, routerMiddleware} from 'connected-react-router';
 import {IAction, Action, State, Meta, ActionBuilder} from './types';
 import rootReducer from './reducers';
-import rootSaga from './sagas';
+import rootSaga from '../comm/sagas';
 import {History} from "history";
 import {initSubscriptionService, middleware as subscribe} from "./subscribe";
 import {actions} from "./actions";

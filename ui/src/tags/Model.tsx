@@ -29,10 +29,20 @@ class Model extends React.Component<ModelProps, ModelState> {
         super(props);
         this.viewId = props.viewId;
         const options = {
+            query: 'expand',
             ...props.options,
             parent: props.parent && props.parent.viewId,
         };
         this.model = new ModelConnector(this.viewId, options, props.store);
+        this.model.onConnect();
+    }
+
+    public componentDidMount(): void {
+        this.model.onConnect();
+    }
+
+    public componentWillUnmount() {
+        this.model.onDestroy();
     }
 
     public render() {

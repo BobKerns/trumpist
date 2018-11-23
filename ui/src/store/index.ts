@@ -10,4 +10,4 @@ export * from './types';
 export * from './view';
 export * from './actions';
 export * from './reducers';
-export * from './sagas';
+export * from '../comm/sagas';

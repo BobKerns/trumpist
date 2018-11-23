@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Node from './Node';
 import Link from './Link';
-import {ILink, INode, IView} from '../store';
+import {ILink, INode, IView, ViewOptions} from '../store';
 import "../css/Graph.css";
 import {Map} from 'immutable';
 import Viewport from "./Viewport";
@@ -19,7 +19,7 @@ export interface GraphProps {
     center: IPoint<number>;
     size: IPoint<string|number>;
     viewId: string;
-    options: LayoutOptions;
+    options: LayoutOptions| ViewOptions;
 }
 
 export default class Graph extends React.Component<GraphProps> {
@@ -27,15 +27,16 @@ export default class Graph extends React.Component<GraphProps> {
         const center = this.props.center;
         const viewId = this.props.viewId;
         const size = this.props.size;
+        const options = this.props.options;
         return (
             <Store.Consumer>{
                 store => {
                     return (
-                        <Model viewId={viewId} store={store}>{
+                        <Model viewId={viewId} store={store} options={options as ViewOptions}>{
                             model => {
                                 return (
                                     <Viewport size={size}>
-                                        <LayoutMgr viewId={viewId} options={{}} center={center}/>
+                                        <LayoutMgr viewId={viewId} options={options as LayoutOptions} center={center}/>
                                     </Viewport>
                                 );
                             }

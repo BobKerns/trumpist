@@ -60,7 +60,7 @@ export class ModelConnector implements ModelInterface {
          * Update the target view from our state.
          */
         const doUpdate = (): any => {
-            const state = store.getState();
+            const state = this.store.getState();
             const parent = state.graph.get(this.options.parentId);
             const filter = filters[this.options.filter];
             const view = state.graph.get(this.viewId);
@@ -78,9 +78,13 @@ export class ModelConnector implements ModelInterface {
     }
 
     private onActivation() {
+        const state = this.store.getState();
+        const parent = state.graph.get(this.options.parentId);
+        const filter = filters[this.options.filter];
+        const view: IView = state.graph.get(this.viewId) || state.graph.get(ROOT_VIEW);
         this.store.dispatch(graph.query({
             queryId: this.options.query,
-            queryParams: this.options,
+            queryParams: {...this.options, id: (view && view.options.startNode) || null},
         }));
         if (this.unsubscribe) {
             this.unsubscribe();

@@ -9,7 +9,7 @@ import * as api from "../database/api";
 import {Mode} from "../database/api";
 import Q from "../database/query";
 import Application = require("koa");
-import {CollectedResults} from "../database/spi";
+import {CollectedResults, ResultSummary} from "../database/spi";
 
 declare module "koa" {
     interface Context {
@@ -40,49 +40,57 @@ RETURN p, l, q, collect(tp.name) as tp, collect(tq.name) as tq;
 
 async function formatNeighborhood(r: CollectedResults, ctx: Context) {
     const rs = await r.getResults();
-    const p = rs[0].get('p');
-    const pid = p.properties.id;
-    const nodes = {
-        [pid]: {
-            id: pid,
-            type: p.properties.type,
-            properties: p.properties,
-            tags: rs[0].get('tp'),
-        },
-    };
-    const links: { [k: string]: object } = {};
-    rs.forEach(row => {
-        const l = row.get('l');
-        const q = row.get('q');
-        const tq = row.get('tq');
-        const qid = q.properties.id;
-        nodes[qid] = {
-            id: qid,
-            type: q.properties.type,
-            properties: q.properties,
-            tags: tq,
-        };
-        const lid = l.properties.id;
-        links[lid] = {
-            id: lid,
-            type: l.type,
-            properties: l.properties,
-            from: pid,
-            to: qid,
-        };
-    });
-    ctx.response.body = {
-        title: 'Trumpist',
-        view: {
-            nodes: nodes,
-            links: links,
-            options: {
-                startNode: pid,
-                filter: 'identity',
-                query: 'expand',
+    if (rs.length > 0) {
+
+        const p = rs[0].get('p');
+        const pid = p.properties.id;
+        const nodes = {
+            [pid]: {
+                id: pid,
+                type: p.properties.type,
+                properties: p.properties,
+                tags: rs[0].get('tp'),
             },
-        },
-    };
+        };
+        const links: { [k: string]: object } = {};
+        rs.forEach(row => {
+            const l = row.get('l');
+            const q = row.get('q');
+            const tq = row.get('tq');
+            const qid = q.properties.id;
+            nodes[qid] = {
+                id: qid,
+                type: q.properties.type,
+                properties: q.properties,
+                tags: tq,
+            };
+            const lid = l.properties.id;
+            links[lid] = {
+                id: lid,
+                type: l.type,
+                properties: l.properties,
+                from: pid,
+                to: qid,
+            };
+        });
+        ctx.response.body = {
+            title: 'Trumpist',
+            view: {
+                nodes: nodes,
+                links: links,
+                options: {
+                    startNode: pid,
+                    filter: 'identity',
+                    query: 'expand',
+                },
+            },
+        };
+    } else {
+        const summary = await r.getResultSummary();
+        ctx.response.body = {
+            error: `Node not found in query.`,
+        }
+    }
 }
 
 /**
