@@ -293,7 +293,7 @@ export function once<T>(fn: () => T): () => T {
 }
 
 /**
- * A pair of functions. The the value from wrapped function is made available by calling the `value()` function.
+ * A pair of functions. The value from wrapped function is made available by calling the `value()` function.
  * This may also be treated as a `Promise` of the value of the `wrapped` function, resolved and available once
  * it has been invoked.
  */

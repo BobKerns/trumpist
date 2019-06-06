@@ -1,4 +1,7 @@
 // jest.config.js
+/*
+ * Copyright (c) 2018 Bob Kerns.
+ */
 const {defaults} = require('jest-config');
 module.exports = {
     // ...
@@ -18,7 +21,5 @@ module.exports = {
         "node"
     ],
     // ...
-};/*
- * Copyright (c) 2018 Bob Kerns.
- */
+};
 
