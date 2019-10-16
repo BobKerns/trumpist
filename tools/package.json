@@ -62,7 +62,6 @@
     "jsdoc": "^3.6.2",
     "leaked-handles": "^5.2.0",
     "marked": "^0.6.2",
-    "npm": "^6.9.0",
     "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "typedoc": "^0.14.2",
