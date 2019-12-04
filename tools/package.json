@@ -40,7 +40,7 @@
     "dts-jest": "^22.0.4",
     "eslint": "^5.16.0",
     "install": "^0.11.2",
-    "jest": "^25.0.0",
+    "jest": "^24.9.0",
     "jest-config": "^25.0.0",
     "jsdoc": "^3.6.3",
     "leaked-handles": "^5.2.0",
