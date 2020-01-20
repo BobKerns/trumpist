@@ -3,13 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-      "@types/react": "^16.9.17",
-      "@types/react-dom": "^16.9.4",
-      "immutable": "^4.0.0-rc.12",
-      "react": "^16.12.0",
-      "react-dom": "^16.12.0",
-      "handlebars": ^4.5.3"
-
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "handlebars": "^4.7.2",
+    "immutable": "^4.0.0-rc.12",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,7 +26,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.8.3",
+    "@babel/plugin-transform-typescript": "^7.8.3",
     "@types/jest": "^23.3.14",
+    "acorn": "^7.1.0",
     "ajv": "^6.11.0",
     "awesome-typescript-loader": "^5.2.1",
     "css-loader": "^1.0.1",
@@ -37,7 +39,7 @@
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "svg-inline-loader": "^0.8.0",
-    "ts-jest": "^23.10.5",
+    "ts-jest": "^24.3.0",
     "typescript": "^3.7.5",
     "webpack-cli": "^3.3.10"
   }

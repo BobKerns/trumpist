@@ -58,9 +58,7 @@ function makeUVs() {
     uv[Direction.NW] = new Point(-S2, S2);
     return Object.freeze(uv);
 }
-export namespace Direction {
-    export const UV = makeUVs();
-}
+export const UV = makeUVs();
 
 export class Connector {
     public readonly point: Point;
