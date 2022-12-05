@@ -45,7 +45,7 @@
     "jsdoc": "^3.6.7",
     "leaked-handles": "^5.2.0",
     "marked": "^4.0.10",
-    "npm": "^7.19.1",
+    "npm": "^8.11.0",
     "ts-jest": "^27.0.3",
     "typedoc": "^0.21.2",
     "typedoc-clarity-theme": "^1.1.0",
