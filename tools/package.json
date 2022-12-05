@@ -42,7 +42,7 @@
     "install": "^0.11.2",
     "jest": "^27.0.6",
     "jest-config": "^27.0.6",
-    "jsdoc": "^3.6.7",
+    "jsdoc": "^3.6.11",
     "leaked-handles": "^5.2.0",
     "marked": "^4.0.10",
     "npm": "^7.19.1",
