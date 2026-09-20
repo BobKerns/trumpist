@@ -2,7 +2,7 @@
   "bundleDependencies": [],
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "adm-zip": "^0.5.5",
+    "adm-zip": "^0.6.1",
     "bomstrip": "^0.1.4",
     "evernote": "^2.0.5",
     "immutable": "^4.3.9",
